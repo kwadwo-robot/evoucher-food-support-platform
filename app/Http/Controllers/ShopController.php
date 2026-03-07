@@ -24,7 +24,7 @@ class ShopController extends Controller
 
         // Build query for shop's food listings
         $query = FoodListing::where('shop_user_id', $shop->id)
-            ->where('is_active', true);
+            ->where('status', 'available');
 
         // Filter by type
         if ($type !== 'all') {
@@ -63,22 +63,22 @@ class ShopController extends Controller
 
         // Get statistics
         $totalItems = FoodListing::where('shop_user_id', $shop->id)
-            ->where('is_active', true)
+            ->where('status', 'available')
             ->count();
 
         $freeItems = FoodListing::where('shop_user_id', $shop->id)
             ->where('listing_type', 'free')
-            ->where('is_active', true)
+            ->where('status', 'available')
             ->count();
 
         $discountedItems = FoodListing::where('shop_user_id', $shop->id)
             ->where('listing_type', 'discounted')
-            ->where('is_active', true)
+            ->where('status', 'available')
             ->count();
 
         $surplusItems = FoodListing::where('shop_user_id', $shop->id)
             ->where('listing_type', 'surplus')
-            ->where('is_active', true)
+            ->where('status', 'available')
             ->count();
 
         return view('shop.detail', compact(
