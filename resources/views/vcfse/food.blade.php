@@ -167,7 +167,7 @@
           @if($allocation && !$allocation->isExpired())
             <form method="POST" action="{{ route('vcfse.food.claim', $item->id) }}" style="margin-top:12px">
               @csrf
-              <button type="submit" class="btn btn-success w-full" style="font-size:13px;padding:10px 16px;font-weight:600;border-radius:6px;box-shadow:0 2px 8px rgba(34,197,94,0.3);transition:all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 12px rgba(34,197,94,0.5)';this.style.transform='translateY(-2px)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(34,197,94,0.3)';this.style.transform='translateY(0)'" onclick="return confirm('Are you sure you want to claim this item? This will reserve it for your organization.')">
+              <button type="submit" class="btn w-full" style="font-size:13px;padding:10px 16px;font-weight:600;border-radius:6px;background:#1f2937;color:#ffffff;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(-2px)';this.style.background='#111827'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)';this.style.transform='translateY(0)';this.style.background='#1f2937'" onclick="return confirm('Are you sure you want to claim this item? This will reserve it for your organization.')">
                 <i class="fas fa-hand-holding-heart" style="margin-right:6px"></i> Claim Now
               </button>
             </form>
