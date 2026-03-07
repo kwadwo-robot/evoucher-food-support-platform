@@ -46,16 +46,16 @@
   </div>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <!-- Impact Card -->
-  <div class="card" style="background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);border:none;color:#fff">
+  <!-- Fund Load Card -->
+  <div class="card" style="background:linear-gradient(135deg,#16a34a 0%,#15803d 100%);border:none;color:#fff">
     <div class="card-body" style="padding:28px">
-      <div style="font-size:32px;margin-bottom:12px">🌱</div>
-      <div style="font-size:18px;font-weight:800;margin-bottom:8px">Your Impact</div>
+      <div style="font-size:32px;margin-bottom:12px">💰</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:8px">Load Funds</div>
       <div style="font-size:13.5px;opacity:.75;line-height:1.7;margin-bottom:20px">
-        Your donations directly fund food vouchers for families in Northamptonshire, helping reduce food waste and food insecurity in our community.
+        Load funds to your wallet using Stripe. Your funds will be used to allocate food vouchers to recipients in Northamptonshire.
       </div>
-      <a href="{{ route('vcfse.donate') }}" class="btn" style="background:#16a34a;color:#fff;width:100%;justify-content:center">
-        <i class="fas fa-hand-holding-heart"></i> Donate Now
+      <a href="{{ route('vcfse.fund-load') }}" class="btn" style="background:#fff;color:#16a34a;width:100%;justify-content:center;font-weight:600">
+        <i class="fas fa-wallet"></i> Load Funds Now
       </a>
     </div>
   </div>

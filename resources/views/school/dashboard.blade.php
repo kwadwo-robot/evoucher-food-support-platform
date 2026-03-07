@@ -45,15 +45,15 @@
   </div>
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-  <div class="card" style="background:linear-gradient(135deg,#0f172a,#1e293b);border:none;color:#fff">
+  <div class="card" style="background:linear-gradient(135deg,#1d4ed8,#1e40af);border:none;color:#fff">
     <div class="card-body" style="padding:28px">
-      <div style="font-size:32px;margin-bottom:12px">🏫</div>
-      <div style="font-size:18px;font-weight:800;margin-bottom:8px">School & Care Support</div>
+      <div style="font-size:32px;margin-bottom:12px">💰</div>
+      <div style="font-size:18px;font-weight:800;margin-bottom:8px">Load Funds</div>
       <div style="font-size:13.5px;opacity:.75;line-height:1.7;margin-bottom:20px">
-        Your organisation's contributions help fund food vouchers for vulnerable families and individuals in Northamptonshire. Together we can make a real difference.
+        Load funds to your wallet using Stripe. Your funds will be used to allocate food vouchers to vulnerable families and individuals in Northamptonshire.
       </div>
-      <a href="{{ route('school.donate') }}" class="btn" style="background:#16a34a;color:#fff">
-        <i class="fas fa-hand-holding-heart"></i> Donate Now
+      <a href="{{ route('school.fund-load') }}" class="btn" style="background:#fff;color:#1d4ed8;width:100%;justify-content:center;font-weight:600">
+        <i class="fas fa-wallet"></i> Load Funds Now
       </a>
     </div>
   </div>
