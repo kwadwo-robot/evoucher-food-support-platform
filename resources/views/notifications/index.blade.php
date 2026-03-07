@@ -25,7 +25,7 @@
         @elseif($notif->type === 'error') background:#fee2e2;color:#dc2626
         @else background:#dbeafe;color:#2563eb
         @endif">
-        <i class="fas {{ $notif->icon ?? 'fa-bell' }}"></i>
+        <i class="{{ $notif->icon ?? 'fas fa-bell' }}"></i>
       </div>
       <div style="flex:1">
         <div style="font-weight:600;color:#0f172a;margin-bottom:4px">{{ $notif->title }}</div>

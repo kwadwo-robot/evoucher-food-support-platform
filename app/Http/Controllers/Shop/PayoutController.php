@@ -174,7 +174,7 @@ class PayoutController extends Controller
                     'title' => 'New Payout Request',
                     'message' => $user->name . ' submitted a payout request for £' . number_format($totalAmount, 2),
                     'type' => 'payout_request',
-                    'icon' => 'fa-money-bill',
+                    'icon' => 'fas fa-money-bill',
                     'read_at' => null,
                 ]);
             }
