@@ -343,9 +343,11 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
     <span class="ni"><i class="fas fa-user-cog"></i></span> Profile Settings
   </a>
   @endif
+  @if($role !== 'recipient')
   <a href="{{ url('/food') }}" class="nav-item">
     <span class="ni"><i class="fas fa-globe"></i></span> Public Listings
   </a>
+  @endif
 
   <div class="sb-footer">
     <form method="POST" action="{{ route('logout') }}">

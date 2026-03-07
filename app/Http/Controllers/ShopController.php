@@ -27,9 +27,9 @@ class ShopController extends Controller
             ->where('status', 'available')
             ->where('quantity', '>', 0); // Hide out-of-stock items
 
-        // Hide free items from recipients (only show discounted items)
+        // Hide free and surplus items from recipients (only show discounted items)
         if (auth()->check() && auth()->user()->role === 'recipient') {
-            $query->where('listing_type', '!=', 'free');
+            $query->whereNotIn('listing_type', ['free', 'surplus']);
         }
 
         // Filter by type
