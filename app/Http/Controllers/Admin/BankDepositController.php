@@ -54,9 +54,23 @@ class BankDepositController extends Controller
             'notes' => $request->notes,
         ]);
 
-        SystemLog::log('bank_deposit_verified', 'bank_deposit', $deposit->id, "Bank deposit of £{$deposit->amount} from {$deposit->organisation->name} verified");
+        // Create FundLoad record
+        \App\Models\FundLoad::create([
+            'amount' => $deposit->amount,
+            'reference' => $deposit->reference,
+            'description' => "Bank deposit from {$deposit->organisation->name}",
+        ]);
 
-        return back()->with('success', 'Bank deposit verified successfully.');
+        // Update organisation profile wallet balance
+        $organisation = $deposit->organisation;
+        if ($organisation) {
+            $organisation->wallet_balance = ($organisation->wallet_balance ?? 0) + $deposit->amount;
+            $organisation->save();
+        }
+
+        SystemLog::log('bank_deposit_verified', 'bank_deposit', $deposit->id, "Bank deposit of £{$deposit->amount} from {$deposit->organisation->name} verified and funds loaded");
+
+        return back()->with('success', 'Bank deposit verified and funds auto-loaded successfully.');
     }
 
     public function reject(Request $request, BankDeposit $deposit)
