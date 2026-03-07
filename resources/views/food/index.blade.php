@@ -182,6 +182,42 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
       <i class="fas fa-store"></i> Browse All Shops
     </a>
   </div>
-</div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="background:#0f172a;color:#fff;padding:40px 24px;margin-top:60px;border-top:1px solid #1e293b">
+    <div style="max-width:1200px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;margin-bottom:30px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <div style="width:34px;height:34px;background:#16a34a;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px"><i class="fas fa-leaf"></i></div>
+            <div style="font-size:16px;font-weight:800">eVoucher</div>
+          </div>
+          <p style="font-size:13px;color:#94a3b8;line-height:1.6">Food Support Platform helping reduce food waste and support vulnerable communities in Northamptonshire.</p>
+        </div>
+        <div>
+          <h4 style="font-size:14px;font-weight:700;margin-bottom:12px">Quick Links</h4>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li style="margin-bottom:8px"><a href="{{ route('food.index') }}" style="color:#94a3b8;text-decoration:none;font-size:13px;transition:color .2s">Browse Food</a></li>
+            <li style="margin-bottom:8px"><a href="{{ route('shops.index') }}" style="color:#94a3b8;text-decoration:none;font-size:13px;transition:color .2s">Browse Shops</a></li>
+            @auth
+            <li style="margin-bottom:8px"><a href="{{ route(auth()->user()->getDashboardRoute()) }}" style="color:#94a3b8;text-decoration:none;font-size:13px;transition:color .2s">Dashboard</a></li>
+            @endauth
+          </ul>
+        </div>
+        <div>
+          <h4 style="font-size:14px;font-weight:700;margin-bottom:12px">Support</h4>
+          <ul style="list-style:none;padding:0;margin:0">
+            <li style="margin-bottom:8px"><a href="#" style="color:#94a3b8;text-decoration:none;font-size:13px;transition:color .2s">About Us</a></li>
+            <li style="margin-bottom:8px"><a href="#" style="color:#94a3b8;text-decoration:none;font-size:13px;transition:color .2s">Contact</a></li>
+            <li style="margin-bottom:8px"><a href="#" style="color:#94a3b8;text-decoration:none;font-size:13px;transition:color .2s">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top:1px solid #1e293b;padding-top:20px;text-align:center;font-size:12px;color:#64748b">
+        <p style="margin:0">© 2026 eVoucher Food Support Platform. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
