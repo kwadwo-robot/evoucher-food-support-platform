@@ -331,8 +331,11 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
         <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:#0f172a">Email</label>
         <input type="email" name="email" required style="width:100%;padding:10px 14px;border:1px solid var(--gray-border);background:#fff;border-radius:8px;font-size:14px;color:#0f172a" placeholder="your@email.com">
       </div>
-      <div id="card-element" style="padding:12px;border:1px solid var(--gray-border);border-radius:8px;background:var(--gray-light)"></div>
-      <div id="card-errors" style="color:#dc2626;font-size:13px"></div>
+      <div>
+        <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:#0f172a">Card Details</label>
+        <div id="card-element" style="padding:12px;border:1px solid var(--gray-border);border-radius:8px;background:#fff;min-height:40px"></div>
+      </div>
+      <div id="card-errors" style="color:#dc2626;font-size:13px;margin-top:8px"></div>
       <button type="submit" style="width:100%;background:var(--accent);color:#fff;padding:13px;border-radius:10px;border:none;font-weight:700;cursor:pointer;font-size:15px">
         <i class="fas fa-lock mr-2"></i>Donate Securely
       </button>
