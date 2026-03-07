@@ -115,6 +115,17 @@ class BroadcastController extends Controller
 
     private function getRecipientsCount(Broadcast $broadcast)
     {
-        return count($this->getRecipients($broadcast));
+        // Use count() in the query instead of fetching all records
+        if ($broadcast->recipient_type === 'all') {
+            return User::where('is_active', true)->count();
+        } elseif ($broadcast->recipient_type === 'group') {
+            return User::where('role', $broadcast->recipient_role)
+                ->where('is_active', true)
+                ->count();
+        } else {
+            return User::whereIn('id', $broadcast->recipient_user_ids)
+                ->where('is_active', true)
+                ->count();
+        }
     }
 }

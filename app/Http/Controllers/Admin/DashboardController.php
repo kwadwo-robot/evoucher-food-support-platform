@@ -110,7 +110,10 @@ class DashboardController extends Controller
 
     public function settings()
     {
-        $settings = Setting::all()->keyBy('key');
+        // Use cache to avoid fetching all settings on every request
+        $settings = \Cache::remember('app_settings', 3600, function () {
+            return Setting::all()->keyBy('key');
+        });
         return view('admin.settings', compact('settings'));
     }
 
@@ -119,6 +122,8 @@ class DashboardController extends Controller
         foreach ($request->except('_token') as $key => $value) {
             Setting::set($key, $value);
         }
+        // Clear cache when settings are updated
+        \Cache::forget('app_settings');
         return back()->with('success', 'Settings saved successfully.');
     }
 }
