@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
+use App\Models\Redemption;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,24 +20,54 @@ class NotificationController extends Controller
 
     public function getUnread()
     {
-        $notifications = Notification::where('user_id', Auth::id())
+        $user = Auth::user();
+        $notifications = Notification::where('user_id', $user->id)
             ->whereNull('read_at')
             ->latest()
             ->take(10)
             ->get();
 
-        return response()->json([
-            'count' => $notifications->count(),
-            'notifications' => $notifications->map(function ($notif) {
+        $notificationList = $notifications->map(function ($notif) {
+            return [
+                'id' => $notif->id,
+                'title' => $notif->title,
+                'message' => $notif->message,
+                'type' => $notif->type,
+                'read_at' => $notif->read_at,
+                'created_at' => $notif->created_at,
+            ];
+        });
+
+        // For shop users, include pending redemptions as notifications
+        if (strpos($user->role, 'shop') !== false || $user->role === 'local_shop') {
+            $pendingRedemptions = Redemption::where('shop_user_id', $user->id)
+                ->where('status', 'pending')
+                ->with(['foodListing', 'recipient.recipientProfile'])
+                ->latest()
+                ->take(10)
+                ->get();
+
+            $redemptionNotifications = $pendingRedemptions->map(function ($redemption) {
                 return [
-                    'id' => $notif->id,
-                    'title' => $notif->title,
-                    'message' => $notif->message,
-                    'type' => $notif->type,
-                    'read_at' => $notif->read_at,
-                    'created_at' => $notif->created_at,
+                    'id' => 'redemption-' . $redemption->id,
+                    'title' => 'Pending Redemption',
+                    'message' => $redemption->recipient->name . ' is waiting to collect ' . $redemption->foodListing->item_name,
+                    'type' => 'redemption',
+                    'read_at' => null,
+                    'created_at' => $redemption->created_at,
                 ];
-            }),
+            });
+
+            $allNotifications = array_merge($notificationList->toArray(), $redemptionNotifications->toArray());
+            $notificationList = collect($allNotifications)
+                ->sortByDesc('created_at')
+                ->values()
+                ->take(10);
+        }
+
+        return response()->json([
+            'count' => $notificationList->count(),
+            'notifications' => $notificationList->values(),
         ]);
     }
 
