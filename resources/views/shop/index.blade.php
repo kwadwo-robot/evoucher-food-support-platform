@@ -89,8 +89,8 @@
 </div>
 
 <!-- Footer -->
-<footer style="background:linear-gradient(135deg,#0f4c81 0%,#1a5fa0 100%);color:#fff;padding:40px 24px;margin-top:60px;border-top:1px solid rgba(255,255,255,.1)">
-    <div style="max-width:1200px;margin:0 auto">
+<footer style="background:linear-gradient(135deg,#0f4c81 0%,#1a5fa0 100%);color:#fff;padding:40px 24px;margin-top:60px;border-top:1px solid rgba(255,255,255,.1);width:100%;margin-left:calc(-50vw + 50%);margin-right:calc(-50vw + 50%)">
+    <div style="max-width:1200px;margin:0 auto;padding:0 24px">
         <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;margin-bottom:30px">
             <div>
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
