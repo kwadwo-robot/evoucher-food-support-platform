@@ -42,15 +42,13 @@
 <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" x-data="{ mobileOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <a href="{{ route('home') }}" class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                    <i class="fas fa-leaf text-white text-sm"></i>
-                </div>
-                <div class="hidden sm:block">
-                    <span class="font-bold text-green-700 text-sm block">eVoucher</span>
-                    <span class="text-xs text-gray-500 block">Food Support</span>
-                </div>
-            </a>
+             <a href="/" class="flex items-center gap-2">
+            <img src="{{ asset('images/logo.png') }}" alt="eVoucher" style="width:32px;height:32px;object-fit:contain">
+            <div style="display:flex;flex-direction:column;line-height:1.2">
+                <div style="font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.04em">BAKUP CIC</div>
+                <span style="font-size:14px;font-weight:900;color:#0f172a">eVoucher</span>
+            </div>
+        </a>
             <div class="hidden md:flex items-center gap-1">
                 <a href="{{ route('food.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-600 hover:bg-green-50 hover:text-green-700">
                     <i class="fas fa-store text-xs"></i> Browse Food
@@ -155,19 +153,7 @@
     @yield('content')
 </main>
 
-<footer class="bg-white border-t border-gray-200 mt-12">
-    <div class="max-w-7xl mx-auto px-4 py-6">
-        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-2">
-                <div class="w-6 h-6 bg-green-600 rounded flex items-center justify-center">
-                    <i class="fas fa-leaf text-white text-xs"></i>
-                </div>
-                <span class="text-sm text-gray-600">eVoucher Food Support Platform &mdash; Northamptonshire Pilot</span>
-            </div>
-            <div class="text-xs text-gray-400">&copy; {{ date('Y') }} BAKUP CIC. All rights reserved.</div>
-        </div>
-    </div>
-</footer>
+<!-- Footer removed - using page-specific footers -->
 
 @stack('scripts')
 </body>
