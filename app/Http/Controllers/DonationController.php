@@ -33,6 +33,10 @@ class DonationController extends Controller
                 'currency' => 'gbp',
                 'payment_method' => $validated['payment_method_id'],
                 'confirm' => true,
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                    'allow_redirects' => 'never'
+                ],
                 'metadata' => [
                     'email' => $validated['email'],
                     'type' => 'donation'
@@ -73,6 +77,10 @@ class DonationController extends Controller
             $paymentIntent = PaymentIntent::create([
                 'amount' => $amountInCents,
                 'currency' => 'gbp',
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                    'allow_redirects' => 'never'
+                ],
                 'metadata' => [
                     'email' => $validated['email'],
                     'type' => 'donation'
