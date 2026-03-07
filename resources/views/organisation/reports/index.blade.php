@@ -10,16 +10,16 @@
 
 <!-- Statistics Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <div class="stat-card">
+  <a href="{{ route($role === 'vcfse' ? 'vcfse.fund-load' : 'school.fund-load') }}" class="stat-card hover:shadow-lg transition cursor-pointer">
     <div class="stat-icon" style="background:#dcfce7;color:#15803d">
       <i class="fas fa-wallet"></i>
     </div>
     <div class="stat-label">Total Funds Loaded</div>
     <div class="stat-value">£{{ number_format($totalFundsLoaded, 2) }}</div>
     <div class="stat-change" style="color:#15803d">{{ $fundLoadsCount }} transactions</div>
-  </div>
+  </a>
   
-  <div class="stat-card">
+  <div class="stat-card hover:shadow-lg transition cursor-pointer" style="pointer-events:none">
     <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8">
       <i class="fas fa-bank"></i>
     </div>
@@ -28,23 +28,23 @@
     <div class="stat-change" style="color:#1d4ed8">{{ $bankDepositsCount }} deposits</div>
   </div>
   
-  <div class="stat-card">
+  <a href="{{ route($role === 'vcfse' ? 'vcfse.reports.fund-loads-pdf' : 'school.reports.fund-loads-pdf') }}" class="stat-card hover:shadow-lg transition cursor-pointer">
     <div class="stat-icon" style="background:#f3e8ff;color:#7e22ce">
       <i class="fas fa-file-pdf"></i>
     </div>
     <div class="stat-label">PDF Reports</div>
     <div class="stat-value">{{ ($fundLoads->count() > 0 || $bankDeposits->count() > 0) ? 2 : 0 }}</div>
     <div class="stat-change" style="color:#7e22ce">{{ ($fundLoads->count() > 0 || $bankDeposits->count() > 0) ? 'Available for download' : 'No data available' }}</div>
-  </div>
+  </a>
   
-  <div class="stat-card">
+  <a href="{{ route($role === 'vcfse' ? 'vcfse.reports.fund-loads-excel' : 'school.reports.fund-loads-excel') }}" class="stat-card hover:shadow-lg transition cursor-pointer">
     <div class="stat-icon" style="background:#ffedd5;color:#c2410c">
       <i class="fas fa-file-excel"></i>
     </div>
     <div class="stat-label">Excel Reports</div>
     <div class="stat-value">{{ ($fundLoads->count() > 0 || $bankDeposits->count() > 0) ? 2 : 0 }}</div>
     <div class="stat-change" style="color:#c2410c">{{ ($fundLoads->count() > 0 || $bankDeposits->count() > 0) ? 'Available for download' : 'No data available' }}</div>
-  </div>
+  </a>
 </div>
 
 <!-- Fund Loads Report Section -->
