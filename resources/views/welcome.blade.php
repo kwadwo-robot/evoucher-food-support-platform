@@ -14,8 +14,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;color:#0f172a}
 /* Hero */
-.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.hero-bg{position:absolute;inset:0;z-index:0}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;overflow:hidden;background:#0f172a}
+.hero-bg{position:absolute;inset:0;z-index:0;top:0;left:0;width:100%;height:100%}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,20,40,0.88) 0%,rgba(10,30,50,0.75) 60%,rgba(10,20,40,0.85) 100%);z-index:1}
 .hero>*{position:relative;z-index:2}
@@ -23,9 +23,11 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
 .nav{display:flex;align-items:center;padding:18px 40px;gap:20px;border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-img{width:40px;height:40px;object-fit:contain}
-.nav-logo-text{font-size:16px;font-weight:800;color:#fff}
-.nav-links{display:flex;align-items:center;gap:6px;margin-left:auto}
-.nav-link{padding:8px 16px;border-radius:8px;font-size:13.5px;font-weight:600;text-decoration:none;transition:all .15s}
+.nav-logo-text{font-size:13px;font-weight:700;color:#fff;display:flex;flex-direction:column;line-height:1.2}
+.nav-logo-text-small{font-size:10px;color:rgba(255,255,255,.7);font-weight:600}
+.nav-links{display:flex;align-items:center;gap:12px;margin-left:auto}
+@media(max-width:768px){.nav-links .nav-link-ghost{display:none}}
+.nav-link{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all .15s;white-space:nowrap}
 .nav-link-ghost{color:rgba(255,255,255,.75)}
 .nav-link-ghost:hover{color:#fff;background:rgba(255,255,255,.1)}
 .nav-link-primary{background:#16a34a;color:#fff}
@@ -36,8 +38,8 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
 .notif-badge{position:absolute;top:4px;right:6px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 .notif-dropdown{position:absolute;right:0;top:110%;width:320px;background:#1e293b;border:1px solid #334155;border-radius:12px;box-shadow:0 16px 48px rgba(0,0,0,.5);z-index:999;overflow:hidden}
 /* Hero Content */
-.hero-content{flex:1;display:flex;align-items:center;padding:60px 40px}
-.hero-inner{max-width:680px}
+.hero-content{flex:1;display:flex;align-items:center;justify-content:flex-start;padding:60px 40px;min-height:calc(100vh - 120px)}
+.hero-inner{max-width:680px;width:100%}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.4);color:#4ade80;padding:6px 16px;border-radius:20px;font-size:12.5px;font-weight:600;margin-bottom:24px;letter-spacing:.04em}
 .hero-title{font-size:clamp(38px,6vw,72px);font-weight:900;color:#fff;line-height:1.08;margin-bottom:20px}
 .hero-title span{color:#4ade80;display:inline}
@@ -135,7 +137,10 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
   <nav class="nav">
     <a href="/" class="nav-logo">
       <img src="{{ asset('images/logo.png') }}" alt="eVoucher Logo" class="nav-logo-img">
-      <div class="nav-logo-text">eVoucher</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-text-small">BAKUP CIC</span>
+        <span>eVoucher</span>
+      </div>
     </a>
     <div class="nav-links">
       <a href="{{ url('/food') }}" class="nav-link nav-link-ghost"><i class="fas fa-basket-shopping mr-1"></i> Browse Food</a>
