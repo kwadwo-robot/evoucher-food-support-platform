@@ -1,4 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+@section('title','Bank Deposits')
+@section('page-title','Bank Deposits Verification')
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
