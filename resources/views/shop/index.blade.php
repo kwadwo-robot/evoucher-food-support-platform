@@ -47,19 +47,19 @@
                     <div style="display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0">
                         <div style="flex:1;text-align:center">
                             <div style="font-size:18px;font-weight:900;color:#10b981">
-                                {{ \App\Models\FoodListing::where('shop_user_id', $shop->id)->where('is_active', true)->count() }}
+                                {{ \App\Models\FoodListing::where('shop_user_id', $shop->id)->where('status', 'available')->count() }}
                             </div>
                             <div style="font-size:11px;color:#94a3b8;margin-top:4px">Items</div>
                         </div>
                         <div style="flex:1;text-align:center">
                             <div style="font-size:18px;font-weight:900;color:#3b82f6">
-                                {{ \App\Models\FoodListing::where('shop_user_id', $shop->id)->where('listing_type', 'free')->where('is_active', true)->count() }}
+                                {{ \App\Models\FoodListing::where('shop_user_id', $shop->id)->where('listing_type', 'free')->where('status', 'available')->count() }}
                             </div>
                             <div style="font-size:11px;color:#94a3b8;margin-top:4px">Free</div>
                         </div>
                         <div style="flex:1;text-align:center">
                             <div style="font-size:18px;font-weight:900;color:#f59e0b">
-                                {{ \App\Models\FoodListing::where('shop_user_id', $shop->id)->where('listing_type', 'discounted')->where('is_active', true)->count() }}
+                                {{ \App\Models\FoodListing::where('shop_user_id', $shop->id)->where('listing_type', 'discounted')->where('status', 'available')->count() }}
                             </div>
                             <div style="font-size:11px;color:#94a3b8;margin-top:4px">Discount</div>
                         </div>
