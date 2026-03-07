@@ -304,6 +304,9 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('vcfse.reports') }}" class="nav-item {{ request()->routeIs('vcfse.reports') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-chart-bar"></i></span> Reports
   </a>
+  <a href="{{ route('vcfse.bank-deposit-notification.create') }}" class="nav-item {{ request()->routeIs('vcfse.bank-deposit-notification.*') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-university"></i></span> Bank Deposit
+  </a>
   @endif
 
   @if($role === 'school_care')
@@ -319,6 +322,9 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   </a>
   <a href="{{ route('school.reports') }}" class="nav-item {{ request()->routeIs('school.reports') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-chart-bar"></i></span> Reports
+  </a>
+  <a href="{{ route('school.bank-deposit-notification.create') }}" class="nav-item {{ request()->routeIs('school.bank-deposit-notification.*') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-university"></i></span> Bank Deposit
   </a>
   @endif
 

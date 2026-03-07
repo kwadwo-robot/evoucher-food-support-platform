@@ -10,7 +10,7 @@
 
 <!-- Statistics Cards -->
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <a href="{{ route($role === 'vcfse' ? 'vcfse.fund-load' : 'school.fund-load') }}" class="stat-card hover:shadow-lg transition cursor-pointer">
+  <a href="{{ route($role === 'vcfse' ? 'vcfse.fund-load' : 'school.fund-load') }}" style="text-decoration:none;display:block;border:2px dashed #16a34a;border-radius:8px;padding:16px;background:#fff;hover:shadow-lg;transition:all 0.3s ease;cursor:pointer" onmouseover="this.style.boxShadow='0 10px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
     <div class="stat-icon" style="background:#dcfce7;color:#15803d">
       <i class="fas fa-wallet"></i>
     </div>
@@ -19,7 +19,7 @@
     <div class="stat-change" style="color:#15803d">{{ $fundLoadsCount }} transactions</div>
   </a>
   
-  <div class="stat-card hover:shadow-lg transition cursor-pointer" style="pointer-events:none">
+  <div style="border:2px solid #e2e8f0;border-radius:8px;padding:16px;background:#fff">
     <div class="stat-icon" style="background:#dbeafe;color:#1d4ed8">
       <i class="fas fa-bank"></i>
     </div>
@@ -28,7 +28,7 @@
     <div class="stat-change" style="color:#1d4ed8">{{ $bankDepositsCount }} deposits</div>
   </div>
   
-  <a href="{{ route($role === 'vcfse' ? 'vcfse.reports.fund-loads-pdf' : 'school.reports.fund-loads-pdf') }}" class="stat-card hover:shadow-lg transition cursor-pointer">
+  <a href="{{ route($role === 'vcfse' ? 'vcfse.reports.fund-loads-pdf' : 'school.reports.fund-loads-pdf') }}" style="text-decoration:none;display:block;border:2px dashed #7e22ce;border-radius:8px;padding:16px;background:#fff;hover:shadow-lg;transition:all 0.3s ease;cursor:pointer" onmouseover="this.style.boxShadow='0 10px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
     <div class="stat-icon" style="background:#f3e8ff;color:#7e22ce">
       <i class="fas fa-file-pdf"></i>
     </div>
@@ -37,7 +37,7 @@
     <div class="stat-change" style="color:#7e22ce">{{ ($fundLoads->count() > 0 || $bankDeposits->count() > 0) ? 'Available for download' : 'No data available' }}</div>
   </a>
   
-  <a href="{{ route($role === 'vcfse' ? 'vcfse.reports.fund-loads-excel' : 'school.reports.fund-loads-excel') }}" class="stat-card hover:shadow-lg transition cursor-pointer">
+  <a href="{{ route($role === 'vcfse' ? 'vcfse.reports.fund-loads-excel' : 'school.reports.fund-loads-excel') }}" style="text-decoration:none;display:block;border:2px dashed #c2410c;border-radius:8px;padding:16px;background:#fff;hover:shadow-lg;transition:all 0.3s ease;cursor:pointer" onmouseover="this.style.boxShadow='0 10px 15px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
     <div class="stat-icon" style="background:#ffedd5;color:#c2410c">
       <i class="fas fa-file-excel"></i>
     </div>
