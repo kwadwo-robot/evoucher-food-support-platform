@@ -20,6 +20,7 @@ use App\Http\Controllers\Recipient\VoucherController as RecipientVoucher;
 use App\Http\Controllers\Shop\DashboardController as ShopDashboard;
 use App\Http\Controllers\Shop\FoodListingController as ShopListing;
 use App\Http\Controllers\Shop\PayoutController as ShopPayout;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,8 @@ Route::get('/lang/{locale}', function ($locale) {
 Route::get('/', function () { return view('welcome'); })->name('home');
 Route::get('/food', [FoodListingController::class, 'index'])->name('food.index');
 Route::get('/food/{id}', [FoodListingController::class, 'show'])->name('food.show');
+Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
+Route::get('/shops/{shop}', [ShopController::class, 'show'])->name('shops.show');
 
 // Auth
 require __DIR__.'/auth.php';

@@ -21,6 +21,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
 .badge-green{background:#dcfce7;color:#15803d}
 .badge-red{background:#fee2e2;color:#b91c1c}
 .badge-yellow{background:#fef9c3;color:#a16207}
+.filter-btn{padding:8px 14px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s}
+.filter-btn:hover{background:#f1f5f9;border-color:#cbd5e1}
+.filter-btn.active{background:#16a34a;color:#fff;border-color:#16a34a}
 </style>
 </head>
 <body>
@@ -38,17 +41,77 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
     @endauth
   </div>
 </nav>
-<div style="max-width:1100px;margin:0 auto;padding:32px 24px">
+
+<div style="max-width:1200px;margin:0 auto;padding:32px 24px">
   <div style="margin-bottom:28px">
     <h1 style="font-size:28px;font-weight:900;color:#0f172a;margin-bottom:6px">Available Food Items</h1>
     <p style="font-size:14px;color:#64748b">Near-expiry food available for voucher redemption in Northamptonshire</p>
   </div>
+
+  <!-- Filters -->
+  <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #e2e8f0;margin-bottom:24px">
+    <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+      <!-- Search -->
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Search</label>
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search items..." 
+          style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+      </div>
+
+      <!-- Shop Filter -->
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Shop</label>
+        <select name="shop_id" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+          <option value="">All Shops</option>
+          @foreach($shops as $shop)
+          <option value="{{ $shop['id'] }}" {{ request('shop_id') == $shop['id'] ? 'selected' : '' }}>
+            {{ $shop['name'] }} ({{ $shop['count'] }})
+          </option>
+          @endforeach
+        </select>
+      </div>
+
+      <!-- Type Filter -->
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Type</label>
+        <select name="type" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+          <option value="all" {{ request('type', 'all') === 'all' ? 'selected' : '' }}>All Types</option>
+          <option value="free" {{ request('type') === 'free' ? 'selected' : '' }}>Free Items</option>
+          <option value="discounted" {{ request('type') === 'discounted' ? 'selected' : '' }}>Discounted</option>
+        </select>
+      </div>
+
+      <!-- Sort -->
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Sort By</label>
+        <select name="sort" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+          <option value="newest" {{ $sortBy === 'newest' ? 'selected' : '' }}>Newest First</option>
+          <option value="price_low" {{ $sortBy === 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+          <option value="price_high" {{ $sortBy === 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+          <option value="expiring" {{ $sortBy === 'expiring' ? 'selected' : '' }}>Expiring Soon</option>
+        </select>
+      </div>
+
+      <!-- Submit -->
+      <div style="display:flex;align-items:flex-end">
+        <button type="submit" style="width:100%;padding:8px 12px;background:#16a34a;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">
+          <i class="fas fa-filter"></i> Filter
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Results -->
   @if(count($listings) > 0)
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px">
+  <div style="margin-bottom:20px;padding:12px 16px;background:#f0fdf4;border-left:4px solid #16a34a;border-radius:6px;font-size:13px;color:#15803d">
+    <i class="fas fa-info-circle"></i> Showing {{ $listings->count() }} of {{ $listings->total() }} items
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:30px">
     @foreach($listings as $item)
     <div class="food-card">
       @if($item->image_url)
-      <img src="{{ $item->image_url }}" style="width:100%;height:180px;object-fit:cover" alt="{{ $item->item_name }}">
+      <img src="{{ $item->image_url }}" style="width:100%;height:180px;object-fit:cover" alt="{{ $item->item_name }}" loading="lazy">
       @else
       <div style="width:100%;height:160px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);display:flex;align-items:center;justify-content:center;font-size:48px">🥗</div>
       @endif
@@ -73,7 +136,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
         <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid #f1f5f9">
           <div>
             <div style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Shop</div>
-            <div style="font-size:13px;font-weight:600;color:#334155">{{ $item->shopUser->name ?? 'Local Shop' }}</div>
+            <a href="{{ route('shops.show', $item->shop_user_id) }}" style="font-size:13px;font-weight:600;color:#334155;text-decoration:none;cursor:pointer;border-bottom:1px solid #cbd5e1">
+              {{ $item->shopUser->name ?? 'Local Shop' }}
+            </a>
           </div>
           <div style="text-align:right">
             <div style="font-size:11px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em">Expires</div>
@@ -96,6 +161,11 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
     </div>
     @endforeach
   </div>
+
+  <!-- Pagination -->
+  <div style="display:flex;justify-content:center;gap:8px;padding:20px;flex-wrap:wrap">
+    {{ $listings->appends(request()->query())->links() }}
+  </div>
   @else
   <div style="text-align:center;padding:80px 24px;background:#fff;border-radius:16px;border:1px solid #e2e8f0">
     <div style="font-size:48px;margin-bottom:16px">🥗</div>
@@ -103,6 +173,15 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
     <div style="font-size:14px;color:#94a3b8">Local shops regularly add new near-expiry items. Check back soon!</div>
   </div>
   @endif
+
+  <!-- Browse Shops Link -->
+  <div style="margin-top:40px;padding:20px;background:#f0fdf4;border-radius:12px;border:1px solid #dcfce7;text-align:center">
+    <h3 style="font-size:16px;font-weight:700;color:#15803d;margin-bottom:8px">Want to browse by shop?</h3>
+    <p style="font-size:13px;color:#64748b;margin-bottom:12px">View all participating shops and their available items</p>
+    <a href="{{ route('shops.index') }}" style="display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#16a34a;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none">
+      <i class="fas fa-store"></i> Browse All Shops
+    </a>
+  </div>
 </div>
 </body>
 </html>

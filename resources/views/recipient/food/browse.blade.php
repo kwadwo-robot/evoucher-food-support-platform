@@ -11,17 +11,50 @@
     <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i>You can only see discounted food items. Browse and redeem your vouchers below.</p>
 </div>
 
-<form method="GET" style="display:flex;gap:10px;margin-bottom:20px">
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search discounted food items..."
-        class="form-input" style="flex:1">
-    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
-</form>
+<!-- Filters -->
+<div style="background:#fff;padding:16px;border-radius:12px;border:1px solid #e2e8f0;margin-bottom:20px">
+    <form method="GET" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+        <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Search</label>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Search items..."
+                class="form-input" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+        </div>
+        
+        <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Shop</label>
+            <select name="shop_id" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+                <option value="">All Shops</option>
+                @foreach($shops as $shop)
+                <option value="{{ $shop['id'] }}" {{ request('shop_id') == $shop['id'] ? 'selected' : '' }}>
+                    {{ $shop['name'] }} ({{ $shop['count'] }})
+                </option>
+                @endforeach
+            </select>
+        </div>
+        
+        <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Sort By</label>
+            <select name="sort" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
+                <option value="newest" {{ $sortBy === 'newest' ? 'selected' : '' }}>Newest First</option>
+                <option value="price_low" {{ $sortBy === 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
+                <option value="price_high" {{ $sortBy === 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
+                <option value="expiring" {{ $sortBy === 'expiring' ? 'selected' : '' }}>Expiring Soon</option>
+            </select>
+        </div>
+        
+        <div style="display:flex;align-items:flex-end">
+            <button type="submit" style="width:100%;padding:8px 12px;background:#16a34a;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+    </form>
+</div>
 
 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">
     @forelse($listings as $listing)
     <a href="{{ route('recipient.food.show', $listing) }}" class="food-card" style="text-decoration:none;display:block">
         @if($listing->image_url)
-        <img src="{{ $listing->image_url }}" alt="{{ $listing->item_name }}" class="food-card-img">
+        <img src="{{ $listing->image_url }}" alt="{{ $listing->item_name }}" class="food-card-img" loading="lazy">
         @else
         <div class="food-card-img-placeholder">🍎</div>
         @endif
@@ -72,6 +105,6 @@
     @endforelse
 </div>
 @if($listings->hasPages())
-<div style="margin-top:24px">{{ $listings->links() }}</div>
+<div style="margin-top:24px">{{ $listings->appends(request()->query())->links() }}</div>
 @endif
 @endsection
