@@ -23,3 +23,9 @@ Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
     Route::get('/unread-count', [\App\Http\Controllers\Api\NotificationController::class, 'unread']);
     Route::post('/{id}/read', [\App\Http\Controllers\Api\NotificationController::class, 'markAsRead']);
 });
+
+Route::middleware('auth:sanctum')->prefix('surplus')->group(function () {
+    Route::get('/allocations/{foodListingId}', [\App\Http\Controllers\Api\SurplusAllocationController::class, 'getCurrentAllocation']);
+    Route::post('/claim/{foodListingId}', [\App\Http\Controllers\Api\SurplusAllocationController::class, 'claim']);
+    Route::get('/my-allocations', [\App\Http\Controllers\Api\SurplusAllocationController::class, 'myAllocations']);
+});
