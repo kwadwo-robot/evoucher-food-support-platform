@@ -273,14 +273,11 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('vcfse.dashboard') }}" class="nav-item {{ request()->routeIs('vcfse.dashboard') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-building"></i></span> Dashboard
   </a>
-  <a href="{{ route('vcfse.donate') }}" class="nav-item {{ request()->routeIs('vcfse.donate') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-hand-holding-heart"></i></span> Make Donation
-  </a>
-  <a href="{{ route('vcfse.donations') }}" class="nav-item {{ request()->routeIs('vcfse.donations') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-receipt"></i></span> Donation History
+  <a href="{{ route('vcfse.fund-load') }}" class="nav-item {{ request()->routeIs('vcfse.fund-load') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-wallet"></i></span> Load Funds
   </a>
   <a href="{{ route('vcfse.food') }}" class="nav-item {{ request()->routeIs('vcfse.food') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-box-open"></i></span> Browse Surplus Food
+    <span class="ni"><i class="fas fa-box-open"></i></span> Browse Food
   </a>
   @endif
 
@@ -289,14 +286,11 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('school.dashboard') }}" class="nav-item {{ request()->routeIs('school.dashboard') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-school"></i></span> Dashboard
   </a>
-  <a href="{{ route('school.donate') }}" class="nav-item {{ request()->routeIs('school.donate') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-hand-holding-heart"></i></span> Make Donation
-  </a>
-  <a href="{{ route('school.donations') }}" class="nav-item {{ request()->routeIs('school.donations') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-receipt"></i></span> Donation History
+  <a href="{{ route('school.fund-load') }}" class="nav-item {{ request()->routeIs('school.fund-load') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-wallet"></i></span> Load Funds
   </a>
   <a href="{{ route('school.food') }}" class="nav-item {{ request()->routeIs('school.food') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-box-open"></i></span> Browse Surplus Food
+    <span class="ni"><i class="fas fa-box-open"></i></span> Browse Food
   </a>
   @endif
 

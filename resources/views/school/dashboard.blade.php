@@ -2,8 +2,8 @@
 @section('title','School Dashboard')
 @section('page-title','Organisation Dashboard')
 @section('topbar-actions')
-<a href="{{ route('school.donate') }}" class="btn btn-primary btn-sm">
-  <i class="fas fa-hand-holding-heart"></i> Make Donation
+<a href="{{ route('school.fund-load') }}" class="btn btn-primary btn-sm">
+  <i class="fas fa-wallet"></i> Load Funds
 </a>
 @endsection
 @section('content')
