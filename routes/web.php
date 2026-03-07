@@ -140,6 +140,9 @@ Route::prefix('recipient')->name('recipient.')->middleware(['auth', 'role:recipi
 Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vcfse'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'vcfseDashboard'])->name('dashboard');
     Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
+    Route::get('/donate', [DonationController::class, 'showDonateForm'])->name('donate');
+    Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
+    Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
     Route::get('/fund-load', [OrgFundLoad::class, 'showLoadForm'])->name('fund-load');
     Route::post('/fund-load/create-intent', [OrgFundLoad::class, 'createPaymentIntent'])->name('fund-load.create-intent');
     Route::post('/fund-load/confirm', [OrgFundLoad::class, 'confirmPayment'])->name('fund-load.confirm');
@@ -152,6 +155,9 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
 Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:school_care'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'schoolDashboard'])->name('dashboard');
     Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
+    Route::get('/donate', [DonationController::class, 'showDonateForm'])->name('donate');
+    Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
+    Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
     Route::get('/fund-load', [OrgFundLoad::class, 'showLoadForm'])->name('fund-load');
     Route::post('/fund-load/create-intent', [OrgFundLoad::class, 'createPaymentIntent'])->name('fund-load.create-intent');
     Route::post('/fund-load/confirm', [OrgFundLoad::class, 'confirmPayment'])->name('fund-load.confirm');
