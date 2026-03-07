@@ -169,6 +169,10 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
     Route::get('/reports/bank-deposits/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportBankDepositsPdf'])->name('reports.bank-deposits-pdf');
     Route::get('/profile', [OrgDashboard::class, 'profile'])->name('profile');
     Route::put('/profile', [OrgDashboard::class, 'updateProfile'])->name('profile.update');
+    Route::get('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'create'])->name('bank-deposit-notification.create');
+    Route::post('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'store'])->name('bank-deposit-notification.store');
+    Route::get('/bank-deposit-notification/list', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'index'])->name('bank-deposit-notification.index');
+    Route::get('/bank-deposit-notification/{bankDeposit}', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'show'])->name('bank-deposit-notification.show');
 });
 
 // School/Care
@@ -189,6 +193,10 @@ Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:
     Route::get('/reports/bank-deposits/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportBankDepositsPdf'])->name('reports.bank-deposits-pdf');
     Route::get('/profile', [OrgDashboard::class, 'profile'])->name('profile');
     Route::put('/profile', [OrgDashboard::class, 'updateProfile'])->name('profile.update');
+    Route::get('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'create'])->name('bank-deposit-notification.create');
+    Route::post('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'store'])->name('bank-deposit-notification.store');
+    Route::get('/bank-deposit-notification/list', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'index'])->name('bank-deposit-notification.index');
+    Route::get('/bank-deposit-notification/{bankDeposit}', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'show'])->name('bank-deposit-notification.show');
 });
 
 // Notifications
