@@ -91,7 +91,7 @@
 <!-- Footer -->
 <footer style="background:#0f172a;color:#fff;padding:40px 24px;margin-top:60px;border-top:1px solid #1e293b">
     <div style="max-width:1200px;margin:0 auto">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;margin-bottom:30px">
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;margin-bottom:30px">
             <div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
                     <img src="{{ asset('images/logo.png') }}" alt="eVoucher Logo" style="width:36px;height:36px;object-fit:contain">
