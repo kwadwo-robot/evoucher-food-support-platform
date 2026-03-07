@@ -74,10 +74,10 @@ class SurplusAllocationController extends Controller
         // Create redemption record
         $redemption = Redemption::create([
             'food_listing_id' => $foodListingId,
-            'vcfse_user_id' => $user->id,
-            'quantity_redeemed' => 1,
-            'redemption_date' => now(),
-            'status' => 'completed',
+            'user_id' => $user->id,
+            'quantity' => 1,
+            'redeemed_at' => now(),
+            'status' => 'confirmed',
         ]);
 
         // Update food listing quantity
@@ -96,7 +96,6 @@ class SurplusAllocationController extends Controller
             'title' => 'Surplus Item Redeemed',
             'message' => 'You have successfully redeemed: ' . $foodListing->item_name,
             'icon' => 'fas fa-check-circle',
-            'read_at' => null,
         ]);
 
         return response()->json([
