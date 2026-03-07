@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
-@section('title','My Dashboard')
-@section('page-title','My Dashboard')
+@section('title', __('app.recipient_dashboard'))
+@section('page-title', __('app.recipient_dashboard'))
 @section('content')
 <div class="page-hd">
-  <h1>Welcome, {{ auth()->user()->name }}</h1>
-  <p>Your eVoucher account — browse food and redeem your vouchers</p>
+  <h1>{{ __('app.recipient_welcome', ['name' => auth()->user()->name]) }}</h1>
+  <p>{{ __('app.recipient_subtitle') }}</p>
 </div>
 <!-- Voucher Balance Card -->
 @if($active_vouchers->first())
@@ -13,25 +13,25 @@
     <div>
       <div style="font-size:12px;font-weight:600;opacity:.7;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">
         @if($active_vouchers->first()->status === 'partially_used')
-          Partial Voucher &nbsp;<span style="background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Partial</span>
+          {{ __('app.recipient_partial_voucher') }} &nbsp;<span style="background:rgba(255,255,255,.2);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">{{ __('app.recipient_partially_used') }}</span>
         @else
-          Active Voucher
+          {{ __('app.recipient_active_voucher') }}
         @endif
       </div>
       <div style="font-size:36px;font-weight:900;line-height:1">£{{ number_format($total_voucher_value, 2) }}</div>
-      <div style="font-size:13px;opacity:.8;margin-top:4px">Total Available Balance</div>
+      <div style="font-size:13px;opacity:.8;margin-top:4px">{{ __('app.recipient_total_balance') }}</div>
     </div>
     <div style="text-align:right">
       <code style="background:rgba(255,255,255,.15);padding:6px 14px;border-radius:8px;font-size:14px;font-weight:800;letter-spacing:.1em;display:block;margin-bottom:8px">{{ $active_vouchers->first()->code }}</code>
-      <div style="font-size:11.5px;opacity:.7">Expires {{ \Carbon\Carbon::parse($active_vouchers->first()->expiry_date)->format('d M Y') }}</div>
+      <div style="font-size:11.5px;opacity:.7">{{ __('app.recipient_expires', ['date' => \Carbon\Carbon::parse($active_vouchers->first()->expiry_date)->format('d M Y')]) }}</div>
     </div>
   </div>
   <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);display:flex;gap:12px;position:relative;z-index:10">
     <a href="{{ route('recipient.food.browse') }}" class="btn" style="background:rgba(255,255,255,.2);color:#fff;flex:1;justify-content:center;backdrop-filter:blur(4px)">
-      <i class="fas fa-basket-shopping"></i> Browse Food
+      <i class="fas fa-basket-shopping"></i> {{ __('app.browse_food') }}
     </a>
     <a href="{{ route('recipient.vouchers') }}" class="btn" style="background:rgba(255,255,255,.1);color:#fff;justify-content:center;backdrop-filter:blur(4px)">
-      <i class="fas fa-ticket"></i> All Vouchers
+      <i class="fas fa-ticket"></i> {{ __('app.recipient_my_vouchers') }}
     </a>
   </div>
 </div>
@@ -39,8 +39,8 @@
 <div class="card mb-6" style="border:2px dashed #e2e8f0">
   <div class="card-body text-center" style="padding:32px">
     <div style="font-size:36px;margin-bottom:12px">🎫</div>
-    <div style="font-size:15px;font-weight:700;color:#334155;margin-bottom:6px">No Active Voucher</div>
-    <div style="font-size:13px;color:#94a3b8">Contact your support worker or admin to receive a voucher</div>
+    <div style="font-size:15px;font-weight:700;color:#334155;margin-bottom:6px">{{ __('app.recipient_no_active_voucher') }}</div>
+    <div style="font-size:13px;color:#94a3b8">{{ __('app.recipient_contact_support') }}</div>
   </div>
 </div>
 @endif
@@ -49,23 +49,23 @@
 <div class="grid grid-cols-3 gap-4 mb-6">
   <div class="stat-card text-center">
     <div style="font-size:24px;font-weight:800;color:#16a34a">{{ $totalVouchers ?? 0 }}</div>
-    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">Total Vouchers</div>
+    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">{{ __('app.recipient_total_vouchers') }}</div>
   </div>
   <div class="stat-card text-center">
     <div style="font-size:24px;font-weight:800;color:#3b82f6">{{ $totalRedemptions ?? 0 }}</div>
-    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">Redemptions</div>
+    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">{{ __('app.recipient_redemptions') }}</div>
   </div>
   <div class="stat-card text-center">
     <div style="font-size:24px;font-weight:800;color:#a855f7">{{ $availableItems ?? 0 }}</div>
-    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">Items Available</div>
+    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">{{ __('app.recipient_items_available') }}</div>
   </div>
 </div>
 
 <!-- Available Food -->
 <div class="card">
   <div class="card-hd">
-    <div class="card-title"><i class="fas fa-basket-shopping text-yellow-500"></i> Available Food Near You</div>
-    <a href="{{ route('recipient.food.browse') }}" class="btn btn-secondary btn-sm">Browse All</a>
+    <div class="card-title"><i class="fas fa-basket-shopping text-yellow-500"></i> {{ __('app.recipient_available_food') }}</div>
+    <a href="{{ route('recipient.food.browse') }}" class="btn btn-secondary btn-sm">{{ __('app.recipient_browse_all') }}</a>
   </div>
   <div style="padding:16px">
     @if(count($availableFood ?? []) > 0)
@@ -83,7 +83,7 @@
             <div style="font-size:12px;color:#64748b;margin-bottom:8px">{{ $item->shopUser->name ?? 'Local Shop' }}</div>
             <div class="flex items-center justify-between">
               <span style="font-size:11.5px;color:#94a3b8"><i class="fas fa-map-marker-alt mr-1"></i>{{ Str::limit($item->collection_address, 25) }}</span>
-              <span class="badge badge-red" style="font-size:10.5px"><i class="fas fa-clock mr-1"></i>Exp: {{ \Carbon\Carbon::parse($item->expiry_date)->format('d M') }}</span>
+              <span class="badge badge-red" style="font-size:10.5px"><i class="fas fa-clock mr-1"></i>{{ __('app.recipient_expires', ['date' => \Carbon\Carbon::parse($item->expiry_date)->format('d M')]) }}</span>
             </div>
           </div>
         </div>
@@ -93,8 +93,8 @@
     @else
     <div class="empty-state">
       <div class="empty-icon"><i class="fas fa-basket-shopping"></i></div>
-      <h3>No food available right now</h3>
-      <p>Check back soon — shops regularly add new listings</p>
+      <h3>{{ __('app.recipient_no_food_available') }}</h3>
+      <p>{{ __('app.recipient_check_back_soon') }}</p>
     </div>
     @endif
   </div>
