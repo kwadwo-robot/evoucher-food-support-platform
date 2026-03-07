@@ -8,6 +8,8 @@ use Stripe\PaymentIntent;
 
 class DonationController extends Controller
 {
+    protected $except = ['store', 'createPaymentIntent'];
+
     public function __construct()
     {
         Stripe::setApiKey(config('services.stripe.secret'));
