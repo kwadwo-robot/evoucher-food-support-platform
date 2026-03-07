@@ -541,11 +541,16 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   }
   
   // Fetch notifications on page load and every 10 seconds
-  fetchNotifications();
-  setInterval(fetchNotifications, 10000);
-  
-  // Fetch when notification button is clicked
-  document.getElementById('notif-btn').addEventListener('click', fetchNotifications);
+  document.addEventListener('DOMContentLoaded', function() {
+    fetchNotifications();
+    setInterval(fetchNotifications, 10000);
+    
+    // Fetch when notification button is clicked
+    const notifBtn = document.getElementById('notif-btn');
+    if (notifBtn) {
+      notifBtn.addEventListener('click', fetchNotifications);
+    }
+  });
 </script>
 
 @yield('scripts')
