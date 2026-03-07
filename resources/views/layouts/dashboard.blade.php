@@ -455,6 +455,11 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
 </div><!-- x-data -->
 
 <script>
+  // Set pending redemptions count for shop users
+  @if(auth()->user()->role === 'shop')
+  window.pendingRedemptionsCount = {{ $pendingRedemptionsCount ?? 0 }};
+  @endif
+  
   // Fetch unread notifications and update badge
   async function fetchNotifications() {
     try {
@@ -469,8 +474,14 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
       const badge = document.getElementById('notif-badge');
       const list = document.getElementById('notif-list');
       
-      if (data.count > 0) {
-        badge.textContent = data.count;
+      // For shop users, show pending redemptions count; for others, show notification count
+      let badgeCount = data.count;
+      if (typeof window.pendingRedemptionsCount !== 'undefined') {
+        badgeCount = window.pendingRedemptionsCount;
+      }
+      
+      if (badgeCount > 0) {
+        badge.textContent = badgeCount;
         badge.style.display = 'flex';
       } else {
         badge.style.display = 'none';

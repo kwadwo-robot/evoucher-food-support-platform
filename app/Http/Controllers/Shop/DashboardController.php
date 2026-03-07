@@ -26,6 +26,10 @@ class DashboardController extends Controller
         $recentRedemptions = Redemption::where('shop_user_id', $user->id)
                               ->with(['recipient.recipientProfile', 'foodListing', 'voucher', 'payoutRequest'])
                               ->latest()->take(5)->get();
+        
+        // Pending redemptions count for notification badge
+        $pendingRedemptionsCount = Redemption::where('shop_user_id', $user->id)
+                              ->where('status', 'pending')->count();
 
         // Payout summary
         $unpaidAmount = Redemption::where('shop_user_id', $user->id)
@@ -42,7 +46,7 @@ class DashboardController extends Controller
         return view('shop.dashboard', compact(
             'totalListings', 'availableListings', 'redeemedCount',
             'expiringSoon', 'listings', 'recentRedemptions',
-            'unpaidAmount', 'pendingPayouts', 'totalPaidOut'
+            'unpaidAmount', 'pendingPayouts', 'totalPaidOut', 'pendingRedemptionsCount'
         ));
     }
 
