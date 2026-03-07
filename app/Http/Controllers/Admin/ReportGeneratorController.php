@@ -202,7 +202,7 @@ class ReportGeneratorController extends Controller
                     $redemption->recipient?->name ?? 'N/A',
                     $redemption->foodListing?->item_name ?? 'N/A',
                     $redemption->voucher?->id ?? 'N/A',
-                    '£' . number_format($redemption->amount_redeemed, 2),
+                    '£' . number_format($redemption->amount_used, 2),
                     $redemption->status,
                     $redemption->created_at->format('Y-m-d H:i:s'),
                 ]);

@@ -52,7 +52,7 @@ class ReportController extends Controller
         // Add data rows
         $totalAmount = 0;
         foreach ($redemptions as $redemption) {
-            $amount = $redemption->amount_redeemed ?? 0;
+            $amount = $redemption->amount_used ?? 0;
             $totalAmount += $amount;
             
             $itemName = $redemption->foodListing->item_name ?? 'N/A';
@@ -89,7 +89,7 @@ class ReportController extends Controller
         $rows = '';
         
         foreach ($redemptions as $redemption) {
-            $amount = $redemption->amount_redeemed ?? 0;
+            $amount = $redemption->amount_used ?? 0;
             $totalAmount += $amount;
             
             $rows .= '

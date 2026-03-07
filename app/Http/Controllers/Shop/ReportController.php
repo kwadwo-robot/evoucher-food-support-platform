@@ -35,7 +35,7 @@ class ReportController extends Controller
         
         $totalAmountRedeemed = Redemption::whereHas('foodListing', function ($q) use ($user) {
             $q->where('shop_user_id', $user->id);
-        })->sum('amount_redeemed');
+        })->sum('amount_used');
         
         // Get recent redemptions
         $recentRedemptions = Redemption::whereHas('foodListing', function ($q) use ($user) {
