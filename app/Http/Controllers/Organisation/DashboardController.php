@@ -3,6 +3,8 @@ namespace App\Http\Controllers\Organisation;
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
 use App\Models\FoodListing;
+use App\Models\FundLoad;
+use App\Models\BankDeposit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

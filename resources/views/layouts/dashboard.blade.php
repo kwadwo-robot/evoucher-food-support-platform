@@ -452,7 +452,76 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
 </div><!-- x-data -->
 
 <script>
-  // Notification badge will be updated via inline script in each view
+  // Fetch unread notifications and update badge
+  async function fetchNotifications() {
+    try {
+      const response = await fetch('/api/notifications/unread', {
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      });
+      const data = await response.json();
+      
+      // Update badge count
+      const badge = document.getElementById('notif-badge');
+      const list = document.getElementById('notif-list');
+      
+      if (data.count > 0) {
+        badge.textContent = data.count;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
+      
+      // Update notification list
+      if (data.notifications && data.notifications.length > 0) {
+        let html = '';
+        data.notifications.forEach(notif => {
+          html += `
+            <div class="px-4 py-3 border-b border-slate-100 hover:bg-slate-50 cursor-pointer transition" onclick="markAsRead(${notif.id})">
+              <div class="flex items-start gap-3">
+                <div class="flex-shrink-0 mt-1">
+                  <div class="w-2 h-2 rounded-full ${notif.read_at ? 'bg-slate-300' : 'bg-green-500'}"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-medium text-slate-900">${notif.title}</p>
+                  <p class="text-xs text-slate-600 mt-0.5">${notif.message}</p>
+                  <p class="text-xs text-slate-400 mt-1">${new Date(notif.created_at).toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        list.innerHTML = html;
+      } else {
+        list.innerHTML = '<div class="px-4 py-6 text-sm text-slate-500 text-center">No notifications</div>';
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
+  }
+  
+  // Mark notification as read
+  async function markAsRead(notifId) {
+    try {
+      await fetch(`/api/notifications/${notifId}/read`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+      });
+      fetchNotifications();
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
+  }
+  
+  // Fetch notifications on page load and every 10 seconds
+  fetchNotifications();
+  setInterval(fetchNotifications, 10000);
+  
+  // Fetch when notification button is clicked
+  document.getElementById('notif-btn').addEventListener('click', fetchNotifications);
 </script>
 
 @yield('scripts')

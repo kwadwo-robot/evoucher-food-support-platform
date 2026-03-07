@@ -26,13 +26,13 @@
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
   <div class="stat-card">
     <div class="stat-icon mb-3" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-sterling-sign"></i></div>
-    <div class="stat-label">Total Donated</div>
-    <div class="stat-value">£{{ number_format($totalDonated ?? 0, 2) }}</div>
+    <div class="stat-label">Total Loaded</div>
+    <div class="stat-value">£{{ number_format($totalLoaded ?? 0, 2) }}</div>
   </div>
   <div class="stat-card">
     <div class="stat-icon mb-3" style="background:#eff6ff;color:#3b82f6"><i class="fas fa-receipt"></i></div>
-    <div class="stat-label">Donations Made</div>
-    <div class="stat-value">{{ $donationCount ?? 0 }}</div>
+    <div class="stat-label">Fund Loads</div>
+    <div class="stat-value">{{ $fundLoadCount ?? 0 }}</div>
   </div>
   <div class="stat-card">
     <div class="stat-icon mb-3" style="background:#fdf4ff;color:#a855f7"><i class="fas fa-ticket"></i></div>
@@ -88,22 +88,20 @@
   <!-- Recent Donations -->
   <div class="card">
     <div class="card-hd">
-      <div class="card-title"><i class="fas fa-receipt text-green-600"></i> Recent Donations</div>
-      <a href="{{ route('vcfse.donations') }}" class="btn btn-secondary btn-sm">All</a>
+      <div class="card-title"><i class="fas fa-exchange-alt text-green-600"></i> Recent Transactions</div>
+      <a href="{{ route('vcfse.reports') }}" class="btn btn-secondary btn-sm">All</a>
     </div>
     <div>
-      @forelse($recentDonations ?? [] as $d)
+      @forelse($recentTransactions ?? [] as $t)
       <div style="padding:14px 20px;border-bottom:1px solid #f8fafc;display:flex;align-items:center;justify-content:space-between">
         <div>
-          <div style="font-size:14px;font-weight:700;color:#16a34a">£{{ number_format($d->amount, 2) }}</div>
-          <div style="font-size:11.5px;color:#94a3b8">{{ \Carbon\Carbon::parse($d->created_at)->format('d M Y') }}</div>
+          <div style="font-size:14px;font-weight:700;color:#16a34a">£{{ number_format($t->amount, 2) }}</div>
+          <div style="font-size:11.5px;color:#94a3b8">{{ \Carbon\Carbon::parse($t->created_at)->format('d M Y H:i') }}</div>
         </div>
-        @if($d->status === 'completed')<span class="badge badge-green">Completed</span>
-        @elseif($d->status === 'pending')<span class="badge badge-yellow">Pending</span>
-        @else<span class="badge badge-gray">{{ ucfirst($d->status) }}</span>@endif
+        <span class="badge badge-green">Loaded</span>
       </div>
       @empty
-      <div class="empty-state" style="padding:32px 24px"><div class="empty-icon" style="font-size:28px"><i class="fas fa-receipt"></i></div><h3 style="font-size:13px">No donations yet</h3></div>
+      <div class="empty-state" style="padding:32px 24px"><div class="empty-icon" style="font-size:28px"><i class="fas fa-exchange-alt"></i></div><h3 style="font-size:13px">No transactions yet</h3></div>
       @endforelse
     </div>
   </div>
