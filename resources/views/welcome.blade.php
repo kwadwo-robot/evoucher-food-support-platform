@@ -209,7 +209,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
 </div>
 
 <!-- Donate Modal -->
-<div id="donateModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:9999">
+<div id="donateModal" style="display:none !important;position:fixed;inset:0;background:rgba(0,0,0,.5);align-items:center;justify-content:center;z-index:9999">
   <div style="background:#fff;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:32px;max-width:420px;width:90%">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
       <h2 style="font-size:24px;font-weight:bold">Make a Donation</h2>
@@ -288,8 +288,8 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
   });
 
   // Load notification count
-  @auth
-  fetch('/api/notifications/count')
+@auth
+  fetch('/notifications/unread')
     .then(r => r.json())
     .then(data => {
       document.getElementById('notification-count').textContent = data.count || 0;
@@ -298,7 +298,32 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
   @endauth
 </script>
 
-<div class="footer">
+<script>
+  // Load notifications on dashboard
+  function loadNotifications() {
+    fetch('/notifications/unread')
+      .then(r => r.json())
+      .then(data => {
+        const badge = document.getElementById('notif-badge');
+        if (badge && data.count > 0) {
+          badge.textContent = data.count;
+          badge.style.display = 'flex';
+        }
+      })
+      .catch(() => {});
+  }
+
+  // Load on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadNotifications);
+  } else {
+    loadNotifications();
+  }
+
+  // Refresh every 30 seconds
+  setInterval(loadNotifications, 30000);
+</script>
+
   <div style="margin-bottom:8px">
     <strong style="color:rgba(255,255,255,.6)">eVoucher Food Support Platform</strong> — Northamptonshire Pilot
   </div>

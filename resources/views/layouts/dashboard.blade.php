@@ -338,6 +338,24 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <div class="topbar-title">@yield('page-title', 'Dashboard')</div>
   <div class="flex items-center gap-3">
     @yield('topbar-actions')
+    <!-- Notifications Button -->
+    <div class="relative" x-data="{ notifOpen: false }">
+      <button @click="notifOpen=!notifOpen" class="tb-btn" title="Notifications" id="notif-btn">
+        <i class="fas fa-bell"></i>
+        <span id="notif-badge" class="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center" style="display:none;font-size:10px;font-weight:bold">0</span>
+      </button>
+      <div x-show="notifOpen" x-cloak @click.away="notifOpen=false"
+           class="absolute right-0 top-full mt-2 w-80 bg-white rounded-xl border border-slate-200 shadow-lg py-2 z-50 max-h-96 overflow-y-auto"
+           x-transition>
+        <div class="px-4 py-2 border-b border-slate-100 flex justify-between items-center">
+          <span class="font-semibold text-sm">Notifications</span>
+          <a href="{{ route('notifications.index') }}" class="text-xs text-green-600 hover:text-green-700">View All</a>
+        </div>
+        <div id="notif-list" style="max-height:300px;overflow-y:auto">
+          <div class="px-4 py-3 text-sm text-slate-500 text-center">Loading...</div>
+        </div>
+      </div>
+    </div>
     <a href="{{ url('/food') }}" class="tb-btn" title="Public Listings">
       <i class="fas fa-globe"></i>
     </a>
@@ -400,11 +418,41 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
       <div>@foreach($errors->all() as $e)<div>{{ $e }}</div>@endforeach</div>
     </div>
     @endif
-    @yield('content')
+     @yield('content')
   </div>
 </main>
-
 </div><!-- x-data -->
+
+<script>
+  // Load notifications on dashboard
+  function loadDashboardNotifications() {
+    fetch('/notifications/unread')
+      .then(r => r.json())
+      .then(data => {
+        const badge = document.getElementById('notif-badge');
+        if (badge) {
+          if (data.count > 0) {
+            badge.textContent = data.count;
+            badge.style.display = 'flex';
+          } else {
+            badge.style.display = 'none';
+          }
+        }
+      })
+      .catch(() => {});
+  }
+
+  // Load on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadDashboardNotifications);
+  } else {
+    loadDashboardNotifications();
+  }
+
+  // Refresh every 30 seconds
+  setInterval(loadDashboardNotifications, 30000);
+</script>
+
 @yield('scripts')
 </body>
 </html>
