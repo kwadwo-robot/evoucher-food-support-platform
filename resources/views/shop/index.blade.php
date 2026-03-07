@@ -94,7 +94,7 @@
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;margin-bottom:30px">
             <div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-                    <div style="width:34px;height:34px;background:#16a34a;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px"><i class="fas fa-leaf"></i></div>
+                    <img src="{{ asset('images/logo.png') }}" alt="eVoucher Logo" style="width:36px;height:36px;object-fit:contain">
                     <div style="font-size:16px;font-weight:800">eVoucher</div>
                 </div>
                 <p style="font-size:13px;color:#94a3b8;line-height:1.6">Food Support Platform helping reduce food waste and support vulnerable communities in Northamptonshire.</p>

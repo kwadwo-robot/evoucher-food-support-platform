@@ -12,64 +12,64 @@
 <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;color:#0f172a}
+body{font-family:'Inter',sans-serif;color:#0f172a;background:#0f172a}
 /* Nav */
-.nav{display:flex;align-items:center;padding:18px 40px;gap:20px;border-bottom:1px solid #e2e8f0;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.nav{display:flex;align-items:center;padding:18px 40px;gap:20px;border-bottom:1px solid rgba(255,255,255,.1);background:#0f172a;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-img{width:40px;height:40px;object-fit:contain}
-.nav-logo-text{font-size:13px;font-weight:700;color:#0f172a;display:flex;flex-direction:column;line-height:1.2}
-.nav-logo-text-small{font-size:10px;color:#64748b;font-weight:600}
+.nav-logo-text{font-size:13px;font-weight:700;color:#fff;display:flex;flex-direction:column;line-height:1.2}
+.nav-logo-text-small{font-size:10px;color:rgba(255,255,255,.6);font-weight:600}
 .nav-links{display:flex;align-items:center;gap:12px;margin-left:auto}
-.nav-link{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all .15s;white-space:nowrap;color:#0f172a}
-.nav-link:hover{background:#f1f5f9;color:#16a34a}
+.nav-link{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:all .15s;white-space:nowrap;color:rgba(255,255,255,.75)}
+.nav-link:hover{background:rgba(255,255,255,.1);color:#fff}
 .nav-link-primary{background:#16a34a;color:#fff}
 .nav-link-primary:hover{background:#15803d}
-.notif-bell{position:relative;cursor:pointer;padding:8px 12px;border-radius:8px;color:#0f172a;transition:all .15s;border:none;background:none;font-size:16px}
-.notif-bell:hover{background:#f1f5f9;color:#16a34a}
+.notif-bell{position:relative;cursor:pointer;padding:8px 12px;border-radius:8px;color:rgba(255,255,255,.75);transition:all .15s;border:none;background:none;font-size:16px}
+.notif-bell:hover{background:rgba(255,255,255,.1);color:#fff}
 .notif-badge{position:absolute;top:4px;right:6px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px}
-.notif-dropdown{position:absolute;right:0;top:110%;width:320px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);z-index:999;overflow:hidden}
+.notif-dropdown{position:absolute;right:0;top:110%;width:320px;background:#1e293b;border:1px solid #334155;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.4);z-index:999;overflow:hidden}
 /* Hero */
-.hero{background:#fff;padding:80px 40px;border-bottom:1px solid #e2e8f0}
+.hero{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);padding:80px 40px;border-bottom:1px solid rgba(255,255,255,.1)}
 .hero-content{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
-.hero-text h1{font-size:clamp(36px,5vw,56px);font-weight:900;color:#0f172a;line-height:1.1;margin-bottom:20px}
-.hero-text h1 span{color:#16a34a}
-.hero-text p{font-size:16px;color:#64748b;line-height:1.75;margin-bottom:32px;max-width:520px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:#f0fdf4;border:1px solid #dcfce7;color:#16a34a;padding:6px 16px;border-radius:20px;font-size:12.5px;font-weight:600;margin-bottom:24px;letter-spacing:.04em}
+.hero-text h1{font-size:clamp(36px,5vw,56px);font-weight:900;color:#fff;line-height:1.1;margin-bottom:20px}
+.hero-text h1 span{color:#4ade80}
+.hero-text p{font-size:16px;color:rgba(255,255,255,.7);line-height:1.75;margin-bottom:32px;max-width:520px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(22,163,74,.2);border:1px solid rgba(22,163,74,.4);color:#4ade80;padding:6px 16px;border-radius:20px;font-size:12.5px;font-weight:600;margin-bottom:24px;letter-spacing:.04em}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
 .btn-primary{padding:14px 32px;background:#16a34a;color:#fff;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;border:none;cursor:pointer}
 .btn-primary:hover{background:#15803d;transform:translateY(-1px);box-shadow:0 8px 24px rgba(22,163,74,.2)}
-.btn-secondary{padding:14px 32px;background:#f1f5f9;color:#0f172a;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;border:1px solid #e2e8f0;cursor:pointer}
-.btn-secondary:hover{background:#e2e8f0}
-.hero-img{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.1)}
+.btn-secondary{padding:14px 32px;background:rgba(255,255,255,.1);color:#fff;border-radius:12px;font-size:15px;font-weight:700;text-decoration:none;transition:all .2s;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(4px);cursor:pointer}
+.btn-secondary:hover{background:rgba(255,255,255,.18)}
+.hero-img{border-radius:16px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.3)}
 .hero-img img{width:100%;height:auto;display:block}
 /* Stats */
-.stats-section{background:#f8fafc;padding:60px 40px;border-bottom:1px solid #e2e8f0}
+.stats-section{background:rgba(255,255,255,.05);padding:60px 40px;border-bottom:1px solid rgba(255,255,255,.1)}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;max-width:1100px;margin:0 auto;text-align:center}
-.stat-item .stat-num{font-size:32px;font-weight:900;color:#16a34a;margin-bottom:8px}
-.stat-item .stat-lbl{font-size:13px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.stat-item .stat-num{font-size:32px;font-weight:900;color:#4ade80;margin-bottom:8px}
+.stat-item .stat-lbl{font-size:13px;color:rgba(255,255,255,.5);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
 /* Sections */
-.section{padding:80px 40px;background:#fff}
-.section-title{font-size:clamp(28px,4vw,42px);font-weight:900;color:#0f172a;text-align:center;margin-bottom:12px}
-.section-sub{font-size:16px;color:#64748b;text-align:center;max-width:560px;margin:0 auto 56px;line-height:1.7}
+.section{padding:80px 40px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.05)}
+.section-title{font-size:clamp(28px,4vw,42px);font-weight:900;color:#fff;text-align:center;margin-bottom:12px}
+.section-sub{font-size:16px;color:rgba(255,255,255,.6);text-align:center;max-width:560px;margin:0 auto 56px;line-height:1.7}
 /* How it works */
 .hiw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px;max-width:1100px;margin:0 auto}
-.hiw-card{border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid #e2e8f0;background:#fff;transition:all .25s}
-.hiw-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.1);transform:translateY(-2px)}
+.hiw-card{border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);background:#1e293b;transition:all .25s}
+.hiw-card:hover{box-shadow:0 12px 32px rgba(0,0,0,.5);transform:translateY(-2px)}
 .hiw-img{width:100%;height:220px;object-fit:cover}
 .hiw-body{padding:24px}
 .hiw-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#16a34a;color:#fff;border-radius:50%;font-size:16px;font-weight:800;margin-bottom:12px}
-.hiw-title{font-size:18px;font-weight:800;color:#0f172a;margin-bottom:8px}
-.hiw-desc{font-size:14px;color:#64748b;line-height:1.7}
+.hiw-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:8px}
+.hiw-desc{font-size:14px;color:rgba(255,255,255,.6);line-height:1.7}
 /* Roles */
-.roles-section{background:#f8fafc;padding:80px 40px;border-bottom:1px solid #e2e8f0}
+.roles-section{background:rgba(255,255,255,.05);padding:80px 40px;border-bottom:1px solid rgba(255,255,255,.1)}
 .roles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;max-width:1000px;margin:0 auto}
-.role-card{background:#fff;border-radius:14px;padding:24px;border:1px solid #e2e8f0;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:all .2s}
-.role-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-2px)}
+.role-card{background:#1e293b;border-radius:14px;padding:24px;border:1px solid rgba(255,255,255,.1);text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:all .2s}
+.role-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.4);transform:translateY(-2px)}
 .role-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 14px}
-.role-name{font-size:15px;font-weight:800;color:#0f172a;margin-bottom:6px}
-.role-desc{font-size:12.5px;color:#64748b;line-height:1.6}
+.role-name{font-size:15px;font-weight:800;color:#fff;margin-bottom:6px}
+.role-desc{font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.6}
 /* CTA */
-.cta-section{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);padding:80px 40px;text-align:center;color:#fff}
+.cta-section{background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);padding:80px 40px;text-align:center;color:#fff;border-bottom:1px solid rgba(255,255,255,.1)}
 .cta-section h2{font-size:clamp(28px,4vw,42px);font-weight:900;margin-bottom:12px}
 .cta-section p{font-size:16px;color:rgba(255,255,255,.7);max-width:500px;margin:0 auto 36px;line-height:1.7}
 /* Footer */
@@ -130,11 +130,11 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
         <span style="font-size:12px;font-weight:700;text-transform:uppercase">{{ app()->getLocale() }}</span>
         <i class="fas fa-chevron-down" style="font-size:10px"></i>
       </button>
-      <div x-show="open" @click.away="open = false" x-transition style="position:absolute;right:0;top:110%;background:#fff;border:1px solid #e2e8f0;border-radius:10px;min-width:160px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.1)">
-        <a href="{{ route('lang.switch', 'en') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:8px 8px 0 0">🇬🇧 English</a>
-        <a href="{{ route('lang.switch', 'ar') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px">🇸🇦 العربية</a>
-        <a href="{{ route('lang.switch', 'ro') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px">🇷🇴 Română</a>
-        <a href="{{ route('lang.switch', 'pl') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:0 0 8px 8px">🇵🇱 Polski</a>
+      <div x-show="open" @click.away="open = false" x-transition style="position:absolute;right:0;top:110%;background:#1e293b;border:1px solid #334155;border-radius:10px;min-width:160px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.4)">
+        <a href="{{ route('lang.switch', 'en') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#e2e8f0;text-decoration:none;font-size:13px;border-radius:8px 8px 0 0">🇬🇧 English</a>
+        <a href="{{ route('lang.switch', 'ar') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#e2e8f0;text-decoration:none;font-size:13px">🇸🇦 العربية</a>
+        <a href="{{ route('lang.switch', 'ro') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#e2e8f0;text-decoration:none;font-size:13px">🇷🇴 Română</a>
+        <a href="{{ route('lang.switch', 'pl') }}" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#e2e8f0;text-decoration:none;font-size:13px;border-radius:0 0 8px 8px">🇵🇱 Polski</a>
       </div>
     </div>
 
@@ -146,12 +146,12 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
         <span class="notif-badge">0</span>
       </button>
       <div x-show="open" @click.away="open = false" x-transition class="notif-dropdown">
-        <div style="padding:16px;border-bottom:1px solid #e2e8f0">
-          <div style="font-size:14px;font-weight:700;color:#0f172a">Notifications</div>
+        <div style="padding:16px;border-bottom:1px solid #334155">
+          <div style="font-size:14px;font-weight:700;color:#e2e8f0">Notifications</div>
           <div style="font-size:12px;color:#94a3b8;margin-top:2px">You have 0 new notifications</div>
         </div>
-        <div style="padding:24px;text-align:center;color:#64748b;font-size:13px">
-          <i class="fas fa-bell-slash" style="font-size:24px;margin-bottom:8px;display:block;color:#cbd5e1"></i>
+        <div style="padding:24px;text-align:center;color:#94a3b8;font-size:13px">
+          <i class="fas fa-bell-slash" style="font-size:24px;margin-bottom:8px;display:block;color:#475569"></i>
           No notifications yet
         </div>
       </div>
@@ -233,32 +233,32 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
   <div class="section-sub">The platform serves six distinct user types, each with their own dedicated dashboard</div>
   <div class="roles-grid">
     <div class="role-card">
-      <div class="role-icon" style="background:#fef2f2;color:#ef4444"><i class="fas fa-shield-halved"></i></div>
+      <div class="role-icon" style="background:rgba(239,68,68,.2);color:#fca5a5"><i class="fas fa-shield-halved"></i></div>
       <div class="role-name">Super Admin</div>
       <div class="role-desc">Full platform control, user management, and system configuration</div>
     </div>
     <div class="role-card">
-      <div class="role-icon" style="background:#eff6ff;color:#3b82f6"><i class="fas fa-user-shield"></i></div>
+      <div class="role-icon" style="background:rgba(59,130,246,.2);color:#93c5fd"><i class="fas fa-user-shield"></i></div>
       <div class="role-name">Admin</div>
       <div class="role-desc">Manage users, issue vouchers, track donations, and view reports</div>
     </div>
     <div class="role-card">
-      <div class="role-icon" style="background:#fff7ed;color:#f97316"><i class="fas fa-store"></i></div>
+      <div class="role-icon" style="background:rgba(249,115,22,.2);color:#fed7aa"><i class="fas fa-store"></i></div>
       <div class="role-name">Local Shops</div>
       <div class="role-desc">List near-expiry food items and manage redemptions from recipients</div>
     </div>
     <div class="role-card">
-      <div class="role-icon" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-user-heart"></i></div>
+      <div class="role-icon" style="background:rgba(22,163,74,.2);color:#86efac"><i class="fas fa-user-heart"></i></div>
       <div class="role-name">Recipients</div>
       <div class="role-desc">Browse food listings and redeem vouchers for near-expiry food items</div>
     </div>
     <div class="role-card">
-      <div class="role-icon" style="background:#fdf4ff;color:#a855f7"><i class="fas fa-building-columns"></i></div>
+      <div class="role-icon" style="background:rgba(168,85,247,.2);color:#d8b4fe"><i class="fas fa-building-columns"></i></div>
       <div class="role-name">VCFSE</div>
       <div class="role-desc">Voluntary and community organisations that fund the voucher programme</div>
     </div>
     <div class="role-card">
-      <div class="role-icon" style="background:#fef9c3;color:#ca8a04"><i class="fas fa-school"></i></div>
+      <div class="role-icon" style="background:rgba(202,138,4,.2);color:#fcd34d"><i class="fas fa-school"></i></div>
       <div class="role-name">Schools & Care</div>
       <div class="role-desc">Educational and care organisations supporting community food security</div>
     </div>
@@ -271,8 +271,8 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
   <p>Join the Northamptonshire eVoucher pilot and help us reduce food waste while supporting families in need.</p>
   <div class="hero-btns" style="justify-content:center">
     <a href="{{ route('register') }}" class="btn-primary"><i class="fas fa-rocket"></i> Get Started Free</a>
-    <a href="{{ url('/food') }}" class="btn-secondary" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)"><i class="fas fa-basket-shopping"></i> Browse Food</a>
-    <button onclick="openDonateModal()" class="btn-secondary" style="background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.2)"><i class="fas fa-heart"></i> Donate</button>
+    <a href="{{ url('/food') }}" class="btn-secondary"><i class="fas fa-basket-shopping"></i> Browse Food</a>
+    <button onclick="openDonateModal()" class="btn-secondary"><i class="fas fa-heart"></i> Donate</button>
   </div>
 </div>
 
@@ -320,30 +320,30 @@ body{font-family:'Inter',sans-serif;color:#0f172a}
 
 <!-- Donate Modal -->
 <div id="donateModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);align-items:center;justify-content:center;z-index:9999">
-  <div style="background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:32px;max-width:420px;width:90%">
+  <div style="background:#1e293b;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:32px;max-width:420px;width:90%;border:1px solid #334155">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-      <h2 style="font-size:22px;font-weight:800;color:#0f172a">Make a Donation</h2>
-      <button onclick="closeDonateModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#94a3b8;line-height:1">
+      <h2 style="font-size:22px;font-weight:800;color:#fff">Make a Donation</h2>
+      <button onclick="closeDonateModal()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#64748b;line-height:1">
         <i class="fas fa-times"></i>
       </button>
     </div>
     <form id="donate-form" style="display:flex;flex-direction:column;gap:16px">
       <div>
-        <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:#374151">Donation Amount (£)</label>
+        <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:#e2e8f0">Donation Amount (£)</label>
         <div style="display:flex;gap:8px;margin-bottom:12px">
-          <button type="button" style="flex:1;padding:10px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;transition:all .15s" onclick="setAmount(5)">£5</button>
-          <button type="button" style="flex:1;padding:10px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" onclick="setAmount(10)">£10</button>
-          <button type="button" style="flex:1;padding:10px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" onclick="setAmount(20)">£20</button>
-          <button type="button" style="flex:1;padding:10px;border:1px solid #e2e8f0;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px" onclick="setAmount(50)">£50</button>
+          <button type="button" style="flex:1;padding:10px;border:1px solid #334155;background:#0f172a;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;transition:all .15s;color:#e2e8f0" onclick="setAmount(5)">£5</button>
+          <button type="button" style="flex:1;padding:10px;border:1px solid #334155;background:#0f172a;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;color:#e2e8f0" onclick="setAmount(10)">£10</button>
+          <button type="button" style="flex:1;padding:10px;border:1px solid #334155;background:#0f172a;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;color:#e2e8f0" onclick="setAmount(20)">£20</button>
+          <button type="button" style="flex:1;padding:10px;border:1px solid #334155;background:#0f172a;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px;color:#e2e8f0" onclick="setAmount(50)">£50</button>
         </div>
-        <input type="number" id="donateAmount" name="amount" min="1" step="0.01" required style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px" placeholder="Or enter custom amount">
+        <input type="number" id="donateAmount" name="amount" min="1" step="0.01" required style="width:100%;padding:10px 14px;border:1px solid #334155;background:#0f172a;border-radius:8px;font-size:14px;color:#e2e8f0" placeholder="Or enter custom amount">
       </div>
       <div>
-        <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:#374151">Email</label>
-        <input type="email" name="email" required style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px" placeholder="your@email.com">
+        <label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:#e2e8f0">Email</label>
+        <input type="email" name="email" required style="width:100%;padding:10px 14px;border:1px solid #334155;background:#0f172a;border-radius:8px;font-size:14px;color:#e2e8f0" placeholder="your@email.com">
       </div>
-      <div id="card-element" style="padding:12px;border:1px solid #e2e8f0;border-radius:8px"></div>
-      <div id="card-errors" style="color:#dc2626;font-size:13px"></div>
+      <div id="card-element" style="padding:12px;border:1px solid #334155;border-radius:8px;background:#0f172a"></div>
+      <div id="card-errors" style="color:#fca5a5;font-size:13px"></div>
       <button type="submit" style="width:100%;background:#16a34a;color:#fff;padding:13px;border-radius:10px;border:none;font-weight:700;cursor:pointer;font-size:15px">
         <i class="fas fa-lock mr-2"></i>Donate Securely
       </button>

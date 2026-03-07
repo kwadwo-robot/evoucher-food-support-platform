@@ -28,9 +28,12 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
 </head>
 <body>
 <nav class="topnav">
-  <a href="/" class="topnav-logo">
-    <div class="topnav-logo-icon"><i class="fas fa-leaf"></i></div>
-    <div class="topnav-logo-text">eVoucher</div>
+  <a href="/" class="topnav-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <img src="{{ asset('images/logo.png') }}" alt="eVoucher Logo" style="width:40px;height:40px;object-fit:contain">
+    <div style="display:flex;flex-direction:column;line-height:1.2">
+      <span style="font-size:10px;color:rgba(255,255,255,.6);font-weight:600">BAKUP CIC</span>
+      <span style="font-size:13px;color:#fff;font-weight:700">eVoucher</span>
+    </div>
   </a>
   <div style="margin-left:auto;display:flex;gap:10px">
     @auth
@@ -190,7 +193,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;margin-bottom:30px">
         <div>
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-            <div style="width:34px;height:34px;background:#16a34a;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px"><i class="fas fa-leaf"></i></div>
+            <img src="{{ asset('images/logo.png') }}" alt="eVoucher Logo" style="width:36px;height:36px;object-fit:contain">
             <div style="font-size:16px;font-weight:800">eVoucher</div>
           </div>
           <p style="font-size:13px;color:#94a3b8;line-height:1.6">Food Support Platform helping reduce food waste and support vulnerable communities in Northamptonshire.</p>

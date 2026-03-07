@@ -26,8 +26,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a;min-height:
 .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
 .sb-logo{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,.07);
   display:flex;align-items:center;gap:10px;}
-.sb-logo-icon{width:38px;height:38px;background:var(--accent);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;flex-shrink:0;}
+.sb-logo-icon{width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sb-logo-icon img{width:100%;height:100%;object-fit:contain;border-radius:10px;}
 .sb-logo-name{font-size:14.5px;font-weight:800;color:#fff;line-height:1.2;}
 .sb-logo-sub{font-size:10px;color:rgba(255,255,255,.35);font-weight:400;letter-spacing:.05em;}
 .sb-section{padding:18px 16px 6px;font-size:10px;font-weight:700;
@@ -191,10 +192,10 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
 <!-- Sidebar -->
 <aside class="sidebar" :class="sidebarOpen ? 'open' : ''">
   <div class="sb-logo">
-    <div class="sb-logo-icon"><i class="fas fa-leaf"></i></div>
+    <div class="sb-logo-icon"><img src="{{ asset('images/logo.png') }}" alt="eVoucher Logo"></div>
     <div>
       <div class="sb-logo-name">eVoucher</div>
-      <div class="sb-logo-sub">Food Support Platform</div>
+      <div class="sb-logo-sub">BAKUP CIC</div>
     </div>
   </div>
 
