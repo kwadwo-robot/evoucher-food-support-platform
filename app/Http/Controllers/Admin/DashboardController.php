@@ -32,10 +32,58 @@ class DashboardController extends Controller
         return view('admin.dashboard', compact('stats','pendingUsers','recentListings','recentDonations','recentVouchers'));
     }
 
-    public function listings()
+    public function listings(Request $request)
     {
-        $listings = FoodListing::with('shop.shopProfile')->latest()->paginate(20);
-        return view('admin.listings.index', compact('listings'));
+        $query = FoodListing::with('shop.shopProfile');
+        
+        // Filter by shop
+        if ($request->shop_id) {
+            $query->where('shop_user_id', $request->shop_id);
+        }
+        
+        // Filter by listing type
+        if ($request->listing_type && $request->listing_type !== 'all') {
+            $query->where('listing_type', $request->listing_type);
+        }
+        
+        // Filter by status
+        if ($request->status && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+        
+        // Search by item name or description
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('item_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
+        
+        // Sort
+        $sortBy = $request->sort ?? 'newest';
+        switch ($sortBy) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'expiring':
+                $query->orderBy('expiry_date', 'asc');
+                break;
+            case 'newest':
+            default:
+                $query->latest();
+        }
+        
+        // Get all shops for filtering
+        $shops = User::where('role', 'local_shop')
+            ->whereHas('foodListings')
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get();
+        
+        // Paginate results
+        $listings = $query->paginate(20);
+        
+        return view('admin.listings.index', compact('listings', 'shops', 'sortBy'));
     }
 
     public function updateListingStatus(Request $request, $id)

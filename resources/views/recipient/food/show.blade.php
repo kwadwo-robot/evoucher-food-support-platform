@@ -19,7 +19,12 @@
       <div class="card-body">
         <div class="flex items-start justify-between mb-3">
           <h1 style="font-size:22px;font-weight:800;color:#0f172a">{{ $listing->item_name }}</h1>
-          <span class="badge badge-green" style="font-size:12px;padding:5px 12px">{{ $listing->quantity }} available</span>
+          <div style="display:flex;gap:8px">
+            <span class="badge badge-green" style="font-size:12px;padding:5px 12px">{{ $listing->quantity }} available</span>
+            @if($listing->listing_type === 'discounted' && $listing->original_price > 0)
+            <span class="badge badge-orange" style="font-size:12px;padding:5px 12px"><i class="fas fa-tag mr-1"></i>{{ round((1 - $listing->discounted_price / $listing->original_price) * 100) }}% off</span>
+            @endif
+          </div>
         </div>
         @if($listing->description)
         <p style="font-size:14px;color:#64748b;line-height:1.7;margin-bottom:16px">{{ $listing->description }}</p>
@@ -160,6 +165,12 @@ function voucherPicker(itemCost) {
           <span style="font-size:13px;color:#64748b">Voucher Cost</span>
           <span style="font-size:13px;font-weight:700;color:#16a34a">{{ $listing->voucher_value > 0 ? '£'.number_format($listing->voucher_value,2) : 'Free' }}</span>
         </div>
+        @if($listing->listing_type === 'discounted')
+        <div class="flex justify-between mb-2">
+          <span style="font-size:13px;color:#64748b">Original Price</span>
+          <span style="font-size:13px;font-weight:600;color:#94a3b8"><del>£{{ number_format($listing->original_price,2) }}</del></span>
+        </div>
+        @endif
         <div class="flex justify-between">
           <span style="font-size:13px;color:#64748b">Status</span>
           <span class="badge badge-green">{{ ucfirst($listing->status) }}</span>

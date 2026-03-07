@@ -58,7 +58,7 @@ class FoodListingController extends Controller
             'collection_address'      => $request->collection_address ?? (Auth::user()->shopProfile->address ?? ''),
             'collection_instructions' => $request->collection_instructions,
             'collection_time'         => $request->collection_time,
-            'voucher_value'           => $listingType === 'surplus' ? 0 : ($request->voucher_value ?? 0),
+            'voucher_value'           => $listingType === 'discounted' ? $request->discounted_price : ($listingType === 'surplus' ? 0 : ($request->voucher_value ?? 0)),
             'listing_type'            => $listingType,
             'original_price'          => $listingType === 'discounted' ? $request->original_price : null,
             'discounted_price'        => $listingType === 'discounted' ? $request->discounted_price : null,
@@ -96,7 +96,7 @@ class FoodListingController extends Controller
         }
         $request->validate($rules);
         $data = $request->only(['item_name','description','quantity','expiry_date','collection_address','collection_instructions','collection_time','listing_type']);
-        $data['voucher_value']    = $listingType === 'surplus' ? 0 : ($request->voucher_value ?? 0);
+        $data['voucher_value']    = $listingType === 'discounted' ? $request->discounted_price : ($listingType === 'surplus' ? 0 : ($request->voucher_value ?? 0));
         $data['original_price']   = $listingType === 'discounted' ? $request->original_price : null;
         $data['discounted_price'] = $listingType === 'discounted' ? $request->discounted_price : null;
         if ($request->hasFile('image')) {
