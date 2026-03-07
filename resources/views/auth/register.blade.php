@@ -29,6 +29,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
 .form-input:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
 .form-select{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;color:#0f172a;background:#fff;outline:none;transition:border .15s;font-family:'Inter',sans-serif}
 .form-select:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.password-wrapper{position:relative;display:flex;align-items:center}
+.password-toggle{position:absolute;right:12px;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:16px;padding:4px 8px;transition:color .15s}
+.password-toggle:hover{color:#64748b}
 .btn-submit{width:100%;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
 .btn-submit:hover{background:#15803d;transform:translateY(-1px)}
 [x-cloak]{display:none!important}
@@ -108,11 +111,21 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
         <div>
           <label class="form-label">Password *</label>
-          <input type="password" name="password" class="form-input" placeholder="Min. 8 characters" required>
+          <div class="password-wrapper">
+            <input type="password" name="password" id="password" class="form-input" placeholder="Min. 8 characters" required style="width:100%">
+            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
         </div>
         <div>
           <label class="form-label">Confirm Password *</label>
-          <input type="password" name="password_confirmation" class="form-input" placeholder="Repeat password" required>
+          <div class="password-wrapper">
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-input" placeholder="Repeat password" required style="width:100%">
+            <button type="button" class="password-toggle" onclick="togglePassword('password_confirmation')">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="mb-4">
@@ -209,5 +222,18 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
     <a href="/" style="font-size:12.5px;color:#94a3b8;text-decoration:none"><i class="fas fa-arrow-left mr-1"></i> Back to Home</a>
   </div>
 </div>
+<script>
+function togglePassword(fieldId) {
+  const field = document.getElementById(fieldId);
+  const button = event.target.closest('.password-toggle');
+  if (field.type === 'password') {
+    field.type = 'text';
+    button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+  } else {
+    field.type = 'password';
+    button.innerHTML = '<i class="fas fa-eye"></i>';
+  }
+}
+</script>
 </body>
 </html>

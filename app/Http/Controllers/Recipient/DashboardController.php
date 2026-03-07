@@ -24,7 +24,13 @@ class DashboardController extends Controller
             ->where('listing_type', 'discounted')
             ->latest()->take(6)->get();
         $total_voucher_value= $active_vouchers->sum('remaining_value');
-        return view('recipient.dashboard', compact('active_vouchers','recent_redemptions','availableFood','total_voucher_value'));
+        $totalVouchers = Voucher::where('recipient_user_id', $user->id)->count();
+        $totalRedemptions = Redemption::where('recipient_user_id', $user->id)->count();
+        $availableItems = FoodListing::where('status','available')
+            ->where('expiry_date','>=',now()->toDateString())
+            ->where('listing_type', 'discounted')
+            ->count();
+        return view('recipient.dashboard', compact('active_vouchers','recent_redemptions','availableFood','total_voucher_value','totalVouchers','totalRedemptions','availableItems'));
     }
 
     public function browse(Request $request)

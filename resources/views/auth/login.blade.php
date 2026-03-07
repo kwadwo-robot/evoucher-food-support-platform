@@ -25,6 +25,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;display:
 .form-label{display:block;font-size:12.5px;font-weight:700;color:#374151;margin-bottom:5px;letter-spacing:.01em}
 .form-input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;color:#0f172a;background:#fff;outline:none;transition:border .15s;font-family:'Inter',sans-serif}
 .form-input:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.password-wrapper{position:relative;display:flex;align-items:center}
+.password-toggle{position:absolute;right:12px;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:16px;padding:4px 8px;transition:color .15s}
+.password-toggle:hover{color:#64748b}
 .btn-submit{width:100%;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:14.5px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-submit:hover{background:#15803d;transform:translateY(-1px);box-shadow:0 4px 12px rgba(22,163,74,.3)}
 @media(max-width:640px){.auth-left{display:none}.auth-right{padding:32px 24px}.auth-wrap{max-width:440px;border-radius:16px}}
@@ -74,7 +77,12 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;display:
         </div>
         <div style="margin-bottom:8px">
           <label class="form-label">Password</label>
-          <input type="password" name="password" class="form-input" placeholder="Your password" required>
+          <div class="password-wrapper">
+            <input type="password" name="password" id="password" class="form-input" placeholder="Your password" required style="width:100%">
+            <button type="button" class="password-toggle" onclick="togglePassword('password')">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
           <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:#64748b;cursor:pointer">
@@ -97,5 +105,18 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;display:
     </div>
   </div>
 </div>
+<script>
+function togglePassword(fieldId) {
+  const field = document.getElementById(fieldId);
+  const button = event.target.closest('.password-toggle');
+  if (field.type === 'password') {
+    field.type = 'text';
+    button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+  } else {
+    field.type = 'password';
+    button.innerHTML = '<i class="fas fa-eye"></i>';
+  }
+}
+</script>
 </body>
 </html>
