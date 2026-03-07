@@ -1,66 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# eVoucher Food Support Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Northamptonshire Pilot — Built for BAKUP CIC**
 
-## About Laravel
+A community food support platform connecting local shops, recipients, and organisations to reduce food waste and food poverty across Northamptonshire.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## What It Does
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Local shops list near-expiry food items. Approved recipients receive digital vouchers by email and through the web app, then redeem them against available food listings. VCFSE groups, schools, and care organisations fund the voucher programme through the platform.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## User Roles
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+| Role | Access |
+|------|--------|
+| **Super Admin** | Full platform control, system configuration |
+| **Admin** | User management, vouchers, reports, fund loads, shop payouts |
+| **Local Shop** | List food items, verify vouchers, request payouts |
+| **Recipient** | Browse food, redeem vouchers, view history |
+| **VCFSE** | Fund vouchers, browse surplus food listings |
+| **School / Care** | Fund vouchers, browse surplus food listings |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Tech Stack
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend:** Laravel 10 (PHP 8.2+)
+- **Database:** MySQL 8+
+- **Frontend:** Blade templates, Tailwind CSS, Alpine.js
+- **Payments:** Stripe (pending API key configuration)
+- **Email:** Laravel Mail (SMTP configurable)
+- **QR Codes:** endroid/qr-code
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Local Setup
+
+### Requirements
+
+- PHP 8.2+
+- Composer
+- MySQL 8+
+- Node.js 18+ and npm
+
+### Installation
+
+```bash
+git clone https://github.com/Niche-Business/evoucher-food-support-platform.git
+cd evoucher-food-support-platform
+composer install
+npm install && npm run build
+cp .env.example .env
+php artisan key:generate
+# Edit .env with your DB credentials
+php artisan migrate
+php artisan db:seed
+php artisan serve
+```
+
+Visit http://localhost:8000
+
+---
+
+## Test Credentials (after seeding)
+
+| Role | Email | Password |
+|------|-------|----------|
+| Super Admin | superadmin@evoucher.org | password123 |
+| Admin | admin@evoucher.org | password123 |
+| Local Shop | shop@evoucher.org | password123 |
+| Recipient | recipient@evoucher.org | password123 |
+| VCFSE | vcfse@evoucher.org | password123 |
+| School/Care | school@evoucher.org | password123 |
+
+---
+
+## Key Features
+
+- **Voucher System** — email delivery, QR code, anti-double-redemption logic
+- **Food Listings** — three types: Free, Food to Go (discounted), Free Surplus (VCFSE only)
+- **Shop Payout System** — shops submit bank details and payout requests; admin marks as paid with BACS reference
+- **Fund Load System** — admin loads wallet funds to VCFSE/School organisations
+- **Multi-language** — English and Arabic (extensible)
+- **Mobile-first** — responsive design throughout
+
+---
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes following [Conventional Commits](https://www.conventionalcommits.org/)
+4. Push and open a Pull Request against `main`
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Pilot Area
 
-## Security Vulnerabilities
+**Northamptonshire, United Kingdom** — structured to scale to other UK regions.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## Licence
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Built for **BAKUP CIC** — Community Interest Company.
+Laravel framework is open-sourced under the [MIT licence](https://opensource.org/licenses/MIT).
