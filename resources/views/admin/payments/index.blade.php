@@ -40,11 +40,11 @@
                 @forelse($payments as $payment)
                 <tr class="hover:bg-gray-50">
                     <td class="px-4 py-3">
-                        <p class="font-medium text-gray-900">{{ $payment->donor->name ?? 'Unknown' }}</p>
-                        <p class="text-xs text-gray-500">{{ $payment->donor->email ?? '' }}</p>
+                        <p class="font-medium text-gray-900">{{ $payment->donor_name ?? 'Anonymous Donor' }}</p>
+                        <p class="text-xs text-gray-500">{{ $payment->donor_email }}</p>
                     </td>
                     <td class="px-4 py-3 font-semibold text-green-600">£{{ number_format($payment->amount, 2) }}</td>
-                    <td class="px-4 py-3 text-gray-500 capitalize hidden sm:table-cell">{{ str_replace('_', ' ', $payment->donor->role ?? 'donor') }}</td>
+                    <td class="px-4 py-3 text-gray-500 capitalize hidden sm:table-cell">{{ $payment->org_name ?? 'Public Donation' }}</td>
                     <td class="px-4 py-3 text-gray-500 hidden md:table-cell">{{ $payment->created_at->format('d M Y') }}</td>
                     <td class="px-4 py-3">
                         <span class="{{ $payment->status === 'completed' ? 'badge-active' : ($payment->status === 'pending' ? 'badge-pending' : 'badge-expired') }}">
