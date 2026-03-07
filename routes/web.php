@@ -13,8 +13,8 @@ use App\Http\Controllers\Admin\ReportGeneratorController as AdminReportGenerator
 use App\Http\Controllers\Organisation\FundLoadController as OrgFundLoad;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\FoodListingController;
-use App\Http\Controllers\Organisation\DashboardController as OrgDashboard;
-use App\Http\Controllers\Organisation\DonationController;
+use App\Http\Controllers\Organisation\DashboardController as OrgDashboause App\Http\Controllers\Organisation\DonationController;
+use App\Http\Controllers\DonationController as PublicDonationController;
 use App\Http\Controllers\Recipient\DashboardController as RecipientDashboard;
 use App\Http\Controllers\Recipient\VoucherController as RecipientVoucher;
 use App\Http\Controllers\Recipient\ReportController as RecipientReport;
@@ -41,6 +41,10 @@ Route::get('/food', [FoodListingController::class, 'index'])->name('food.index')
 Route::get('/food/{id}', [FoodListingController::class, 'show'])->name('food.show');
 Route::get('/shops', [ShopController::class, 'index'])->name('shops.index');
 Route::get('/shops/{shop}', [ShopController::class, 'show'])->name('shops.show');
+
+// Donations
+Route::post('/api/donations/create-payment-intent', [PublicDonationController::class, 'createPaymentIntent'])->name('donations.create-intent');
+Route::post('/api/donations/process', [PublicDonationController::class, 'store'])->name('donations.store');
 
 // Auth
 require __DIR__.'/auth.php';

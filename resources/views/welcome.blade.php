@@ -439,9 +439,46 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
         return;
       }
       
-      // For now, show a thank you message
-      alert('Thank you for your donation of £' + amount + '! Stripe integration will be completed soon.');
-      closeDonateModal();
+      try {
+        // Create payment method from card element
+        const { paymentMethod, error } = await stripe.createPaymentMethod({
+          type: 'card',
+          card: cardElement,
+          billing_details: {
+            email: email
+          }
+        });
+
+        if (error) {
+          alert('Card error: ' + error.message);
+          return;
+        }
+
+        // Send to backend
+        const response = await fetch('/api/donations/process', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+          },
+          body: JSON.stringify({
+            amount: amount,
+            email: email,
+            payment_method_id: paymentMethod.id
+          })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          alert('Thank you for your donation of £' + amount + '!');
+          closeDonateModal();
+        } else {
+          alert('Error: ' + result.message);
+        }
+      } catch (err) {
+        console.error('Donation error:', err);
+        alert('An error occurred. Please try again.');
+      }
     });
   }
 </script>
