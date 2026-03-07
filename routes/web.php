@@ -123,7 +123,8 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'approved', 'role:loca
     Route::post('/verify/lookup', [ShopDashboard::class, 'lookupVoucher'])->name('verify.lookup');
     Route::post('/verify/accept', [ShopDashboard::class, 'acceptVoucher'])->name('verify.accept');
     Route::post('/verify/reject', [ShopDashboard::class, 'rejectVoucher'])->name('verify.reject');
-    Route::patch('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption'])->name('redemptions.confirm');
+    Route::post('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption'])->name('redemptions.confirm');
+    Route::patch('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption']);
     Route::get('/profile', [ShopDashboard::class, 'profile'])->name('profile');
     Route::put('/profile', [ShopDashboard::class, 'updateProfile'])->name('profile.update');
     // Payouts

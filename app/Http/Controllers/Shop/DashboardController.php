@@ -65,7 +65,7 @@ class DashboardController extends Controller
             ->where('shop_user_id', Auth::id())
             ->firstOrFail();
 
-        $updateData = ['status' => 'collected'];
+        $updateData = ['status' => 'confirmed'];
 
         // If this is a payment confirmation from the modal (priced item)
         if ($request->input('payment_confirmed') == '1') {
@@ -78,7 +78,7 @@ class DashboardController extends Controller
 
         $redemption->update($updateData);
 
-        $msg = 'Redemption marked as collected.';
+        $msg = 'Redemption marked as confirmed.';
         if (!empty($updateData['payment_method'])) {
             $msg .= ' Payment received by ' . ucfirst(str_replace('_', ' ', $updateData['payment_method'])) . '.';
         }
