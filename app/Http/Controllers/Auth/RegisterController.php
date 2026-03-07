@@ -7,6 +7,7 @@ use App\Models\OrganisationProfile;
 use App\Models\RecipientProfile;
 use App\Models\ShopProfile;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -88,6 +89,8 @@ class RegisterController extends Controller
                 'address'   => $validated['shop_address'],
                 'phone'     => $validated['phone'] ?? null,
             ]);
+            // Notify admins about new shop registration
+            NotificationService::notifyNewShopRegistration($user);
         } elseif ($role === 'vcfse') {
             OrganisationProfile::create([
                 'user_id'        => $user->id,

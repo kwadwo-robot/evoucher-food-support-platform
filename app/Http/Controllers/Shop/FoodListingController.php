@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\FoodListing;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -47,7 +48,7 @@ class FoodListingController extends Controller
             $imageUrl = Storage::url($path);
         }
 
-        FoodListing::create([
+        $listing = FoodListing::create([
             'shop_user_id'            => Auth::id(),
             'item_name'               => $request->item_name,
             'description'             => $request->description,
@@ -63,6 +64,11 @@ class FoodListingController extends Controller
             'discounted_price'        => $listingType === 'discounted' ? $request->discounted_price : null,
             'status'                  => 'available',
         ]);
+
+        // Notify VCFSE/School about surplus food
+        if ($listingType === 'surplus') {
+            NotificationService::notifySurplusFoodAlert($listing);
+        }
 
         return redirect()->route('shop.listings.index')->with('success', 'Food listing created successfully.');
     }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use App\Models\Donation;
+use App\Services\NotificationService;
 
 class DonationController extends Controller
 {
@@ -54,6 +55,9 @@ class DonationController extends Controller
                     'currency' => 'GBP',
                     'notes' => json_encode($paymentIntent->metadata)
                 ]);
+
+                // Notify admins about new donation
+                NotificationService::notifyNewDonation($validated['amount'], $validated['email']);
 
                 return response()->json([
                     'success' => true,
