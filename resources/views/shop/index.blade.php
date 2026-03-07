@@ -22,7 +22,7 @@
     <!-- Shops Grid -->
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-bottom:30px">
         @forelse($shops as $shop)
-        <a href="{{ route('shop.show', $shop) }}" style="text-decoration:none;display:block">
+        <a href="{{ route('shops.show', $shop) }}" style="text-decoration:none;display:block">
             <div class="shop-card" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1);transition:all .3s ease;background:#fff">
                 <div style="background:linear-gradient(135deg,#10b981 0%,#059669 100%);padding:30px;text-align:center;color:#fff">
                     <div style="font-size:48px;margin-bottom:12px">🏪</div>
