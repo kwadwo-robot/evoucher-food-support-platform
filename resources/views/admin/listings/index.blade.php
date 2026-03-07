@@ -99,7 +99,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="px-4 py-3 text-gray-600 hidden sm:table-cell">{{ $listing->shopProfile->shop_name ?? 'N/A' }}</td>
+                    <td class="px-4 py-3 text-gray-600 hidden sm:table-cell">{{ $listing->shop->name ?? ($listing->shopProfile->shop_name ?? 'N/A') }}</td>
                     <td class="px-4 py-3">
                         @if($listing->listing_type === 'discounted')
                         <span class="badge badge-orange" style="font-size:10px"><i class="fas fa-tag mr-1"></i>Discounted</span>

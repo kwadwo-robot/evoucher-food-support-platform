@@ -41,7 +41,7 @@
                         <div style="font-weight:600;color:#0f172a;">{{ $listing->item_name }}</div>
                         <div style="font-size:12px;color:#94a3b8;">{{ Str::limit($listing->description, 40) }}</div>
                     </td>
-                    <td style="color:#64748b;">{{ $listing->shopUser->name ?? 'N/A' }}</td>
+                    <td style="color:#64748b;">{{ $listing->shop->name ?? 'N/A' }}</td>
                     <td style="font-weight:600;">{{ $listing->quantity }}</td>
                     <td>
                         @php $days = now()->diffInDays($listing->expiry_date, false); @endphp
