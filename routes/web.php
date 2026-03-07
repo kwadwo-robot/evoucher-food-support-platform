@@ -156,6 +156,7 @@ Route::prefix('recipient')->name('recipient.')->middleware(['auth', 'role:recipi
 Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vcfse'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'vcfseDashboard'])->name('dashboard');
     Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
+    Route::post('/food/{foodListingId}/claim', [SurplusClaimController::class, 'claim'])->name('food.claim');
     Route::get('/donate', [DonationController::class, 'showDonateForm'])->name('donate');
     Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
     Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');

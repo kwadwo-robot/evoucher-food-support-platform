@@ -162,9 +162,12 @@
                 ->first();
             @endphp
             @if($allocation && !$allocation->isExpired())
-              <button type="button" class="btn btn-sm btn-success claim-btn" data-item-id="{{ $item->id }}" style="font-size:11px;padding:6px 12px">
-                <i class="fas fa-check"></i> Claim
-              </button>
+              <form method="POST" action="{{ route('vcfse.food.claim', $item->id) }}" style="display:inline">
+                @csrf
+                <button type="submit" class="btn btn-sm btn-success" style="font-size:11px;padding:6px 12px" onclick="return confirm('Are you sure you want to claim this item?')">
+                  <i class="fas fa-check"></i> Claim
+                </button>
+              </form>
             @endif
           @endif
           <span style="font-size:11px;color:#94a3b8">{{ $item->listing_type === 'surplus' ? 'VCFSE Collection' : 'Available to All' }}</span>
@@ -184,34 +187,5 @@
 @endsection
 
 <script>
-document.querySelectorAll('.claim-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const itemId = this.getAttribute('data-item-id');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    
-    if (confirm('Are you sure you want to claim this item?')) {
-      fetch(`/api/surplus/claim/${itemId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-          'Content-Type': 'application/json',
-          'X-CSRF-TOKEN': csrfToken
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Item claimed successfully!');
-          location.reload();
-        } else {
-          alert('Error: ' + (data.error || 'Failed to claim item'));
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while claiming the item');
-      });
-    }
-  });
-});
+// Claim button functionality is now handled by form submission
 </script>
