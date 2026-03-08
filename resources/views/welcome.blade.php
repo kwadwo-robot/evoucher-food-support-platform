@@ -303,33 +303,60 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
 <div id="donateModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center">
   <div style="background:#fff;border-radius:16px;padding:40px;max-width:500px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
-      <h2 style="font-size:24px;font-weight:900;color:#0f172a">{{ __('app.donate') }}</h2>
+      <h2 style="font-size:24px;font-weight:900;color:#0f172a">Donate</h2>
       <button onclick="closeDonateModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#94a3b8">&times;</button>
     </div>
-    <p style="color:#64748b;margin-bottom:24px;line-height:1.6">{{ __('app.donate_description') ?? 'Your donation helps us continue providing food support to families in need. Every contribution makes a difference.' }}</p>
-    <form id="donateForm" action="{{ route('login') }}" method="POST">
-      @csrf
+    <p style="color:#64748b;margin-bottom:24px;line-height:1.6">Your donation helps us continue providing food support to families in need. Every contribution makes a difference.</p>
+    <form id="donateForm" method="POST">
       <div style="margin-bottom:20px">
-        <label style="display:block;font-size:14px;font-weight:600;color:#0f172a;margin-bottom:8px">{{ __('app.donation_amount') }}</label>
+        <label style="display:block;font-size:14px;font-weight:600;color:#0f172a;margin-bottom:8px">Donation Amount</label>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px">
           <button type="button" onclick="setDonationAmount(25)" style="padding:12px;border:2px solid var(--gray-border);border-radius:8px;background:#fff;cursor:pointer;font-weight:600;color:#0f172a;transition:all .2s">£25</button>
           <button type="button" onclick="setDonationAmount(50)" style="padding:12px;border:2px solid var(--gray-border);border-radius:8px;background:#fff;cursor:pointer;font-weight:600;color:#0f172a;transition:all .2s">£50</button>
           <button type="button" onclick="setDonationAmount(100)" style="padding:12px;border:2px solid var(--gray-border);border-radius:8px;background:#fff;cursor:pointer;font-weight:600;color:#0f172a;transition:all .2s">£100</button>
         </div>
-        <input type="number" name="amount" id="donationAmount" placeholder="{{ __('app.enter_custom_amount') }}" min="1" step="0.01" style="width:100%;padding:12px;border:1px solid var(--gray-border);border-radius:8px;font-size:14px" required>
+        <input type="number" name="amount" id="donationAmount" placeholder="Enter custom amount" min="1" step="0.01" style="width:100%;padding:12px;border:1px solid var(--gray-border);border-radius:8px;font-size:14px" required>
       </div>
       <div style="margin-bottom:24px">
-        <label style="display:block;font-size:14px;font-weight:600;color:#0f172a;margin-bottom:8px">{{ __('app.email') }}</label>
+        <label style="display:block;font-size:14px;font-weight:600;color:#0f172a;margin-bottom:8px">Email Address</label>
         <input type="email" name="email" placeholder="your@email.com" style="width:100%;padding:12px;border:1px solid var(--gray-border);border-radius:8px;font-size:14px" required>
       </div>
-      <button type="submit" onclick="handleDonation(event)" style="width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s">{{ __('app.proceed_to_payment') }}</button>
+      <div id="card-element" style="border:1px solid var(--gray-border);border-radius:8px;padding:12px;margin-bottom:24px;background:#f8fafc"></div>
+      <div id="card-errors" style="color:#ef4444;font-size:13px;margin-bottom:12px"></div>
+      <button type="submit" onclick="handleDonation(event)" style="width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s">Proceed to Payment</button>
     </form>
   </div>
 </div>
 
+<!-- Stripe Script -->
+<script src="https://js.stripe.com/v3/"></script>
+
 <script>
+let stripe, elements, cardElement;
+
+// Initialize Stripe
+function initStripe() {
+  stripe = Stripe('pk_test_51234567890abcdefghijklmnop'); // Replace with your test key
+  elements = stripe.elements();
+  cardElement = elements.create('card');
+  cardElement.mount('#card-element');
+  
+  cardElement.on('change', function(event) {
+    const displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
+}
+
 function openDonateModal() {
   document.getElementById('donateModal').style.display = 'flex';
+  // Initialize Stripe when modal opens
+  if (!stripe) {
+    setTimeout(initStripe, 100);
+  }
 }
 
 function closeDonateModal() {
@@ -350,13 +377,33 @@ function handleDonation(event) {
   event.preventDefault();
   const amount = document.getElementById('donationAmount').value;
   const email = document.querySelector('input[name="email"]').value;
+  
   if (!amount || !email) {
     alert('Please enter both amount and email');
     return;
   }
-  alert('Thank you for your donation of GBP' + amount + '! Your support helps us reduce food waste and support families in need.');
-  closeDonateModal();
-  document.getElementById('donateForm').reset();
+  
+  if (!cardElement) {
+    alert('Payment form is loading. Please try again.');
+    return;
+  }
+  
+  // Create payment method
+  stripe.createPaymentMethod({
+    type: 'card',
+    card: cardElement,
+    billing_details: {
+      email: email
+    }
+  }).then(function(result) {
+    if (result.error) {
+      document.getElementById('card-errors').textContent = result.error.message;
+    } else {
+      alert('Thank you for your donation of GBP' + amount + '! Your support helps us reduce food waste and support families in need.');
+      closeDonateModal();
+      document.getElementById('donateForm').reset();
+    }
+  });
 }
 
 document.addEventListener('click', function(event) {
