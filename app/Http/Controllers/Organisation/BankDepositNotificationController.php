@@ -26,7 +26,13 @@ class BankDepositNotificationController extends Controller
             'sort_code' => 'required|string|regex:/^\d{2}-\d{2}-\d{2}$/',
             'account_number' => 'required|string|regex:/^\d{8}$/',
             'notes' => 'nullable|string|max:500',
+            'receipt' => 'nullable|file|mimes:pdf,png,jpg,jpeg|max:5120',
         ]);
+
+        $receiptPath = null;
+        if ($request->hasFile('receipt')) {
+            $receiptPath = $request->file('receipt')->store('bank-deposits', 'public');
+        }
 
         $bankDeposit = BankDeposit::create([
             'organisation_id' => auth()->user()->organisation_id,
@@ -38,6 +44,7 @@ class BankDepositNotificationController extends Controller
             'sort_code' => $validated['sort_code'],
             'account_number' => $validated['account_number'],
             'notes' => $validated['notes'] ?? null,
+            'receipt_path' => $receiptPath,
             'status' => 'pending',
         ]);
 

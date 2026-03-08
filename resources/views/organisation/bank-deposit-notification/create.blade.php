@@ -10,7 +10,7 @@
 
 <div class="card">
   <div class="card-body">
-    <form action="{{ route($role === 'vcfse' ? 'vcfse.bank-deposit-notification.store' : 'school.bank-deposit-notification.store') }}" method="POST" class="max-w-2xl">
+    <form action="{{ route($role === 'vcfse' ? 'vcfse.bank-deposit-notification.store' : 'school.bank-deposit-notification.store') }}" method="POST" enctype="multipart/form-data" class="max-w-2xl">
       @csrf
 
       <!-- Deposit Amount -->
@@ -84,6 +84,32 @@
         @enderror
       </div>
 
+      <!-- Receipt Upload -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">Bank Receipt/Proof of Transfer <span class="text-gray-500 text-xs">(Optional)</span></label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-green-500 hover:bg-green-50 transition" id="receipt-drop-zone">
+          <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+          <p class="text-gray-600 font-medium">Drag and drop your receipt or click to upload</p>
+          <p class="text-gray-500 text-xs mt-1">Supported formats: PDF, PNG, JPG, JPEG (Max 5MB)</p>
+          <input type="file" name="receipt" id="receipt-input" class="hidden" accept=".pdf,.png,.jpg,.jpeg" @error('receipt') aria-invalid="true" @enderror>
+        </div>
+        <div id="receipt-preview" class="mt-3 hidden">
+          <div class="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <i class="fas fa-file-check text-green-600 text-xl"></i>
+            <div class="flex-1">
+              <p class="font-medium text-gray-800" id="receipt-filename"></p>
+              <p class="text-xs text-gray-600" id="receipt-size"></p>
+            </div>
+            <button type="button" id="receipt-remove" class="text-red-600 hover:text-red-800">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+        @error('receipt')
+          <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+      </div>
+
       <!-- Submit Button -->
       <div class="flex gap-3">
         <button type="submit" class="btn btn-primary">
@@ -133,3 +159,85 @@
 }
 </style>
 @endsection
+
+.hidden {
+  display: none;
+}
+</style>
+
+<script>
+  const dropZone = document.getElementById('receipt-drop-zone');
+  const receiptInput = document.getElementById('receipt-input');
+  const receiptPreview = document.getElementById('receipt-preview');
+  const receiptFilename = document.getElementById('receipt-filename');
+  const receiptSize = document.getElementById('receipt-size');
+  const receiptRemove = document.getElementById('receipt-remove');
+
+  // Click to upload
+  dropZone.addEventListener('click', () => receiptInput.click());
+
+  // File selection
+  receiptInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      displayFile(file);
+    }
+  });
+
+  // Drag and drop
+  dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#16a34a';
+    dropZone.style.backgroundColor = '#dcfce7';
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.style.borderColor = '#d1d5db';
+    dropZone.style.backgroundColor = 'transparent';
+  });
+
+  dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = '#d1d5db';
+    dropZone.style.backgroundColor = 'transparent';
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (validateFile(file)) {
+        receiptInput.files = files;
+        displayFile(file);
+      }
+    }
+  });
+
+  // Remove file
+  receiptRemove.addEventListener('click', (e) => {
+    e.preventDefault();
+    receiptInput.value = '';
+    receiptPreview.classList.add('hidden');
+  });
+
+  function validateFile(file) {
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
+    
+    if (file.size > maxSize) {
+      alert('File size must be less than 5MB');
+      return false;
+    }
+    
+    if (!allowedTypes.includes(file.type)) {
+      alert('Only PDF, PNG, and JPEG files are allowed');
+      return false;
+    }
+    
+    return true;
+  }
+
+  function displayFile(file) {
+    receiptFilename.textContent = file.name;
+    receiptSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
+    receiptPreview.classList.remove('hidden');
+  }
+</script>
