@@ -58,11 +58,15 @@ class PublicDonationController extends Controller
     public function store(Request $request)
     {
         try {
+            \Log::info('Donation store request:', $request->all());
+            
             $validated = $request->validate([
                 'amount' => 'required|numeric|min:1',
                 'email' => 'required|email',
                 'payment_intent_id' => 'required|string'
             ]);
+            
+            \Log::info('Donation validated:', $validated);
 
             // Retrieve the payment intent from Stripe
             $paymentIntent = PaymentIntent::retrieve($validated['payment_intent_id']);
