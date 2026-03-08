@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ShopPayoutRequest;
 use App\Models\ShopBankDetail;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +73,9 @@ class PayoutController extends Controller
             'processed_by' => Auth::id(),
         ]);
 
+        // Notify shop about approval
+        NotificationService::notifyShopPayoutApproved($payout);
+
         return back()->with('success', 'Payout request approved. Please process the bank transfer.');
     }
 
@@ -98,6 +102,9 @@ class PayoutController extends Controller
             'processed_by'       => Auth::id(),
             'paid_at'            => now(),
         ]);
+
+        // Notify shop about payment
+        NotificationService::notifyShopPayoutProcessed($payout);
 
         return back()->with('success', 'Payout marked as paid. Reference: ' . $request->payment_reference);
     }
@@ -126,6 +133,9 @@ class PayoutController extends Controller
                 'processed_by' => Auth::id(),
             ]);
         });
+
+        // Notify shop about rejection
+        NotificationService::notifyShopPayoutRejected($payout);
 
         return back()->with('success', 'Payout request rejected. Redemptions are now available for a new request.');
     }
