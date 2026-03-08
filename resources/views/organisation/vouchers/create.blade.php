@@ -188,11 +188,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Form submission - ensure correct dropdown is submitted
   form.addEventListener('submit', function(e) {
+    // Log current values for debugging
+    console.log('Form submission:');
+    console.log('Individuals section hidden:', individualsSection.classList.contains('hidden'));
+    console.log('Individuals select value:', individualsSelect.value);
+    console.log('Organisations select value:', organisationsSelect.value);
+    
     // Clear the hidden dropdown's value to prevent conflicts
     if (individualsSection.classList.contains('hidden')) {
       individualsSelect.value = '';
+      console.log('Cleared individuals select');
     } else {
       organisationsSelect.value = '';
+      console.log('Cleared organisations select');
     }
   });
 
