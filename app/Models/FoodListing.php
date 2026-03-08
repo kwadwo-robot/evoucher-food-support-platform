@@ -25,6 +25,7 @@ class FoodListing extends Model
     public function shop()        { return $this->belongsTo(User::class, 'shop_user_id'); }
     public function shopProfile() { return $this->hasOneThrough(ShopProfile::class, User::class, 'id', 'user_id', 'shop_user_id', 'id'); }
     public function redemptions() { return $this->hasMany(Redemption::class); }
+    public function allocations() { return $this->hasMany(SurplusAllocation::class); }
 
     // ── Accessors ────────────────────────────────────────────────────────────
 

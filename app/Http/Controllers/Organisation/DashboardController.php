@@ -123,12 +123,35 @@ class DashboardController extends Controller
 
     public function browseFood(Request $request)
     {
+        $user = Auth::user();
+        
         // VCFSE and School/Care see Free, Discounted, and Surplus listings
         $query = FoodListing::where('status', 'available')
             ->where('expiry_date', '>=', now()->toDateString())
             ->where('quantity', '>', 0) // Hide out-of-stock items
             ->whereIn('listing_type', ['free', 'discounted', 'surplus'])
             ->with('shop.shopProfile');
+        
+        // For surplus items, only show if user has a valid (non-expired) allocation
+        $query->where(function ($q) use ($user) {
+            // Show all non-surplus items
+            $q->where('listing_type', '!=', 'surplus')
+              // For surplus items, only show if user has a valid pending allocation
+              ->orWhere(function ($sq) use ($user) {
+                  $sq->where('listing_type', 'surplus')
+                     ->whereHas('allocations', function ($aq) use ($user) {
+                         $aq->where(function ($a) use ($user) {
+                             if ($user->role === 'vcfse') {
+                                 $a->where('vcfse_user_id', $user->id);
+                             } else if ($user->role === 'school_care') {
+                                 $a->where('school_care_user_id', $user->id);
+                             }
+                         })
+                         ->where('status', 'pending')
+                         ->where('expires_at', '>', now()); // Only valid allocations
+                     });
+              });
+        });
         
         // Filter by shop if specified
         if ($request->shop_id) {
@@ -167,11 +190,31 @@ class DashboardController extends Controller
         $listings = $query->paginate(12);
         
         // Get list of shops with available items for filtering
-        $shops = FoodListing::where('status', 'available')
+        $shopsQuery = FoodListing::where('status', 'available')
             ->where('expiry_date', '>=', now()->toDateString())
             ->where('quantity', '>', 0) // Hide out-of-stock items
-            ->whereIn('listing_type', ['free', 'discounted', 'surplus'])
-            ->select('shop_user_id')
+            ->whereIn('listing_type', ['free', 'discounted', 'surplus']);
+        
+        // Apply same surplus allocation filter for shops list
+        $shopsQuery->where(function ($q) use ($user) {
+            $q->where('listing_type', '!=', 'surplus')
+              ->orWhere(function ($sq) use ($user) {
+                  $sq->where('listing_type', 'surplus')
+                     ->whereHas('allocations', function ($aq) use ($user) {
+                         $aq->where(function ($a) use ($user) {
+                             if ($user->role === 'vcfse') {
+                                 $a->where('vcfse_user_id', $user->id);
+                             } else if ($user->role === 'school_care') {
+                                 $a->where('school_care_user_id', $user->id);
+                             }
+                         })
+                         ->where('status', 'pending')
+                         ->where('expires_at', '>', now());
+                     });
+              });
+        });
+        
+        $shops = $shopsQuery->select('shop_user_id')
             ->distinct()
             ->with('shop.shopProfile')
             ->get()
