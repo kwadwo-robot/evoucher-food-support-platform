@@ -13,6 +13,7 @@ class SurplusAllocation extends Model
     protected $fillable = [
         'food_listing_id',
         'vcfse_user_id',
+        'school_care_user_id',
         'allocated_at',
         'expires_at',
         'status',
@@ -38,6 +39,22 @@ class SurplusAllocation extends Model
     public function vcfseUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'vcfse_user_id');
+    }
+
+    /**
+     * Get the School/Care user allocated this item
+     */
+    public function schoolCareUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'school_care_user_id');
+    }
+
+    /**
+     * Get the allocated user (either VCFSE or School/Care)
+     */
+    public function getAllocatedUser()
+    {
+        return $this->school_care_user_id ? $this->schoolCareUser : $this->vcfseUser;
     }
 
     /**
@@ -71,6 +88,25 @@ class SurplusAllocation extends Model
             ->toArray();
 
         return User::where('role', 'vcfse')
+            ->where('is_approved', true)
+            ->whereNotIn('id', $usedUsers)
+            ->inRandomOrder()
+            ->first();
+    }
+
+    /**
+     * Get next School/Care user in queue for this item
+     */
+    public static function getNextSchoolCareUser($foodListingId)
+    {
+        // Get all School/Care users, excluding those who already have expired allocations for this item
+        $usedUsers = self::where('food_listing_id', $foodListingId)
+            ->whereIn('status', ['expired', 'redeemed'])
+            ->whereNotNull('school_care_user_id')
+            ->pluck('school_care_user_id')
+            ->toArray();
+
+        return User::where('role', 'school_care')
             ->where('is_approved', true)
             ->whereNotIn('id', $usedUsers)
             ->inRandomOrder()

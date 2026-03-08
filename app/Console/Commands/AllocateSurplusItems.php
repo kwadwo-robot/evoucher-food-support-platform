@@ -21,7 +21,7 @@ class AllocateSurplusItems extends Command
      *
      * @var string
      */
-    protected $description = 'Allocate surplus items to VCFSE users with 2-hour countdown';
+    protected $description = 'Allocate surplus items to School/Care users with 2-hour countdown';
 
     /**
      * Execute the console command.
@@ -43,10 +43,12 @@ class AllocateSurplusItems extends Command
             if (!$activeAllocation) {
                 // Get next available VCFSE user
                 $vcfseUser = SurplusAllocation::getNextVcfseUser($item->id);
+                // Get next available School/Care user
+                $schoolCareUser = SurplusAllocation::getNextSchoolCareUser($item->id);
 
+                // Allocate to VCFSE user if available
                 if ($vcfseUser) {
-                    // Create allocation with 2-hour expiry
-                    $allocation = SurplusAllocation::create([
+                    $vcfseAllocation = SurplusAllocation::create([
                         'food_listing_id' => $item->id,
                         'vcfse_user_id' => $vcfseUser->id,
                         'allocated_at' => now(),
@@ -55,7 +57,6 @@ class AllocateSurplusItems extends Command
                         'allocation_sequence' => 0,
                     ]);
 
-                    // Send notification
                     Notification::create([
                         'user_id' => $vcfseUser->id,
                         'type' => 'surplus_allocated',
@@ -65,7 +66,30 @@ class AllocateSurplusItems extends Command
                         'read_at' => null,
                     ]);
 
-                    $this->info("Allocated {$item->item_name} to {$vcfseUser->name}");
+                    $this->info("Allocated {$item->item_name} to VCFSE user {$vcfseUser->name}");
+                }
+
+                // Allocate to School/Care user if available
+                if ($schoolCareUser) {
+                    $schoolAllocation = SurplusAllocation::create([
+                        'food_listing_id' => $item->id,
+                        'school_care_user_id' => $schoolCareUser->id,
+                        'allocated_at' => now(),
+                        'expires_at' => now()->addHours(2),
+                        'status' => 'pending',
+                        'allocation_sequence' => 0,
+                    ]);
+
+                    Notification::create([
+                        'user_id' => $schoolCareUser->id,
+                        'type' => 'surplus_allocated',
+                        'title' => 'Surplus Food Available',
+                        'message' => 'A surplus item has been allocated to you for 2 hours: ' . $item->item_name,
+                        'icon' => 'fas fa-hourglass-end',
+                        'read_at' => null,
+                    ]);
+
+                    $this->info("Allocated {$item->item_name} to School/Care user {$schoolCareUser->name}");
                 }
             }
         }
