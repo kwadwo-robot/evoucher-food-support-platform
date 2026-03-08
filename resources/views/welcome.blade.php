@@ -342,7 +342,7 @@ function initStripe() {
   try {
     if (stripe) return; // Already initialized
     
-    stripe = Stripe('pk_test_51234567890abcdefghijklmnop'); // Replace with your test key
+    stripe = Stripe('pk_test_51Sc7h13gtZiQWbc7XZP3ooVrjZp0XcaHOWk8aPzXvFLt9qH7aKd7NspGSo3klEzj43qV56Gial5zqFbloWpKGqqw00v1IHlzjt');
     elements = stripe.elements();
     
     // Destroy existing card element if it exists
