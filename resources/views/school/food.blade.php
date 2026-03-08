@@ -59,15 +59,15 @@
     <p>There are no free or surplus food listings available at the moment. Check back soon.</p>
   </div>
 @else
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6" style="grid-auto-rows: 1fr;">
     @foreach($listings as $item)
-    <div class="food-card">
+    <div class="food-card" style="display: flex; flex-direction: column; height: 100%;">
       @if($item->image_url)
         <img src="{{ $item->image_url }}" alt="{{ $item->item_name }}" class="food-card-img">
       @else
         <div class="food-card-img-placeholder">🥦</div>
       @endif
-      <div class="food-card-body">
+      <div class="food-card-body" style="display: flex; flex-direction: column; flex: 1;">
         <!-- Type Badge -->
         <div class="mb-2">
           @if($item->listing_type === 'surplus')
@@ -131,6 +131,7 @@
           <span style="font-size:11px;color:#94a3b8">{{ $item->listing_type === 'surplus' ? 'School/Care Collection' : 'Available to All' }}</span>
         </div>
         <!-- Action Buttons for School/Care -->
+        <div style="margin-top: auto; padding-top: 12px; border-top: 1px solid #e2e8f0;">
         @if($item->listing_type === 'surplus')
           <!-- Claim Surplus Food -->
           <form method="POST" action="{{ route('school.food.claim', $item->id) }}" style="margin-top:12px">
@@ -179,6 +180,7 @@
             </form>
           @endif
         @endif
+        </div>
       </div>
     </div>
     @endforeach
