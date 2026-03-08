@@ -130,6 +130,55 @@
           <span style="font-size:18px;font-weight:800;color:#16a34a">FREE</span>
           <span style="font-size:11px;color:#94a3b8">{{ $item->listing_type === 'surplus' ? 'School/Care Collection' : 'Available to All' }}</span>
         </div>
+        <!-- Action Buttons for School/Care -->
+        @if($item->listing_type === 'surplus')
+          <!-- Claim Surplus Food -->
+          <form method="POST" action="{{ route('school.food.claim', $item->id) }}" style="margin-top:12px">
+            @csrf
+            <button type="submit" class="btn w-full" style="font-size:13px;padding:10px 16px;font-weight:600;border-radius:6px;background:#1f2937;color:#ffffff;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(-2px)';this.style.background='#111827'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)';this.style.transform='translateY(0)';this.style.background='#1f2937'" onclick="return confirm('Are you sure you want to claim this item? This will reserve it for your organization.')">
+              <i class="fas fa-hand-holding-heart" style="margin-right:6px"></i> Claim Now
+            </button>
+          </form>
+        @elseif($item->listing_type === 'free')
+          <!-- Claim Free Food -->
+          <form method="POST" action="{{ route('school.food.claim', $item->id) }}" style="margin-top:12px">
+            @csrf
+            <button type="submit" class="btn w-full" style="font-size:13px;padding:10px 16px;font-weight:600;border-radius:6px;background:#1f2937;color:#ffffff;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(-2px)';this.style.background='#111827'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)';this.style.transform='translateY(0)';this.style.background='#1f2937'" onclick="return confirm('Are you sure you want to claim this item? This will reserve it for your organization.')">
+              <i class="fas fa-hand-holding-heart" style="margin-right:6px"></i> Claim Now
+            </button>
+          </form>
+        @elseif($item->listing_type === 'discounted')
+          <!-- Redeem Discounted Food with Voucher -->
+          @php
+            $userVouchers = \App\Models\Voucher::where('recipient_user_id', Auth::id())
+              ->where('status', 'active')
+              ->where('remaining_value', '>', 0)
+              ->get();
+          @endphp
+          @if($userVouchers->isEmpty())
+            <div style="margin-top:12px;padding:10px;background:#fef3c7;border-radius:6px;text-align:center;color:#92400e;font-weight:600;font-size:12px">
+              <i class="fas fa-exclamation-triangle"></i> No active vouchers available
+            </div>
+          @else
+            <form method="POST" action="{{ route('school.food.redeem', $item->id) }}" style="margin-top:12px">
+              @csrf
+              <div style="margin-bottom:8px">
+                <label style="font-size:12px;color:#64748b;font-weight:600;display:block;margin-bottom:4px">Select Voucher (£{{ $item->discounted_price }})</label>
+                <select name="voucher_id" class="form-select" style="font-size:12px;padding:6px 8px;border:1px solid #cbd5e1;border-radius:4px;width:100%" required>
+                  <option value="">-- Choose a voucher --</option>
+                  @foreach($userVouchers as $voucher)
+                    @if($voucher->remaining_value >= $item->discounted_price)
+                      <option value="{{ $voucher->id }}">Voucher #{{ $voucher->id }} (Balance: £{{ number_format($voucher->remaining_value, 2) }})</option>
+                    @endif
+                  @endforeach
+                </select>
+              </div>
+              <button type="submit" class="btn w-full" style="font-size:13px;padding:10px 16px;font-weight:600;border-radius:6px;background:#1f2937;color:#ffffff;border:none;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:all 0.3s ease;" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.5)';this.style.transform='translateY(-2px)';this.style.background='#111827'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.3)';this.style.transform='translateY(0)';this.style.background='#1f2937'" onclick="return confirm('Are you sure you want to redeem this item? This will deduct £{{ $item->discounted_price }} from your voucher.')">
+                <i class="fas fa-hand-holding-heart" style="margin-right:6px"></i> Redeem Now
+              </button>
+            </form>
+          @endif
+        @endif
       </div>
     </div>
     @endforeach

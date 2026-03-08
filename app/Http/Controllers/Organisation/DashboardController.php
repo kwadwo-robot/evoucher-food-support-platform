@@ -24,14 +24,28 @@ class DashboardController extends Controller
     private function orgDashboard(string $type)
     {
         $user          = Auth::user();
-        $donations     = Donation::where('donor_user_id', $user->id)->latest()->take(10)->get();
-        $totalDonated  = Donation::where('donor_user_id', $user->id)->where('status','completed')->sum('amount');
-        $donationCount = Donation::where('donor_user_id', $user->id)->where('status','completed')->count();
-        $vouchersFunded= Donation::where('donor_user_id', $user->id)->where('status','completed')->sum('vouchers_allocated');
         $profile       = $user->organisationProfile;
         $walletBalance = $profile ? (float)$profile->wallet_balance : 0.0;
-        $peopleHelped  = (int)$vouchersFunded; // 1 voucher = 1 person helped
-        $recentDonations = $donations->take(5);
+        
+        // For VCFSE: Use Donation model
+        // For School/Care: Use Voucher model
+        if ($type === 'vcfse') {
+            $donations     = Donation::where('donor_user_id', $user->id)->latest()->take(10)->get();
+            $totalDonated  = Donation::where('donor_user_id', $user->id)->where('status','completed')->sum('amount');
+            $donationCount = Donation::where('donor_user_id', $user->id)->where('status','completed')->count();
+            $vouchersFunded= Donation::where('donor_user_id', $user->id)->where('status','completed')->sum('vouchers_allocated');
+            $peopleHelped  = (int)$vouchersFunded; // 1 voucher = 1 person helped
+            $recentDonations = $donations->take(5);
+        } else {
+            // School/Care: Get voucher issuance data
+            $vouchers = \App\Models\Voucher::where('issued_by', $user->id)->get();
+            $totalDonated  = $vouchers->sum('value');
+            $donationCount = $vouchers->count();
+            $vouchersFunded= $vouchers->count();
+            $peopleHelped  = $vouchers->pluck('recipient_user_id')->unique()->count();
+            $recentDonations = $vouchers->sortByDesc('created_at')->take(5);
+            $donations = $vouchers->sortByDesc('created_at')->take(10);
+        }
         
         // Fund Loads Data
         $totalLoaded = FundLoad::where('organisation_user_id', $user->id)
@@ -73,6 +87,23 @@ class DashboardController extends Controller
                 ->latest()
                 ->take(5)
                 ->get();
+        } else {
+            // School/Care: Get food claims by recipients who received vouchers from this school
+            $foodClaimsCounted = Redemption::whereIn('voucher_id', 
+                \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
+            )->where('status', 'confirmed')->count();
+            
+            $foodClaimsRedeemed = Redemption::whereIn('voucher_id',
+                \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
+            )->where('status', 'confirmed')->whereNotNull('redeemed_at')->count();
+            
+            $foodClaimsPaid = (float)Redemption::whereIn('voucher_id',
+                \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
+            )->where('status', 'confirmed')->sum('amount_used');
+            
+            $recentFoodClaims = Redemption::whereIn('voucher_id',
+                \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
+            )->with('foodListing')->latest()->take(5)->get();
         }
         
         $view = $type === 'vcfse' ? 'vcfse.dashboard' : 'school.dashboard';

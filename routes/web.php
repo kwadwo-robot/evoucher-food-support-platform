@@ -191,6 +191,8 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
 Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:school_care'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'schoolDashboard'])->name('dashboard');
     Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
+    Route::post('/food/{foodListingId}/claim', [SurplusClaimController::class, 'claim'])->name('food.claim');
+    Route::post('/food/{listing}/redeem', [RecipientVoucher::class, 'redeem'])->name('food.redeem');
     Route::get('/donate', [DonationController::class, 'showDonateForm'])->name('donate');
     Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
     Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
