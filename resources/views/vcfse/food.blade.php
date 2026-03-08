@@ -151,8 +151,8 @@
             <i class="fas fa-times-circle"></i> Allocation Expired
           </div>
         @endif
-      @else
-        <!-- Expiry Warning -->
+      @elseif($item->listing_type === 'discounted')
+        <!-- Expiry Warning for Discounted Items Only -->
         @php $daysLeft = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($item->expiry_date), false); @endphp
         @if($daysLeft <= 2)
           <div class="badge badge-red w-full justify-center mb-2" style="display:flex">

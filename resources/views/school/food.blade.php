@@ -126,7 +126,7 @@
           <i class="fas fa-info-circle"></i> {{ $item->collection_instructions }}
         </div>
         @endif
-        <!-- Expiry Warning -->
+        <!-- Expiry Warning - Only for Surplus Items with Allocations and Discounted Items -->
         @php $daysLeft = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($item->expiry_date), false); @endphp
         @if($item->listing_type === 'surplus' && $allocation)
           @php
@@ -152,17 +152,13 @@
               <i class="fas fa-times-circle"></i> Allocation expired
             </div>
           @endif
-        @elseif($daysLeft <= 2)
+        @elseif($item->listing_type === 'discounted' && $daysLeft <= 2)
           <div class="badge badge-red w-full justify-center mb-2" style="display:flex">
             <i class="fas fa-exclamation-triangle"></i> Expires in {{ $daysLeft }} day{{ $daysLeft !== 1 ? 's' : '' }}!
           </div>
-        @elseif($daysLeft <= 5)
+        @elseif($item->listing_type === 'discounted' && $daysLeft <= 5)
           <div class="badge badge-yellow w-full justify-center mb-2" style="display:flex">
             <i class="fas fa-clock"></i> Expires in {{ $daysLeft }} days
-          </div>
-        @else
-          <div class="badge badge-green w-full justify-center mb-2" style="display:flex">
-            <i class="fas fa-check-circle"></i> Expires in {{ $daysLeft }} days
           </div>
         @endif
         <!-- Collection Time -->

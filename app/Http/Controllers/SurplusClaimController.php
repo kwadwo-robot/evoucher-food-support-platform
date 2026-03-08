@@ -19,9 +19,9 @@ class SurplusClaimController extends Controller
     {
         $user = Auth::user();
 
-        // Verify user is VCFSE
-        if ($user->role !== 'vcfse') {
-            return redirect()->back()->with('error', 'Only VCFSE members can claim items');
+        // Verify user is VCFSE or School/Care
+        if ($user->role !== 'vcfse' && $user->role !== 'school_care') {
+            return redirect()->back()->with('error', 'Only VCFSE and School/Care members can claim items');
         }
 
         // Get the food listing
@@ -73,10 +73,18 @@ class SurplusClaimController extends Controller
         // For surplus items, check allocation
         $allocation = null;
         if ($foodListing->listing_type === 'surplus') {
-            $allocation = SurplusAllocation::where('food_listing_id', $foodListingId)
-                ->where('vcfse_user_id', $user->id)
-                ->where('status', 'pending')
-                ->first();
+            // Check allocation based on user role
+            if ($user->role === 'vcfse') {
+                $allocation = SurplusAllocation::where('food_listing_id', $foodListingId)
+                    ->where('vcfse_user_id', $user->id)
+                    ->where('status', 'pending')
+                    ->first();
+            } else if ($user->role === 'school_care') {
+                $allocation = SurplusAllocation::where('food_listing_id', $foodListingId)
+                    ->where('school_care_user_id', $user->id)
+                    ->where('status', 'pending')
+                    ->first();
+            }
 
             if (!$allocation) {
                 return redirect()->back()->with('error', 'No allocation found for this item');
