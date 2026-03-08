@@ -18,45 +18,19 @@
             <!-- Recipient Selection -->
             <div class="mb-5">
               <label class="form-label">Select Recipient <span class="text-red-600">*</span></label>
-              <div class="mb-3">
-                <div class="flex gap-2 mb-3">
-                  @if(auth()->user()->role === 'vcfse')
-                    <button type="button" class="recipient-filter-btn px-4 py-2 rounded-lg border-2 border-green-600 bg-green-50 text-green-700 font-semibold" data-filter="individuals">
-                      <i class="fas fa-user"></i> Individuals
-                    </button>
-                    <button type="button" class="recipient-filter-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:border-blue-600 hover:bg-blue-50" data-filter="schools">
-                      <i class="fas fa-school"></i> Schools/Care
-                    </button>
-                  @else
-                    <button type="button" class="recipient-filter-btn px-4 py-2 rounded-lg border-2 border-green-600 bg-green-50 text-green-700 font-semibold" data-filter="individuals">
-                      <i class="fas fa-user"></i> Individuals
-                    </button>
-                    <button type="button" class="recipient-filter-btn px-4 py-2 rounded-lg border-2 border-gray-300 text-gray-700 font-semibold hover:border-blue-600 hover:bg-blue-50" data-filter="vcfse">
-                      <i class="fas fa-handshake"></i> VCFSE Groups
-                    </button>
-                  @endif
-                </div>
-              </div>
-
-              <!-- Individuals Dropdown -->
-              <div id="individuals-section" class="recipient-section">
-                <select name="recipient_id" id="individuals-select" class="form-input @error('recipient_id') border-red-500 @enderror">
-                  <option value="">-- Select an Individual --</option>
-                  @forelse($recipients['individuals'] ?? [] as $individual)
-                    <option value="{{ $individual->id }}" {{ old('recipient_id') == $individual->id ? 'selected' : '' }}>
-                      {{ $individual->name }} ({{ $individual->email }})
-                    </option>
-                  @empty
-                    <option value="" disabled>No individuals available</option>
-                  @endforelse
-                </select>
-              </div>
-
-              <!-- Organisations Dropdown -->
-              <div id="organisations-section" class="recipient-section hidden">
-                <select name="recipient_id" id="organisations-select" class="form-input @error('recipient_id') border-red-500 @enderror">
-                  <option value="">-- Select an Organisation --</option>
-                  @if(auth()->user()->role === 'vcfse')
+              <select name="recipient_id" id="recipient-select" class="form-input @error('recipient_id') border-red-500 @enderror">
+                <option value="">-- Select a Recipient --</option>
+                @if(auth()->user()->role === 'vcfse')
+                  <optgroup label="Individuals">
+                    @forelse($recipients['individuals'] ?? [] as $individual)
+                      <option value="{{ $individual->id }}" {{ old('recipient_id') == $individual->id ? 'selected' : '' }}>
+                        {{ $individual->name }} ({{ $individual->email }})
+                      </option>
+                    @empty
+                      <option value="" disabled>No individuals available</option>
+                    @endforelse
+                  </optgroup>
+                  <optgroup label="Schools/Care">
                     @forelse($recipients['schools'] ?? [] as $school)
                       <option value="{{ $school->id }}" {{ old('recipient_id') == $school->id ? 'selected' : '' }}>
                         {{ $school->name }} ({{ $school->email }})
@@ -64,7 +38,18 @@
                     @empty
                       <option value="" disabled>No schools/care organizations available</option>
                     @endforelse
-                  @else
+                  </optgroup>
+                @else
+                  <optgroup label="Individuals">
+                    @forelse($recipients['individuals'] ?? [] as $individual)
+                      <option value="{{ $individual->id }}" {{ old('recipient_id') == $individual->id ? 'selected' : '' }}>
+                        {{ $individual->name }} ({{ $individual->email }})
+                      </option>
+                    @empty
+                      <option value="" disabled>No individuals available</option>
+                    @endforelse
+                  </optgroup>
+                  <optgroup label="VCFSE Groups">
                     @forelse($recipients['vcfse'] ?? [] as $vcfse)
                       <option value="{{ $vcfse->id }}" {{ old('recipient_id') == $vcfse->id ? 'selected' : '' }}>
                         {{ $vcfse->name }} ({{ $vcfse->email }})
@@ -72,9 +57,9 @@
                     @empty
                       <option value="" disabled>No VCFSE groups available</option>
                     @endforelse
-                  @endif
-                </select>
-              </div>
+                  </optgroup>
+                @endif
+              </select>
 
               @error('recipient_id')
                 <p class="text-red-600 text-sm mt-1"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
@@ -175,65 +160,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('DOMContentLoaded fired');
-  const form = document.querySelector('form');
-  console.log('Form found:', !!form);
-  const submitBtn = document.getElementById('submit-btn');
-  const filterButtons = document.querySelectorAll('.recipient-filter-btn');
-  const individualsSection = document.getElementById('individuals-section');
-  const organisationsSection = document.getElementById('organisations-section');
-  const individualsSelect = document.getElementById('individuals-select');
-  const organisationsSelect = document.getElementById('organisations-select');
-  const voucherValue = document.getElementById('voucher-value');
-  const expiryDays = document.getElementById('expiry-days');
-  console.log('All elements loaded');
-  if (!form) {
-    console.error('Form not found!');
-    return;
-  }
-
-  // Form submission - ensure correct dropdown is submitted
-  form.addEventListener('submit', function(e) {
-    // Log current values for debugging
-    console.log('Form submission:');
-    console.log('Individuals section hidden:', individualsSection.classList.contains('hidden'));
-    console.log('Individuals select value:', individualsSelect.value);
-    console.log('Organisations select value:', organisationsSelect.value);
-    
-    // Clear the hidden dropdown's value to prevent conflicts
-    if (individualsSection.classList.contains('hidden')) {
-      individualsSelect.value = '';
-      console.log('Cleared individuals select');
-    } else {
-      organisationsSelect.value = '';
-      console.log('Cleared organisations select');
-    }
-  });
-
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const filter = this.getAttribute('data-filter');
-      
-      // Update button styles
-      filterButtons.forEach(b => {
-        b.classList.remove('border-green-600', 'bg-green-50', 'text-green-700');
-        b.classList.add('border-gray-300', 'text-gray-700');
-      });
-      this.classList.remove('border-gray-300', 'text-gray-700');
-      this.classList.add('border-green-600', 'bg-green-50', 'text-green-700');
-
-      // Show/hide sections
-      if (filter === 'individuals') {
-        individualsSection.classList.remove('hidden');
-        organisationsSection.classList.add('hidden');
-      } else {
-        individualsSection.classList.add('hidden');
-        organisationsSection.classList.remove('hidden');
-      }
-    });
-  });
-});
+// Simple form - no complex validation needed
 </script>
 
 @endsection
