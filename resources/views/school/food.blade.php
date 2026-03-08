@@ -89,9 +89,28 @@
             <i class="fas fa-store" style="width:14px"></i>
             {{ $item->shop->shopProfile->shop_name ?? $item->shop->name ?? 'Unknown Shop' }}
           </div>
+          @php
+            // Get the current allocation for this item for the logged-in user
+            $allocation = \App\Models\SurplusAllocation::where('food_listing_id', $item->id)
+              ->where('school_care_user_id', Auth::id())
+              ->where('status', 'pending')
+              ->first();
+          @endphp
           <div class="flex items-center gap-1 mb-1">
             <i class="fas fa-calendar-alt" style="width:14px"></i>
-            Expires: {{ \Carbon\Carbon::parse($item->expiry_date)->format('d M Y') }}
+            @if($allocation && $item->listing_type === 'surplus')
+              @php
+                $hoursLeft = $allocation->expires_at->diffInHours(now(), false);
+                $minutesLeft = $allocation->expires_at->diffInMinutes(now(), false) % 60;
+              @endphp
+              @if($hoursLeft > 0 || $minutesLeft > 0)
+                Claim expires in {{ $hoursLeft }}h {{ $minutesLeft }}m
+              @else
+                Allocation expired
+              @endif
+            @else
+              Expires: {{ \Carbon\Carbon::parse($item->expiry_date)->format('d M Y') }}
+            @endif
           </div>
           <div class="flex items-center gap-1 mb-1">
             <i class="fas fa-cubes" style="width:14px"></i>
@@ -111,7 +130,31 @@
         @endif
         <!-- Expiry Warning -->
         @php $daysLeft = \Carbon\Carbon::now()->diffInDays(\Carbon\Carbon::parse($item->expiry_date), false); @endphp
-        @if($daysLeft <= 2)
+        @if($item->listing_type === 'surplus' && $allocation)
+          @php
+            $hoursLeft = $allocation->expires_at->diffInHours(now(), false);
+            $minutesLeft = $allocation->expires_at->diffInMinutes(now(), false) % 60;
+          @endphp
+          @if($hoursLeft > 0 || $minutesLeft > 0)
+            @if($hoursLeft < 1)
+              <div class="badge badge-red w-full justify-center mb-2" style="display:flex">
+                <i class="fas fa-hourglass-end"></i> Claim expires in {{ $minutesLeft }} minutes!
+              </div>
+            @elseif($hoursLeft <= 1)
+              <div class="badge badge-yellow w-full justify-center mb-2" style="display:flex">
+                <i class="fas fa-clock"></i> Claim expires in {{ $hoursLeft }}h {{ $minutesLeft }}m
+              </div>
+            @else
+              <div class="badge badge-green w-full justify-center mb-2" style="display:flex">
+                <i class="fas fa-hourglass-start"></i> Claim expires in {{ $hoursLeft }}h {{ $minutesLeft }}m
+              </div>
+            @endif
+          @else
+            <div class="badge badge-red w-full justify-center mb-2" style="display:flex">
+              <i class="fas fa-times-circle"></i> Allocation expired
+            </div>
+          @endif
+        @elseif($daysLeft <= 2)
           <div class="badge badge-red w-full justify-center mb-2" style="display:flex">
             <i class="fas fa-exclamation-triangle"></i> Expires in {{ $daysLeft }} day{{ $daysLeft !== 1 ? 's' : '' }}!
           </div>

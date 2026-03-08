@@ -91,9 +91,27 @@
             <i class="fas fa-store" style="width:14px"></i>
             {{ $item->shop->shopProfile->shop_name ?? $item->shop->name ?? 'Unknown Shop' }}
           </div>
+          @php
+            $allocation = \App\Models\SurplusAllocation::where('food_listing_id', $item->id)
+              ->where('vcfse_user_id', Auth::id())
+              ->where('status', 'pending')
+              ->first();
+          @endphp
           <div class="flex items-center gap-1 mb-1">
             <i class="fas fa-calendar-alt" style="width:14px"></i>
-            Expires: {{ \Carbon\Carbon::parse($item->expiry_date)->format('d M Y') }}
+            @if($allocation && $item->listing_type === 'surplus')
+              @php
+                $hoursLeft = $allocation->expires_at->diffInHours(now(), false);
+                $minutesLeft = $allocation->expires_at->diffInMinutes(now(), false) % 60;
+              @endphp
+              @if($hoursLeft > 0 || $minutesLeft > 0)
+                Claim expires in {{ $hoursLeft }}h {{ $minutesLeft }}m
+              @else
+                Allocation expired
+              @endif
+            @else
+              Expires: {{ \Carbon\Carbon::parse($item->expiry_date)->format('d M Y') }}
+            @endif
           </div>
           <div class="flex items-center gap-1 mb-1">
             <i class="fas fa-cubes" style="width:14px"></i>
