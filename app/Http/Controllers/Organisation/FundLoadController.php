@@ -112,15 +112,18 @@ class FundLoadController extends Controller
                 ]);
             }
 
-            // 2. Save a FundLoad record so the transaction appears in the admin dashboard
+            // 2. Save a FundLoad record so the transaction appears in the admin dashboard.
+            // admin_user_id has a NOT NULL constraint on some DB versions, so we use the
+            // first available admin account as the "system admin" reference.
+            $adminUser = User::whereIn('role', ['admin', 'super_admin'])->first();
             FundLoad::create([
                 'organisation_user_id'  => $user->id,
-                'admin_user_id'         => null,
+                'admin_user_id'         => $adminUser ? $adminUser->id : $user->id,
                 'amount'                => $request->amount,
                 'reference'             => 'STRIPE-' . strtoupper(Str::random(8)),
                 'stripe_transaction_id' => $paymentIntent->id,
                 'payment_method'        => 'stripe',
-                'notes'                 => 'Stripe fund load by ' . $user->name . ' (' . $user->email . ')',
+                'notes'                 => 'Stripe self-load by ' . $user->name . ' (' . $user->email . ')',
             ]);
 
             // 3. System log
