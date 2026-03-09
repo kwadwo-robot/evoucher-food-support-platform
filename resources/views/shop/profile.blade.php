@@ -24,7 +24,7 @@
       <label class="form-label">Shop Category</label>
       <select name="category" class="form-input">
         <option value="">-- Select a category --</option>
-        @foreach(['grocery' => 'Grocery / Supermarket', 'butcher' => 'Butcher', 'bakery' => 'Bakery', 'greengrocer' => 'Greengrocer / Farm Shop', 'deli' => 'Deli / Convenience Store', 'ethnic_food' => 'Ethnic / World Food Shop', 'health_food' => 'Health Food Store', 'fishmonger' => 'Fishmonger', 'market_stall' => 'Market Stall', 'other' => 'Other'] as $val => $label)
+        @foreach(['african' => 'African', 'caribbean' => 'Caribbean', 'mixed_african_caribbean' => 'Mixed African & Caribbean', 'indian_south_asian' => 'Indian / South Asian', 'eastern_european' => 'Eastern European', 'middle_eastern' => 'Middle Eastern'] as $val => $label)
           <option value="{{ $val }}" {{ old('category', $profile->category ?? '') === $val ? 'selected' : '' }}>{{ $label }}</option>
         @endforeach
       </select>
@@ -40,8 +40,29 @@
     </div>
     <div class="grid grid-cols-2 gap-4 mb-4">
       <div>
-        <label class="form-label">Town / City</label>
-        <input type="text" name="town" class="form-input" value="{{ old('town', $profile->town ?? 'Northampton') }}">
+        <label class="form-label">Town</label>
+        <select name="town" class="form-input">
+          <option value="">-- Select your town --</option>
+          <optgroup label="North Northamptonshire">
+            <option value="Wellingborough" {{ old('town', $profile->town ?? '') === 'Wellingborough' ? 'selected' : '' }}>Wellingborough</option>
+            <option value="Kettering" {{ old('town', $profile->town ?? '') === 'Kettering' ? 'selected' : '' }}>Kettering</option>
+            <option value="Corby" {{ old('town', $profile->town ?? '') === 'Corby' ? 'selected' : '' }}>Corby</option>
+          </optgroup>
+          <optgroup label="East Northamptonshire">
+            <option value="Rushden" {{ old('town', $profile->town ?? '') === 'Rushden' ? 'selected' : '' }}>Rushden</option>
+            <option value="Higham Ferrers" {{ old('town', $profile->town ?? '') === 'Higham Ferrers' ? 'selected' : '' }}>Higham Ferrers</option>
+            <option value="Raunds" {{ old('town', $profile->town ?? '') === 'Raunds' ? 'selected' : '' }}>Raunds</option>
+            <option value="Irthlingborough" {{ old('town', $profile->town ?? '') === 'Irthlingborough' ? 'selected' : '' }}>Irthlingborough</option>
+            <option value="Oundle" {{ old('town', $profile->town ?? '') === 'Oundle' ? 'selected' : '' }}>Oundle</option>
+            <option value="Thrapston" {{ old('town', $profile->town ?? '') === 'Thrapston' ? 'selected' : '' }}>Thrapston</option>
+          </optgroup>
+          <optgroup label="West Northamptonshire">
+            <option value="Northampton" {{ old('town', $profile->town ?? '') === 'Northampton' ? 'selected' : '' }}>Northampton</option>
+            <option value="Daventry" {{ old('town', $profile->town ?? '') === 'Daventry' ? 'selected' : '' }}>Daventry</option>
+            <option value="Brackley" {{ old('town', $profile->town ?? '') === 'Brackley' ? 'selected' : '' }}>Brackley</option>
+            <option value="Towcester" {{ old('town', $profile->town ?? '') === 'Towcester' ? 'selected' : '' }}>Towcester</option>
+          </optgroup>
+        </select>
       </div>
       <div>
         <label class="form-label">Postcode</label>

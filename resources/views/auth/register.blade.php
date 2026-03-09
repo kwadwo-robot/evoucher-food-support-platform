@@ -165,16 +165,12 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
             <label class="form-label">Shop Category *</label>
             <select name="shop_category" class="form-select">
               <option value="">-- Select a category --</option>
-              <option value="grocery" {{ old('shop_category') === 'grocery' ? 'selected' : '' }}>Grocery / Supermarket</option>
-              <option value="butcher" {{ old('shop_category') === 'butcher' ? 'selected' : '' }}>Butcher</option>
-              <option value="bakery" {{ old('shop_category') === 'bakery' ? 'selected' : '' }}>Bakery</option>
-              <option value="greengrocer" {{ old('shop_category') === 'greengrocer' ? 'selected' : '' }}>Greengrocer / Farm Shop</option>
-              <option value="deli" {{ old('shop_category') === 'deli' ? 'selected' : '' }}>Deli / Convenience Store</option>
-              <option value="ethnic_food" {{ old('shop_category') === 'ethnic_food' ? 'selected' : '' }}>Ethnic / World Food Shop</option>
-              <option value="health_food" {{ old('shop_category') === 'health_food' ? 'selected' : '' }}>Health Food Store</option>
-              <option value="fishmonger" {{ old('shop_category') === 'fishmonger' ? 'selected' : '' }}>Fishmonger</option>
-              <option value="market_stall" {{ old('shop_category') === 'market_stall' ? 'selected' : '' }}>Market Stall</option>
-              <option value="other" {{ old('shop_category') === 'other' ? 'selected' : '' }}>Other</option>
+              <option value="african" {{ old('shop_category') === 'african' ? 'selected' : '' }}>African</option>
+              <option value="caribbean" {{ old('shop_category') === 'caribbean' ? 'selected' : '' }}>Caribbean</option>
+              <option value="mixed_african_caribbean" {{ old('shop_category') === 'mixed_african_caribbean' ? 'selected' : '' }}>Mixed African &amp; Caribbean</option>
+              <option value="indian_south_asian" {{ old('shop_category') === 'indian_south_asian' ? 'selected' : '' }}>Indian / South Asian</option>
+              <option value="eastern_european" {{ old('shop_category') === 'eastern_european' ? 'selected' : '' }}>Eastern European</option>
+              <option value="middle_eastern" {{ old('shop_category') === 'middle_eastern' ? 'selected' : '' }}>Middle Eastern</option>
             </select>
           </div>
         </div>
@@ -184,8 +180,29 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label class="form-label">Town / City *</label>
-            <input type="text" name="shop_town" value="{{ old('shop_town') }}" class="form-input" placeholder="e.g. Northampton">
+            <label class="form-label">Town *</label>
+            <select name="shop_town" class="form-select">
+              <option value="">-- Select your town --</option>
+              <optgroup label="North Northamptonshire">
+                <option value="Wellingborough" {{ old('shop_town') === 'Wellingborough' ? 'selected' : '' }}>Wellingborough</option>
+                <option value="Kettering" {{ old('shop_town') === 'Kettering' ? 'selected' : '' }}>Kettering</option>
+                <option value="Corby" {{ old('shop_town') === 'Corby' ? 'selected' : '' }}>Corby</option>
+              </optgroup>
+              <optgroup label="East Northamptonshire">
+                <option value="Rushden" {{ old('shop_town') === 'Rushden' ? 'selected' : '' }}>Rushden</option>
+                <option value="Higham Ferrers" {{ old('shop_town') === 'Higham Ferrers' ? 'selected' : '' }}>Higham Ferrers</option>
+                <option value="Raunds" {{ old('shop_town') === 'Raunds' ? 'selected' : '' }}>Raunds</option>
+                <option value="Irthlingborough" {{ old('shop_town') === 'Irthlingborough' ? 'selected' : '' }}>Irthlingborough</option>
+                <option value="Oundle" {{ old('shop_town') === 'Oundle' ? 'selected' : '' }}>Oundle</option>
+                <option value="Thrapston" {{ old('shop_town') === 'Thrapston' ? 'selected' : '' }}>Thrapston</option>
+              </optgroup>
+              <optgroup label="West Northamptonshire">
+                <option value="Northampton" {{ old('shop_town') === 'Northampton' ? 'selected' : '' }}>Northampton</option>
+                <option value="Daventry" {{ old('shop_town') === 'Daventry' ? 'selected' : '' }}>Daventry</option>
+                <option value="Brackley" {{ old('shop_town') === 'Brackley' ? 'selected' : '' }}>Brackley</option>
+                <option value="Towcester" {{ old('shop_town') === 'Towcester' ? 'selected' : '' }}>Towcester</option>
+              </optgroup>
+            </select>
           </div>
           <div>
             <label class="form-label">Postcode *</label>
