@@ -42,9 +42,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🏷️</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Food to Go</span>
-                <span class="badge badge-orange ml-auto" style="font-size:10px">All Users</span>
+                <span class="badge badge-orange ml-auto" style="font-size:10px">Discounted</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Sell near-expiry food at a discount. Visible to Recipients, Schools/Care, and VCFSE groups.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to Recipients, Schools/Care, and VCFSE groups. They pay the discounted price at your shop (voucher covers part or all).</p>
             </label>
 
             {{-- Free Surplus --}}
