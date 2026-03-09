@@ -1,28 +1,23 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('fund_loads', function (Blueprint $table) {
-            $table->foreignId('admin_user_id')->nullable()->change();
-        });
+        // MySQL: make admin_user_id nullable without requiring doctrine/dbal
+        // SQLite: already allows NULL on all columns — no action needed
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE fund_loads MODIFY admin_user_id BIGINT UNSIGNED NULL');
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('fund_loads', function (Blueprint $table) {
-            $table->foreignId('admin_user_id')->nullable(false)->change();
-        });
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('ALTER TABLE fund_loads MODIFY admin_user_id BIGINT UNSIGNED NOT NULL');
+        }
     }
 };
