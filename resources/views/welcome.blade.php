@@ -342,7 +342,12 @@ function initStripe() {
   try {
     if (stripe) return; // Already initialized
     
-    stripe = Stripe('pk_test_51Sc7h13gtZiQWbc7XZP3ooVrjZp0XcaHOWk8aPzXvFLt9qH7aKd7NspGSo3klEzj43qV56Gial5zqFbloWpKGqqw00v1IHlzjt');
+    var stripePublishableKey = '{{ \App\Services\StripeService::publishableKey() }}';
+    if (!stripePublishableKey) {
+      console.warn('Stripe is not configured. Please set the Stripe keys in Admin Settings.');
+      return;
+    }
+    stripe = Stripe(stripePublishableKey);
     elements = stripe.elements();
     
     // Destroy existing card element if it exists

@@ -10,17 +10,10 @@ use App\Models\OrganisationProfile;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Stripe\StripeClient;
+use App\Services\StripeService;
 
 class FundLoadController extends Controller
 {
-    private $stripe;
-
-    public function __construct()
-    {
-        $this->stripe = new StripeClient(config('services.stripe.secret'));
-    }
-
     public function showLoadForm()
     {
         $user = Auth::user();
@@ -46,7 +39,11 @@ class FundLoadController extends Controller
         $amountInCents = (int)($request->amount * 100);
 
         try {
-            $paymentIntent = $this->stripe->paymentIntents->create([
+            $stripe = StripeService::client();
+            if (!$stripe) {
+                return response()->json(['error' => 'Payment processing is not configured. Please contact the administrator.'], 503);
+            }
+            $paymentIntent = $stripe->paymentIntents->create([
                 'amount' => $amountInCents,
                 'currency' => 'gbp',
                 'metadata' => [

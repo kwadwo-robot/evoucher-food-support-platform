@@ -136,7 +136,8 @@
 
 <script src="https://js.stripe.com/v3/"></script>
 <script>
-const stripe = Stripe('{{ config("services.stripe.public") }}');
+const stripeKey = '{{ \App\Services\StripeService::publishableKey() }}';
+const stripe = stripeKey ? Stripe(stripeKey) : null;
 const elements = stripe.elements();
 const cardElement = elements.create('card');
 cardElement.mount('#card-element');
