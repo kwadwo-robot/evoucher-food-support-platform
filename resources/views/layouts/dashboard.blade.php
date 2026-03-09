@@ -239,6 +239,11 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('admin.bank-deposits.index') }}" class="nav-item {{ request()->routeIs('admin.bank-deposits.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-bank"></i></span> Bank Deposits
   </a>
+  @if($role === 'super_admin')
+  <a href="{{ route('admin.settings') }}" class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-cog"></i></span> Settings
+  </a>
+  @endif
   @endif
 
   @if($role === 'local_shop')
