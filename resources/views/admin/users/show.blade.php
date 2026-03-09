@@ -46,6 +46,7 @@
             <div class="grid grid-cols-2 gap-3 text-sm">
                 <div><p class="text-xs text-gray-500">Full Name</p><p class="font-medium">{{ $user->recipientProfile->full_name }}</p></div>
                 <div><p class="text-xs text-gray-500">Phone</p><p class="font-medium">{{ $user->recipientProfile->phone ?? 'N/A' }}</p></div>
+                <div class="col-span-2"><p class="text-xs text-gray-500">Address</p><p class="font-medium">{{ $user->recipientProfile->address ?? 'N/A' }}</p></div>
                 <div><p class="text-xs text-gray-500">Postcode</p><p class="font-medium">{{ $user->recipientProfile->postcode ?? 'N/A' }}</p></div>
             </div>
         </div>
@@ -53,22 +54,46 @@
 
         @if($user->shopProfile)
         <div class="border-t border-gray-100 mt-4 pt-4">
-            <h3 class="font-semibold text-gray-700 mb-3 text-sm">Shop Profile</h3>
+            <h3 class="font-semibold text-gray-700 mb-3 text-sm">Local Food Shop Profile</h3>
             <div class="grid grid-cols-2 gap-3 text-sm">
                 <div><p class="text-xs text-gray-500">Shop Name</p><p class="font-medium">{{ $user->shopProfile->shop_name }}</p></div>
+                <div><p class="text-xs text-gray-500">Category</p><p class="font-medium capitalize">{{ $user->shopProfile->category ? str_replace('_', ' ', $user->shopProfile->category) : 'N/A' }}</p></div>
                 <div><p class="text-xs text-gray-500">Phone</p><p class="font-medium">{{ $user->shopProfile->phone ?? 'N/A' }}</p></div>
                 <div class="col-span-2"><p class="text-xs text-gray-500">Address</p><p class="font-medium">{{ $user->shopProfile->address ?? 'N/A' }}</p></div>
+                <div><p class="text-xs text-gray-500">Town / City</p><p class="font-medium">{{ $user->shopProfile->town ?? 'N/A' }}</p></div>
+                <div><p class="text-xs text-gray-500">Postcode</p><p class="font-medium">{{ $user->shopProfile->postcode ?? 'N/A' }}</p></div>
+                <div class="col-span-2"><p class="text-xs text-gray-500">Opening Hours</p><p class="font-medium">{{ $user->shopProfile->opening_hours ?? 'N/A' }}</p></div>
+                <div class="col-span-2"><p class="text-xs text-gray-500">Description</p><p class="font-medium">{{ $user->shopProfile->description ?? 'N/A' }}</p></div>
             </div>
         </div>
         @endif
 
         @if($user->organisationProfile)
         <div class="border-t border-gray-100 mt-4 pt-4">
-            <h3 class="font-semibold text-gray-700 mb-3 text-sm">Organisation Profile</h3>
+            <h3 class="font-semibold text-gray-700 mb-3 text-sm">
+                @if($user->role === 'school_care') School / Care Organisation Profile
+                @else VCFSE Organisation Profile
+                @endif
+            </h3>
             <div class="grid grid-cols-2 gap-3 text-sm">
-                <div><p class="text-xs text-gray-500">Org Name</p><p class="font-medium">{{ $user->organisationProfile->org_name }}</p></div>
-                <div><p class="text-xs text-gray-500">Type</p><p class="font-medium capitalize">{{ $user->organisationProfile->org_type }}</p></div>
-                <div><p class="text-xs text-gray-500">Charity No</p><p class="font-medium">{{ $user->organisationProfile->charity_number ?? 'N/A' }}</p></div>
+                <div><p class="text-xs text-gray-500">Organisation Name</p><p class="font-medium">{{ $user->organisationProfile->org_name }}</p></div>
+                <div><p class="text-xs text-gray-500">Type</p><p class="font-medium capitalize">{{ str_replace('_', ' ', $user->organisationProfile->org_type) }}</p></div>
+                <div><p class="text-xs text-gray-500">Contact Person</p><p class="font-medium">{{ $user->organisationProfile->contact_person ?? 'N/A' }}</p></div>
+                <div><p class="text-xs text-gray-500">Phone</p><p class="font-medium">{{ $user->organisationProfile->phone ?? 'N/A' }}</p></div>
+                @if($user->role === 'vcfse')
+                <div><p class="text-xs text-gray-500">Charity / Reg Number</p><p class="font-medium">{{ $user->organisationProfile->charity_number ?? 'N/A' }}</p></div>
+                @else
+                <div><p class="text-xs text-gray-500">Reg / Ofsted Number</p><p class="font-medium">{{ $user->organisationProfile->charity_number ?? 'N/A' }}</p></div>
+                @endif
+                <div class="col-span-2"><p class="text-xs text-gray-500">Address</p><p class="font-medium">{{ $user->organisationProfile->address ?? 'N/A' }}</p></div>
+                <div><p class="text-xs text-gray-500">Postcode</p><p class="font-medium">{{ $user->organisationProfile->postcode ?? 'N/A' }}</p></div>
+                <div><p class="text-xs text-gray-500">Website</p>
+                    @if($user->organisationProfile->website)
+                        <a href="{{ $user->organisationProfile->website }}" target="_blank" class="font-medium text-green-600 hover:underline">{{ $user->organisationProfile->website }}</a>
+                    @else
+                        <p class="font-medium">N/A</p>
+                    @endif
+                </div>
             </div>
         </div>
         @endif

@@ -250,6 +250,7 @@ class DashboardController extends Controller
     {
         $request->validate([
             'shop_name'     => 'required|string|max:200',
+            'category'      => 'nullable|string|max:100',
             'phone'         => 'nullable|string|max:20',
             'address'       => 'required|string',
             'town'          => 'nullable|string|max:100',
@@ -259,7 +260,7 @@ class DashboardController extends Controller
         ]);
 
         Auth::user()->shopProfile->update($request->only([
-            'shop_name', 'phone', 'address', 'town', 'postcode', 'opening_hours', 'description'
+            'shop_name', 'category', 'phone', 'address', 'town', 'postcode', 'opening_hours', 'description'
         ]));
 
         return back()->with('success', 'Profile updated.');

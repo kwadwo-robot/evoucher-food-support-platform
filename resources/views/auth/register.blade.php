@@ -12,7 +12,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:40px 20px}
-.reg-wrap{max-width:680px;margin:0 auto}
+.reg-wrap{max-width:720px;margin:0 auto}
 .reg-header{text-align:center;margin-bottom:32px}
 .reg-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:20px;text-decoration:none}
 .reg-logo-icon{width:44px;height:44px;background:#16a34a;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px}
@@ -29,11 +29,15 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
 .form-input:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
 .form-select{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;color:#0f172a;background:#fff;outline:none;transition:border .15s;font-family:'Inter',sans-serif}
 .form-select:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.form-textarea{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;color:#0f172a;background:#fff;outline:none;transition:border .15s;font-family:'Inter',sans-serif;resize:vertical;min-height:80px}
+.form-textarea:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
 .password-wrapper{position:relative;display:flex;align-items:center}
 .password-toggle{position:absolute;right:12px;background:none;border:none;cursor:pointer;color:#94a3b8;font-size:16px;padding:4px 8px;transition:color .15s}
 .password-toggle:hover{color:#64748b}
 .btn-submit{width:100%;padding:13px;background:#16a34a;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px}
 .btn-submit:hover{background:#15803d;transform:translateY(-1px)}
+.section-divider{height:1px;background:#f1f5f9;margin:4px 0 16px}
+.section-title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px}
 [x-cloak]{display:none!important}
 </style>
 </head>
@@ -75,7 +79,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
       </div>
       <div class="role-tab" :class="role === 'local_shop' ? 'active' : ''" @click="setRole('local_shop')">
         <div class="role-tab-icon">🏪</div>
-        <div class="role-tab-name">Local Shop</div>
+        <div class="role-tab-name">Local Food Shop</div>
         <div class="role-tab-desc">I want to list food</div>
       </div>
       <div class="role-tab" :class="role === 'vcfse' ? 'active' : ''" @click="setRole('vcfse')">
@@ -142,60 +146,117 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
           <label class="form-label">Address</label>
           <input type="text" name="address" value="{{ old('address') }}" class="form-input" placeholder="Your home address">
         </div>
+        <div class="mb-4">
+          <label class="form-label">Postcode</label>
+          <input type="text" name="postcode" value="{{ old('postcode') }}" class="form-input" placeholder="e.g. NN9 6GR" style="max-width:200px">
+        </div>
       </div>
 
-      <!-- Shop Fields -->
+      <!-- Local Food Shop Fields -->
       <div x-show="role === 'local_shop'" x-cloak>
-        <div style="height:1px;background:#f1f5f9;margin:4px 0 16px"></div>
-        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px">Shop Details</div>
+        <div class="section-divider"></div>
+        <div class="section-title"><i class="fas fa-store mr-1" style="color:#16a34a"></i> Shop Details</div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="form-label">Shop Name *</label>
             <input type="text" name="shop_name" value="{{ old('shop_name') }}" class="form-input" placeholder="Your shop name">
           </div>
           <div>
-            <label class="form-label">Business Registration</label>
-            <input type="text" name="business_reg" value="{{ old('business_reg') }}" class="form-input" placeholder="Optional">
+            <label class="form-label">Shop Category *</label>
+            <select name="shop_category" class="form-select">
+              <option value="">-- Select a category --</option>
+              <option value="grocery" {{ old('shop_category') === 'grocery' ? 'selected' : '' }}>Grocery / Supermarket</option>
+              <option value="butcher" {{ old('shop_category') === 'butcher' ? 'selected' : '' }}>Butcher</option>
+              <option value="bakery" {{ old('shop_category') === 'bakery' ? 'selected' : '' }}>Bakery</option>
+              <option value="greengrocer" {{ old('shop_category') === 'greengrocer' ? 'selected' : '' }}>Greengrocer / Farm Shop</option>
+              <option value="deli" {{ old('shop_category') === 'deli' ? 'selected' : '' }}>Deli / Convenience Store</option>
+              <option value="ethnic_food" {{ old('shop_category') === 'ethnic_food' ? 'selected' : '' }}>Ethnic / World Food Shop</option>
+              <option value="health_food" {{ old('shop_category') === 'health_food' ? 'selected' : '' }}>Health Food Store</option>
+              <option value="fishmonger" {{ old('shop_category') === 'fishmonger' ? 'selected' : '' }}>Fishmonger</option>
+              <option value="market_stall" {{ old('shop_category') === 'market_stall' ? 'selected' : '' }}>Market Stall</option>
+              <option value="other" {{ old('shop_category') === 'other' ? 'selected' : '' }}>Other</option>
+            </select>
           </div>
         </div>
         <div class="mb-4">
           <label class="form-label">Shop Address *</label>
-          <input type="text" name="shop_address" value="{{ old('shop_address') }}" class="form-input" placeholder="Full shop address">
+          <input type="text" name="shop_address" value="{{ old('shop_address') }}" class="form-input" placeholder="Full shop address (street and building)">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="form-label">Town / City *</label>
+            <input type="text" name="shop_town" value="{{ old('shop_town') }}" class="form-input" placeholder="e.g. Northampton">
+          </div>
+          <div>
+            <label class="form-label">Postcode *</label>
+            <input type="text" name="shop_postcode" value="{{ old('shop_postcode') }}" class="form-input" placeholder="e.g. NN1 1AA">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Business Registration Number</label>
+          <input type="text" name="business_reg" value="{{ old('business_reg') }}" class="form-input" placeholder="Optional">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Opening Hours</label>
+          <input type="text" name="opening_hours" value="{{ old('opening_hours') }}" class="form-input" placeholder="e.g. Mon–Fri 9am–6pm, Sat 9am–4pm">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Shop Description</label>
+          <textarea name="shop_description" class="form-textarea" placeholder="Brief description of your shop and the products you offer">{{ old('shop_description') }}</textarea>
         </div>
       </div>
 
-      <!-- VCFSE Fields -->
+      <!-- VCFSE Organisation Fields -->
       <div x-show="role === 'vcfse'" x-cloak>
-        <div style="height:1px;background:#f1f5f9;margin:4px 0 16px"></div>
-        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px">Organisation Details</div>
+        <div class="section-divider"></div>
+        <div class="section-title"><i class="fas fa-building mr-1" style="color:#16a34a"></i> VCFSE Organisation Details</div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="form-label">Organisation Name *</label>
             <input type="text" name="org_name" id="vcfse_org_name" value="{{ old('role') === 'vcfse' ? old('org_name') : '' }}" class="form-input" placeholder="Organisation name">
           </div>
           <div>
-            <label class="form-label">Charity Number</label>
+            <label class="form-label">Charity / Registration Number</label>
             <input type="text" name="charity_number" value="{{ old('role') === 'vcfse' ? old('charity_number') : '' }}" class="form-input" placeholder="e.g. 1234567">
           </div>
         </div>
         <div class="mb-4">
-          <label class="form-label">Contact Person</label>
-          <input type="text" name="contact_name" value="{{ old('role') === 'vcfse' ? old('contact_name') : '' }}" class="form-input" placeholder="Primary contact name">
+          <label class="form-label">Contact Person *</label>
+          <input type="text" name="contact_name" value="{{ old('role') === 'vcfse' ? old('contact_name') : '' }}" class="form-input" placeholder="Primary contact full name">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Organisation Address *</label>
+          <input type="text" name="org_address" value="{{ old('role') === 'vcfse' ? old('org_address') : '' }}" class="form-input" placeholder="Full organisation address">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="form-label">Town / City *</label>
+            <input type="text" name="org_town" value="{{ old('role') === 'vcfse' ? old('org_town') : '' }}" class="form-input" placeholder="e.g. Northampton">
+          </div>
+          <div>
+            <label class="form-label">Postcode *</label>
+            <input type="text" name="org_postcode" value="{{ old('role') === 'vcfse' ? old('org_postcode') : '' }}" class="form-input" placeholder="e.g. NN1 1AA">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Website</label>
+          <input type="url" name="org_website" value="{{ old('role') === 'vcfse' ? old('org_website') : '' }}" class="form-input" placeholder="https://www.yourorganisation.org.uk">
         </div>
       </div>
 
-      <!-- School Fields -->
+      <!-- School / Care Organisation Fields -->
       <div x-show="role === 'school_care'" x-cloak>
-        <div style="height:1px;background:#f1f5f9;margin:4px 0 16px"></div>
-        <div style="font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px">Organisation Details</div>
+        <div class="section-divider"></div>
+        <div class="section-title"><i class="fas fa-school mr-1" style="color:#16a34a"></i> School / Care Organisation Details</div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="form-label">Organisation Name *</label>
-            <input type="text" name="school_org_name" id="school_org_name" value="{{ old('role') === 'school_care' ? old('school_org_name') : '' }}" class="form-input" placeholder="School or care org name">
+            <input type="text" name="school_org_name" id="school_org_name" value="{{ old('role') === 'school_care' ? old('school_org_name') : '' }}" class="form-input" placeholder="School or care organisation name">
           </div>
           <div>
-            <label class="form-label">Organisation Type</label>
+            <label class="form-label">Organisation Type *</label>
             <select name="org_type" class="form-select">
+              <option value="">-- Select type --</option>
               <option value="school" {{ old('org_type') === 'school' ? 'selected' : '' }}>School</option>
               <option value="care_home" {{ old('org_type') === 'care_home' ? 'selected' : '' }}>Care Home</option>
               <option value="ngo" {{ old('org_type') === 'ngo' ? 'selected' : '' }}>NGO</option>
@@ -204,8 +265,30 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
           </div>
         </div>
         <div class="mb-4">
-          <label class="form-label">Contact Person</label>
-          <input type="text" name="school_contact_name" value="{{ old('role') === 'school_care' ? old('school_contact_name') : '' }}" class="form-input" placeholder="Primary contact name">
+          <label class="form-label">Contact Person *</label>
+          <input type="text" name="school_contact_name" value="{{ old('role') === 'school_care' ? old('school_contact_name') : '' }}" class="form-input" placeholder="Primary contact full name">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Organisation Address *</label>
+          <input type="text" name="school_address" value="{{ old('role') === 'school_care' ? old('school_address') : '' }}" class="form-input" placeholder="Full organisation address">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label class="form-label">Town / City *</label>
+            <input type="text" name="school_town" value="{{ old('role') === 'school_care' ? old('school_town') : '' }}" class="form-input" placeholder="e.g. Northampton">
+          </div>
+          <div>
+            <label class="form-label">Postcode *</label>
+            <input type="text" name="school_postcode" value="{{ old('role') === 'school_care' ? old('school_postcode') : '' }}" class="form-input" placeholder="e.g. NN1 1AA">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Website</label>
+          <input type="url" name="school_website" value="{{ old('role') === 'school_care' ? old('school_website') : '' }}" class="form-input" placeholder="https://www.yourschool.sch.uk">
+        </div>
+        <div class="mb-4">
+          <label class="form-label">Registration / Ofsted Number</label>
+          <input type="text" name="school_reg_number" value="{{ old('role') === 'school_care' ? old('school_reg_number') : '' }}" class="form-input" placeholder="Optional — school URN, Ofsted, or care registration number">
         </div>
       </div>
 

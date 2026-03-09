@@ -34,32 +34,44 @@ class RegisterController extends Controller
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::min(8)],
             'role'     => ['required', 'in:recipient,local_shop,vcfse,school_care'],
+            'phone'    => ['nullable', 'string', 'max:20'],
         ];
 
         if ($role === 'recipient') {
             $rules += [
-                'phone'   => ['nullable', 'string', 'max:20'],
-                'address' => ['nullable', 'string'],
+                'address'  => ['nullable', 'string'],
+                'postcode' => ['nullable', 'string', 'max:10'],
             ];
         } elseif ($role === 'local_shop') {
             $rules += [
-                'shop_name'    => ['required', 'string', 'max:200'],
-                'shop_address' => ['required', 'string'],
-                'phone'        => ['nullable', 'string', 'max:20'],
+                'shop_name'        => ['required', 'string', 'max:200'],
+                'shop_category'    => ['required', 'string', 'max:100'],
+                'shop_address'     => ['required', 'string'],
+                'shop_town'        => ['required', 'string', 'max:100'],
+                'shop_postcode'    => ['required', 'string', 'max:10'],
+                'opening_hours'    => ['nullable', 'string', 'max:255'],
+                'shop_description' => ['nullable', 'string'],
             ];
         } elseif ($role === 'vcfse') {
             $rules += [
                 'org_name'       => ['required', 'string', 'max:200'],
-                'contact_name'   => ['nullable', 'string', 'max:150'],
-                'phone'          => ['nullable', 'string', 'max:20'],
+                'contact_name'   => ['required', 'string', 'max:150'],
                 'charity_number' => ['nullable', 'string', 'max:50'],
+                'org_address'    => ['required', 'string'],
+                'org_town'       => ['required', 'string', 'max:100'],
+                'org_postcode'   => ['required', 'string', 'max:10'],
+                'org_website'    => ['nullable', 'url', 'max:255'],
             ];
         } else { // school_care
             $rules += [
                 'school_org_name'     => ['required', 'string', 'max:200'],
-                'org_type'            => ['nullable', 'string', 'max:50'],
-                'school_contact_name' => ['nullable', 'string', 'max:150'],
-                'phone'               => ['nullable', 'string', 'max:20'],
+                'org_type'            => ['required', 'string', 'max:50'],
+                'school_contact_name' => ['required', 'string', 'max:150'],
+                'school_address'      => ['required', 'string'],
+                'school_town'         => ['required', 'string', 'max:100'],
+                'school_postcode'     => ['required', 'string', 'max:10'],
+                'school_website'      => ['nullable', 'url', 'max:255'],
+                'school_reg_number'   => ['nullable', 'string', 'max:100'],
             ];
         }
 
@@ -81,13 +93,22 @@ class RegisterController extends Controller
                 'last_name'  => '',
                 'phone'      => $validated['phone'] ?? null,
                 'address'    => $validated['address'] ?? null,
+                'postcode'   => $validated['postcode'] ?? null,
             ]);
         } elseif ($role === 'local_shop') {
+            // Combine address parts into a full address string
+            $fullAddress = $validated['shop_address'];
+
             ShopProfile::create([
-                'user_id'   => $user->id,
-                'shop_name' => $validated['shop_name'],
-                'address'   => $validated['shop_address'],
-                'phone'     => $validated['phone'] ?? null,
+                'user_id'       => $user->id,
+                'shop_name'     => $validated['shop_name'],
+                'category'      => $validated['shop_category'],
+                'address'       => $fullAddress,
+                'town'          => $validated['shop_town'],
+                'postcode'      => $validated['shop_postcode'],
+                'phone'         => $validated['phone'] ?? null,
+                'opening_hours' => $validated['opening_hours'] ?? null,
+                'description'   => $validated['shop_description'] ?? null,
             ]);
             // Notify admins about new shop registration
             NotificationService::notifyNewShopRegistration($user);
@@ -96,18 +117,24 @@ class RegisterController extends Controller
                 'user_id'        => $user->id,
                 'org_name'       => $validated['org_name'],
                 'org_type'       => 'vcfse',
-                'contact_person' => $validated['contact_name'] ?? null,
+                'contact_person' => $validated['contact_name'],
                 'charity_number' => $validated['charity_number'] ?? null,
                 'phone'          => $validated['phone'] ?? null,
+                'address'        => $validated['org_address'] . ', ' . $validated['org_town'],
+                'postcode'       => $validated['org_postcode'],
+                'website'        => $validated['org_website'] ?? null,
             ]);
         } else { // school_care
             OrganisationProfile::create([
                 'user_id'        => $user->id,
                 'org_name'       => $validated['school_org_name'],
-                'org_type'       => $validated['org_type'] ?? 'school',
-                'contact_person' => $validated['school_contact_name'] ?? null,
-                'charity_number' => null,
+                'org_type'       => $validated['org_type'],
+                'contact_person' => $validated['school_contact_name'],
+                'charity_number' => $validated['school_reg_number'] ?? null,
                 'phone'          => $validated['phone'] ?? null,
+                'address'        => $validated['school_address'] . ', ' . $validated['school_town'],
+                'postcode'       => $validated['school_postcode'],
+                'website'        => $validated['school_website'] ?? null,
             ]);
         }
 

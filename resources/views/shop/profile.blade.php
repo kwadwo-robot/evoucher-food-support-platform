@@ -21,6 +21,15 @@
       @error('shop_name')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
     </div>
     <div class="mb-4">
+      <label class="form-label">Shop Category</label>
+      <select name="category" class="form-input">
+        <option value="">-- Select a category --</option>
+        @foreach(['grocery' => 'Grocery / Supermarket', 'butcher' => 'Butcher', 'bakery' => 'Bakery', 'greengrocer' => 'Greengrocer / Farm Shop', 'deli' => 'Deli / Convenience Store', 'ethnic_food' => 'Ethnic / World Food Shop', 'health_food' => 'Health Food Store', 'fishmonger' => 'Fishmonger', 'market_stall' => 'Market Stall', 'other' => 'Other'] as $val => $label)
+          <option value="{{ $val }}" {{ old('category', $profile->category ?? '') === $val ? 'selected' : '' }}>{{ $label }}</option>
+        @endforeach
+      </select>
+    </div>
+    <div class="mb-4">
       <label class="form-label">Phone Number</label>
       <input type="text" name="phone" class="form-input" value="{{ old('phone', $profile->phone ?? '') }}">
     </div>

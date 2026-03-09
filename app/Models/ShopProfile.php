@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ShopProfile extends Model
 {
     protected $fillable = [
-        'user_id', 'shop_name', 'phone', 'address', 'town', 'postcode',
+        'user_id', 'shop_name', 'category', 'phone', 'address', 'town', 'postcode',
         'opening_hours', 'description', 'logo_url', 'is_verified',
     ];
 

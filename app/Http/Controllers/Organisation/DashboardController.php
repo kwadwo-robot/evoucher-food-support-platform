@@ -230,4 +230,28 @@ class DashboardController extends Controller
         $view = $user->role === 'vcfse' ? 'vcfse.reports' : 'school.reports';
         return view($view);
     }
+
+    public function profile()
+    {
+        $profile = Auth::user()->organisationProfile;
+        return view('organisation.profile', compact('profile'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'org_name'       => 'required|string|max:200',
+            'contact_person' => 'nullable|string|max:150',
+            'phone'          => 'nullable|string|max:20',
+            'address'        => 'nullable|string',
+            'postcode'       => 'nullable|string|max:10',
+            'website'        => 'nullable|url|max:255',
+        ]);
+
+        Auth::user()->organisationProfile->update($request->only([
+            'org_name', 'contact_person', 'phone', 'address', 'postcode', 'website',
+        ]));
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
 }
