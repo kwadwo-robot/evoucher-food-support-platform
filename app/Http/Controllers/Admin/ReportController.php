@@ -46,6 +46,10 @@ class ReportController extends Controller
         $totalVouchers = Voucher::count();
         $totalListings = FoodListing::count();
         
+        // Calculate redemption rate (percentage of vouchers that have been redeemed)
+        $vouchersRedeemed = Voucher::whereIn('status', ['redeemed', 'partially_used'])->count();
+        $redemptionRate = $totalVouchers > 0 ? round(($vouchersRedeemed / $totalVouchers) * 100) : 0;
+        
         // Get monthly data for the table
         $monthlyData = Donation::where('status','completed')
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month_key, DATE_FORMAT(created_at, "%b %Y") as month, COUNT(*) as donations, SUM(amount) as amount')
@@ -120,7 +124,8 @@ class ReportController extends Controller
             'totalVouchers',
             'totalListings',
             'monthlyData',
-            'spendingByCategory'
+            'spendingByCategory',
+            'redemptionRate'
         ));
     }
 

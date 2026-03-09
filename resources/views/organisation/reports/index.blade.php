@@ -43,13 +43,13 @@
       </div>
     </div>
     
-    <!-- Utilization Rate -->
+    <!-- Redemption Rate -->
     <div class="stat-card border-l-4 border-purple-500">
       <div class="stat-icon mb-3" style="background:#fdf4ff;color:#a855f7"><i class="fas fa-percent"></i></div>
-      <div class="stat-label">Utilization Rate</div>
-      <div class="stat-value">{{ $totalReceived > 0 ? round(($totalSpent / $totalReceived) * 100) : 0 }}%</div>
+      <div class="stat-label">Redemption Rate</div>
+      <div class="stat-value">{{ $redemptionRate ?? 0 }}%</div>
       <div style="font-size:12px;color:#64748b;margin-top:8px">
-        Funds Utilized
+        Vouchers Redeemed
       </div>
     </div>
   </div>

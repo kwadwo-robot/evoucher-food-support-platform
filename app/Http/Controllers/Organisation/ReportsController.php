@@ -48,6 +48,12 @@ class ReportsController extends Controller
         // Calculate balance
         $totalBalance = $totalReceived - $totalSpent;
         
+        // Calculate redemption rate (percentage of vouchers that have been redeemed)
+        $organisationVouchers = Voucher::where('organisation_user_id', $user->id)->count();
+        $organisationVouchersRedeemed = Voucher::where('organisation_user_id', $user->id)
+            ->whereIn('status', ['redeemed', 'partially_used'])->count();
+        $redemptionRate = $organisationVouchers > 0 ? round(($organisationVouchersRedeemed / $organisationVouchers) * 100) : 0;
+        
         // Get spending breakdown by food category
         $spendingByCategory = Redemption::whereHas('voucher', function($q) use ($user) {
             $q->where('organisation_user_id', $user->id);
@@ -76,7 +82,8 @@ class ReportsController extends Controller
             'totalBalance',
             'redemptionCount',
             'spendingByCategory',
-            'role'
+            'role',
+            'redemptionRate'
         ));
     }
     

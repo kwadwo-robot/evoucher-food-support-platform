@@ -109,10 +109,10 @@
           <div class="flex justify-between mb-1">
             <span style="font-size:13px;font-weight:600;color:#334155">Redemption Rate</span>
             <span style="font-size:13px;font-weight:700;color:#f97316">
-              {{ $totalVouchers > 0 ? round(($totalRedemptions / $totalVouchers) * 100) : 0 }}%
+              {{ $redemptionRate ?? 0 }}%
             </span>
           </div>
-          <div class="progress-bar"><div class="progress-fill" style="width:{{ $totalVouchers > 0 ? min(100, round(($totalRedemptions / $totalVouchers) * 100)) : 0 }}%;background:#f97316"></div></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:{{ $redemptionRate ?? 0 }}%;background:#f97316"></div></div>
         </div>
       </div>
     </div>
