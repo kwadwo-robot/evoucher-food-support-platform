@@ -83,14 +83,12 @@ class PublicDonationController extends Controller
 
             if (in_array($paymentIntent->status, ['succeeded', 'processing'])) {
                 $donation = Donation::create([
-                    'amount'             => $validated['amount'],
-                    'email'              => $validated['email'],
-                    'donor_email'        => $validated['email'],
-                    'stripe_payment_id'  => $paymentIntent->id,
-                    'payment_intent_id'  => $validated['payment_intent_id'],
-                    'status'             => $paymentIntent->status === 'succeeded' ? 'completed' : 'processing',
-                    'currency'           => 'GBP',
-                    'notes'              => json_encode([
+                    'amount'            => $validated['amount'],
+                    'donor_email'       => $validated['email'],
+                    'stripe_payment_id' => $paymentIntent->id,
+                    'status'            => $paymentIntent->status === 'succeeded' ? 'completed' : 'pending',
+                    'currency'          => 'GBP',
+                    'notes'             => json_encode([
                         'email'          => $validated['email'],
                         'type'           => 'donation',
                         'stripe_status'  => $paymentIntent->status,
@@ -98,8 +96,9 @@ class PublicDonationController extends Controller
                     ])
                 ]);
 
-                $admin = User::where('role', 'admin')->first();
-                if ($admin) {
+                // Notify all admins
+                $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+                foreach ($admins as $admin) {
                     Notification::create([
                         'user_id' => $admin->id,
                         'title'   => 'New Donation Received',
@@ -131,10 +130,8 @@ class PublicDonationController extends Controller
                     if ($charge->status === 'succeeded') {
                         $donation = Donation::create([
                             'amount'            => $validated['amount'],
-                            'email'             => $validated['email'],
                             'donor_email'       => $validated['email'],
                             'stripe_payment_id' => $paymentIntent->id,
-                            'payment_intent_id' => $validated['payment_intent_id'],
                             'status'            => 'completed',
                             'currency'          => 'GBP',
                             'notes'             => json_encode([
@@ -145,8 +142,8 @@ class PublicDonationController extends Controller
                             ])
                         ]);
 
-                        $admin = User::where('role', 'admin')->first();
-                        if ($admin) {
+                        $admins = User::whereIn('role', ['admin', 'super_admin'])->get();
+                        foreach ($admins as $admin) {
                             Notification::create([
                                 'user_id' => $admin->id,
                                 'title'   => 'New Donation Received',
@@ -181,10 +178,8 @@ class PublicDonationController extends Controller
 
                 Donation::create([
                     'amount'            => $validated['amount'],
-                    'email'             => $validated['email'],
                     'donor_email'       => $validated['email'],
                     'stripe_payment_id' => $paymentIntent->id,
-                    'payment_intent_id' => $validated['payment_intent_id'],
                     'status'            => 'failed',
                     'currency'          => 'GBP',
                     'notes'             => json_encode([
@@ -207,7 +202,7 @@ class PublicDonationController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Error saving donation: ' . $e->getMessage()
             ], 400);
         }
     }
