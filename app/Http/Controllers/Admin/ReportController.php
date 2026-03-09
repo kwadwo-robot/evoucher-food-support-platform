@@ -8,6 +8,7 @@ use App\Models\FundLoad;
 use App\Models\Redemption;
 use App\Models\User;
 use App\Models\Voucher;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 
@@ -50,26 +51,47 @@ class ReportController extends Controller
         $vouchersRedeemed = Voucher::whereIn('status', ['redeemed', 'partially_used'])->count();
         $redemptionRate = $totalVouchers > 0 ? round(($vouchersRedeemed / $totalVouchers) * 100) : 0;
         
+        // Use database-agnostic date formatting (SQLite uses strftime, MySQL uses DATE_FORMAT)
+        $isSqlite = config('database.default') === 'sqlite';
+        
+        if ($isSqlite) {
+            $monthKeyExpr = "strftime('%Y-%m', created_at) as month_key";
+            $monthLabelExpr = "strftime('%Y-%m', created_at) as month";
+            $yearExpr = "CAST(strftime('%Y', created_at) AS INTEGER) as year";
+            $monthExpr = "CAST(strftime('%m', created_at) AS INTEGER) as month";
+        } else {
+            $monthKeyExpr = 'DATE_FORMAT(created_at, "%Y-%m") as month_key';
+            $monthLabelExpr = 'DATE_FORMAT(created_at, "%b %Y") as month';
+            $yearExpr = 'YEAR(created_at) as year';
+            $monthExpr = 'MONTH(created_at) as month';
+        }
+        
         // Get monthly data for the table
         $monthlyData = Donation::where('status','completed')
-            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month_key, DATE_FORMAT(created_at, "%b %Y") as month, COUNT(*) as donations, SUM(amount) as amount')
+            ->selectRaw("{$monthKeyExpr}, {$monthLabelExpr}, COUNT(*) as donations, SUM(amount) as amount")
             ->groupBy('month_key', 'month')
             ->orderBy('month_key', 'desc')
             ->take(12)
             ->get()
-            ->map(function($row) {
+            ->map(function($row) use ($isSqlite) {
+                $monthKey = $row->month_key;
+                // For SQLite the month label is also in Y-m format, convert to readable
+                $monthLabel = $isSqlite
+                    ? \Carbon\Carbon::createFromFormat('Y-m', $monthKey)->format('M Y')
+                    : $row->month;
+
                 // Get vouchers issued in this month
-                $monthStart = \Carbon\Carbon::createFromFormat('Y-m', $row->month_key)->startOfMonth();
-                $monthEnd = \Carbon\Carbon::createFromFormat('Y-m', $row->month_key)->endOfMonth();
+                $monthStart = \Carbon\Carbon::createFromFormat('Y-m', $monthKey)->startOfMonth();
+                $monthEnd   = \Carbon\Carbon::createFromFormat('Y-m', $monthKey)->endOfMonth();
                 
-                $vouchers = Voucher::whereBetween('created_at', [$monthStart, $monthEnd])->count();
+                $vouchers    = Voucher::whereBetween('created_at', [$monthStart, $monthEnd])->count();
                 $redemptions = Redemption::whereBetween('created_at', [$monthStart, $monthEnd])->count();
                 
                 return [
-                    'month' => $row->month,
-                    'donations' => $row->donations,
-                    'amount' => $row->amount,
-                    'vouchers' => $vouchers,
+                    'month'       => $monthLabel,
+                    'donations'   => $row->donations,
+                    'amount'      => $row->amount,
+                    'vouchers'    => $vouchers,
                     'redemptions' => $redemptions,
                 ];
             })
@@ -83,7 +105,7 @@ class ReportController extends Controller
             })
             ->map(function($items) {
                 return [
-                    'count' => $items->count(),
+                    'count'  => $items->count(),
                     'amount' => $items->sum('amount_used')
                 ];
             });
@@ -104,9 +126,15 @@ class ReportController extends Controller
             'total_bank_deposits'   => BankDeposit::where('status','verified')->count(),
         ];
         
-        $monthly_donations = Donation::where('status','completed')
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(amount) as total')
-            ->groupBy('year','month')->orderBy('year','desc')->orderBy('month','desc')->take(12)->get();
+        if ($isSqlite) {
+            $monthly_donations = Donation::where('status','completed')
+                ->selectRaw("CAST(strftime('%Y', created_at) AS INTEGER) as year, CAST(strftime('%m', created_at) AS INTEGER) as month, SUM(amount) as total")
+                ->groupBy('year','month')->orderBy('year','desc')->orderBy('month','desc')->take(12)->get();
+        } else {
+            $monthly_donations = Donation::where('status','completed')
+                ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(amount) as total')
+                ->groupBy('year','month')->orderBy('year','desc')->orderBy('month','desc')->take(12)->get();
+        }
         
         return view('admin.reports.index', compact(
             'data',
