@@ -30,9 +30,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🎁</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Free</span>
-                <span class="badge badge-green ml-auto" style="font-size:10px">Free</span>
+                <span class="badge badge-green ml-auto" style="font-size:10px">Schools/Care & VCFSE</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Recipients and VCFSE groups can redeem this item for free using a voucher.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to Schools/Care and VCFSE groups only. Recipients cannot see this.</p>
             </label>
 
             {{-- Food to Go (Discounted) --}}
@@ -42,9 +42,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🏷️</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Food to Go</span>
-                <span class="badge badge-orange ml-auto" style="font-size:10px">Discounted</span>
+                <span class="badge badge-orange ml-auto" style="font-size:10px">All Users</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Sell near-expiry food at a discount. Recipients only — VCFSE cannot see this.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Sell near-expiry food at a discount. Visible to Recipients, Schools/Care, and VCFSE groups.</p>
             </label>
 
             {{-- Free Surplus --}}
@@ -54,9 +54,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">📦</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Free Surplus</span>
-                <span class="badge badge-purple ml-auto" style="font-size:10px">VCFSE Only</span>
+                <span class="badge badge-purple ml-auto" style="font-size:10px">Schools/Care & VCFSE</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Post surplus food for VCFSE groups to collect. Recipients cannot see this.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Post surplus food for Schools/Care and VCFSE groups to collect. Recipients cannot see this.</p>
             </label>
 
           </div>

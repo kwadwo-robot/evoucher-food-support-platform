@@ -61,21 +61,27 @@ class FoodListing extends Model
 
     // ── Query Scopes (visibility rules) ─────────────────────────────────────
 
-    /** Recipients see: free + discounted (NOT surplus) */
+    /** Recipients see: discounted only (NOT free or surplus) */
     public function scopeVisibleToRecipient($query)
     {
-        return $query->whereIn('listing_type', ['free', 'discounted']);
+        return $query->where('listing_type', 'discounted');
     }
 
-    /** VCFSE sees: free + surplus (NOT discounted) */
+    /** Schools/Care see: free + discounted + surplus (all types) */
+    public function scopeVisibleToSchoolCare($query)
+    {
+        return $query->whereIn('listing_type', ['free', 'discounted', 'surplus']);
+    }
+
+    /** VCFSE sees: free + discounted + surplus (all types) */
     public function scopeVisibleToVcfse($query)
     {
-        return $query->whereIn('listing_type', ['free', 'surplus']);
+        return $query->whereIn('listing_type', ['free', 'discounted', 'surplus']);
     }
 
-    /** Public browse page shows: free + discounted only */
+    /** Public browse page shows: discounted only */
     public function scopePubliclyVisible($query)
     {
-        return $query->whereIn('listing_type', ['free', 'discounted']);
+        return $query->where('listing_type', 'discounted');
     }
 }
