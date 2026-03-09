@@ -107,8 +107,26 @@
                 <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                     <h2 class="text-lg font-semibold text-gray-900">Additional Information</h2>
                 </div>
-                <div class="px-6 py-6">
-                    <pre class="text-gray-900 text-sm bg-gray-50 p-4 rounded border border-gray-200 overflow-auto">{{ json_encode(json_decode($donation->notes), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
+                <div class="px-6 py-6 space-y-4">
+                    @php
+                        $notes = json_decode($donation->notes, true);
+                        if (is_array($notes)) {
+                            foreach ($notes as $key => $value) {
+                                $label = ucfirst(str_replace('_', ' ', $key));
+                                if (is_array($value)) {
+                                    $displayValue = json_encode($value);
+                                } else {
+                                    $displayValue = $value;
+                                }
+                    @endphp
+                    <div>
+                        <label class="block text-sm font-medium text-gray-600 mb-2">{{ $label }}</label>
+                        <p class="text-gray-900 font-medium break-all">{{ $displayValue }}</p>
+                    </div>
+                    @php
+                            }
+                        }
+                    @endphp
                 </div>
             </div>
             @endif
