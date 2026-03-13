@@ -4,6 +4,8 @@ use App\Http\Controllers\Controller;
 use App\Models\FoodListing;
 use App\Models\Redemption;
 use App\Models\Voucher;
+use App\Models\SystemLog;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +22,18 @@ class VoucherController extends Controller
     {
         abort_if($voucher->recipient_user_id !== Auth::id(), 403);
         $voucher->load(['redemptions.foodListing.shop.shopProfile','issuedBy']);
+        
+        // Log voucher view
+        SystemLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'view',
+            'entity_type' => 'Voucher',
+            'entity_id' => $voucher->id,
+            'description' => 'Viewed voucher #' . $voucher->id,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+        
         return view('recipient.vouchers.show', compact('voucher'));
     }
 
@@ -69,7 +83,33 @@ class VoucherController extends Controller
             ]);
 
             $listing->update(['status' => 'reserved']);
+            
+            // Log voucher redemption
+            SystemLog::create([
+                'user_id' => $user->id,
+                'action' => 'redeem',
+                'entity_type' => 'Voucher',
+                'entity_id' => $voucher->id,
+                'description' => 'Redeemed voucher #' . $voucher->id . ' for food item. Amount used: £' . number_format($voucherUsed, 2),
+                'changes' => [
+                    'voucher_remaining' => $newRemaining,
+                    'amount_used' => $voucherUsed,
+                ],
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
         });
+
+        // Get the created redemption to send notification
+        $redemption = Redemption::where('voucher_id', $voucher->id)
+            ->where('food_listing_id', $listing->id)
+            ->where('recipient_user_id', $user->id)
+            ->latest()
+            ->first();
+        
+        if ($redemption) {
+            NotificationService::notifyRecipientRedemptionConfirmed($redemption);
+        }
 
         $msg = 'Voucher redeemed! Please collect your item from the shop.';
         if ($amountOwedAtShop > 0) {

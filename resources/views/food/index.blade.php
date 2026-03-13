@@ -81,6 +81,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
           <option value="all" {{ request('type', 'all') === 'all' ? 'selected' : '' }}>All Types</option>
           <option value="free" {{ request('type') === 'free' ? 'selected' : '' }}>Free Items</option>
           <option value="discounted" {{ request('type') === 'discounted' ? 'selected' : '' }}>Discounted</option>
+          <option value="surplus" {{ request('type') === 'surplus' ? 'selected' : '' }}>Surplus</option>
         </select>
       </div>
 
@@ -88,7 +89,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
       <div>
         <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase">Sort By</label>
         <select name="sort" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px">
-          <option value="newest" {{ $sortBy === 'newest' ? 'selected' : '' }}>Newest First</option>
+          <option value="newest" {{ $sortBy === 'newest' ? 'selected' : '' }}>Newest</option>
           <option value="price_low" {{ $sortBy === 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
           <option value="price_high" {{ $sortBy === 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
           <option value="expiring" {{ $sortBy === 'expiring' ? 'selected' : '' }}>Expiring Soon</option>

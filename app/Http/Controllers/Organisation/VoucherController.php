@@ -7,6 +7,7 @@ use App\Mail\VoucherIssuedConfirmationMail;
 use App\Mail\VoucherIssuedMail;
 use App\Models\Voucher;
 use App\Models\User;
+use App\Models\SystemLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -161,6 +162,22 @@ class VoucherController extends Controller
             }
 
             DB::commit();
+            
+            // Log voucher issuance
+            SystemLog::create([
+                'user_id' => $user->id,
+                'action' => 'issue',
+                'entity_type' => 'Voucher',
+                'entity_id' => $voucher->id,
+                'description' => 'Issued voucher #' . $voucher->code . ' to ' . $recipient->name . ' for ' . number_format($validated['value'], 2),
+                'changes' => [
+                    'recipient_id' => $recipient->id,
+                    'value' => $validated['value'],
+                    'wallet_balance_after' => $newBalance,
+                ],
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
 
             return redirect()->route($user->role === 'vcfse' ? 'vcfse.dashboard' : 'school.dashboard')
                 ->with('success', 'Voucher issued successfully! A confirmation has been sent to your email and the recipient has been notified.');

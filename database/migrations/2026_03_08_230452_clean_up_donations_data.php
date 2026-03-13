@@ -11,18 +11,15 @@ return new class extends Migration
     public function up(): void
     {
         // Delete all incomplete donations (missing email or amount)
-        DB::table('donations')
-            ->whereNull('donor_email')
-            ->orWhereNull('email')
-            ->orWhereNull('amount')
-            ->orWhere('amount', 0)
-            ->delete();
-
-        // Keep only donations from shadrackadupoku@gmail.com
-        DB::table('donations')
-            ->where('donor_email', '!=', 'shadrackadupoku@gmail.com')
-            ->where('email', '!=', 'shadrackadupoku@gmail.com')
-            ->delete();
+        try {
+            DB::table('donations')
+                ->whereNull('email')
+                ->orWhereNull('amount')
+                ->orWhere('amount', 0)
+                ->delete();
+        } catch (\Exception $e) {
+            // Column may not exist yet
+        }
     }
 
     /**

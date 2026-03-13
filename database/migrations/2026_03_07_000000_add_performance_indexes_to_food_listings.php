@@ -44,8 +44,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('food_listings', function (Blueprint $table) {
-            $table->dropIndexIfExists(['expiry_date']);
-            $table->dropIndexIfExists(['created_at']);
+            try { $table->dropIndex(['expiry_date']); } catch (\Exception $e) {}
+            try { $table->dropIndex(['created_at']); } catch (\Exception $e) {}
         });
         
         // Drop composite index if exists

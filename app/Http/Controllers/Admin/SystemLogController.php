@@ -12,6 +12,18 @@ class SystemLogController extends Controller
     {
         $query = SystemLog::with('user');
 
+        // Filter by user role (only non-admin users)
+        if ($request->user_role) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('role', $request->user_role);
+            });
+        } else {
+            // By default, only show logs for non-admin users
+            $query->whereHas('user', function($q) {
+                $q->whereIn('role', ['recipient', 'vcfse', 'school_care']);
+            });
+        }
+
         if ($request->action) {
             $query->where('action', $request->action);
         }

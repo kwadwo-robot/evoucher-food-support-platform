@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Shop;
 use App\Http\Controllers\Controller;
 use App\Models\FoodListing;
+use App\Models\SystemLog;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +70,21 @@ class FoodListingController extends Controller
         if ($listingType === 'surplus') {
             NotificationService::notifySurplusFoodAlert($listing);
         }
+        
+        // Log food listing creation
+        SystemLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'create',
+            'entity_type' => 'FoodListing',
+            'entity_id' => $listing->id,
+            'description' => 'Created food listing: ' . $listing->item_name . ' (Type: ' . $listingType . ')',
+            'changes' => [
+                'listing_type' => $listingType,
+                'quantity' => $listing->quantity,
+            ],
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
 
         return redirect()->route('shop.listings.index')->with('success', 'Food listing created successfully.');
     }

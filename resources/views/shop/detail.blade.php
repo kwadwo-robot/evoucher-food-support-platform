@@ -53,7 +53,7 @@
         </select>
         
         <select name="sort" class="form-input" style="padding:10px;border:1px solid #e2e8f0;border-radius:6px">
-            <option value="newest" {{ $sortBy === 'newest' ? 'selected' : '' }}>Newest First</option>
+            <option value="newest" {{ $sortBy === 'newest' ? 'selected' : '' }}>Newest</option>
             <option value="price_low" {{ $sortBy === 'price_low' ? 'selected' : '' }}>Price: Low to High</option>
             <option value="price_high" {{ $sortBy === 'price_high' ? 'selected' : '' }}>Price: High to Low</option>
             <option value="expiring" {{ $sortBy === 'expiring' ? 'selected' : '' }}>Expiring Soon</option>
