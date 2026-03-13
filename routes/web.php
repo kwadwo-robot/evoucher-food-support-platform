@@ -36,8 +36,9 @@ Route::get('/lang/{locale}', function ($locale) {
     $supported = ['en', 'ar', 'ro', 'pl'];
     if (in_array($locale, $supported)) {
         session(['locale' => $locale]);
+        return response()->json(['success' => true, 'locale' => $locale]);
     }
-    return redirect()->back()->withInput();
+    return response()->json(['success' => false], 400);
 })->name('lang.switch');
 
 // Public
