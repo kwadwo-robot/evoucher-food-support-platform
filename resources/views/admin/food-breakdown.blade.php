@@ -256,7 +256,7 @@
 
     .modern-tabs .nav-link:hover {
         color: #495057;
-        background-color: rgba(0, 0, 0, 0.02);
+        background-color: rgba(0, 0, 0, 0.01);
     }
 
     .modern-tabs .nav-link.active {

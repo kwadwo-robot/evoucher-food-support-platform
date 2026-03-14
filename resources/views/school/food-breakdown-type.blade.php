@@ -1,10 +1,12 @@
 <!-- Type-Specific Statistics Widgets -->
 <div class="type-stats-section mb-4">
-    <h5 class="mb-3 text-muted">
-        <i class="fas fa-chart-line"></i> Type-Specific Breakdown
-    </h5>
-    
     <div class="row mb-4 g-3 type-stats-grid">
+        <!-- Heading spanning all columns -->
+        <div class="col-12 mb-3">
+            <h5 class="mb-0 text-muted">
+                <i class="fas fa-chart-line"></i> Type-Specific Breakdown
+            </h5>
+        </div>
         <!-- Total Redemptions Widget -->
         <div class="col-12 col-sm-6 col-lg-3 mb-3">
             <div class="modern-stat-widget widget-primary type-widget">
