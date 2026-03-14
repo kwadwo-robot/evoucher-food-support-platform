@@ -278,6 +278,19 @@
         font-weight: 500;
     }
 
+    /* Tab Content */
+    .tab-pane {
+        display: none;
+    }
+
+    .tab-pane.show {
+        display: block;
+    }
+
+    .tab-pane.active {
+        display: block;
+    }
+
     /* Counter Animation */
     @keyframes slideUp {
         from {
