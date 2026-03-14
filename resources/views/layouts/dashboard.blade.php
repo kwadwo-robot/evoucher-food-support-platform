@@ -202,87 +202,87 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   @php $role = auth()->user()->role ?? 'recipient'; @endphp
 
   @if(in_array($role, ['admin','super_admin']))
-  <div class="sb-section">Main</div>
+  <div class="sb-section">{{ __('app.main') }}</div>
   <a href="{{ route('admin.dashboard') }}" class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-pie"></i></span> Overview
+    <span class="ni"><i class="fas fa-chart-pie"></i></span> {{ __('app.overview') }}
   </a>
   <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-users"></i></span> Users
+    <span class="ni"><i class="fas fa-users"></i></span> {{ __('app.users') }}
     @if(isset($pendingCount) && $pendingCount > 0)<span class="nb">{{ $pendingCount }}</span>@endif
   </a>
-  <div class="sb-section">Operations</div>
+  <div class="sb-section">{{ __('app.operations') }}</div>
   <a href="{{ route('admin.listings.index') }}" class="nav-item {{ request()->routeIs('admin.listings.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-basket-shopping"></i></span> Food Listings
+    <span class="ni"><i class="fas fa-basket-shopping"></i></span> {{ __('app.food_listings') }}
   </a>
   <a href="{{ route('admin.vouchers.index') }}" class="nav-item {{ request()->routeIs('admin.vouchers.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-ticket"></i></span> Vouchers
+    <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.vouchers') }}
   </a>
   <a href="{{ route('admin.donations.index') }}" class="nav-item {{ request()->routeIs('admin.donations.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-credit-card"></i></span> Payments
+    <span class="ni"><i class="fas fa-credit-card"></i></span> {{ __('app.payments') }}
   </a>
   <a href="{{ route('admin.fund-loads.index') }}" class="nav-item {{ request()->routeIs('admin.fund-loads.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-wallet"></i></span> Load Funds
+    <span class="ni"><i class="fas fa-wallet"></i></span> {{ __('app.load_funds') }}
   </a>
   <a href="{{ route('admin.payouts.index') }}" class="nav-item {{ request()->routeIs('admin.payouts.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-money-bill-transfer"></i></span> Shop Payouts
+    <span class="ni"><i class="fas fa-money-bill-transfer"></i></span> {{ __('app.shop_payouts') }}
   </a>
   <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-bar"></i></span> Reports
+    <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.reports') }}
   </a>
-  <div class="sb-section">Management</div>
+  <div class="sb-section">{{ __('app.management') }}</div>
   <a href="{{ route('admin.broadcasts.index') }}" class="nav-item {{ request()->routeIs('admin.broadcasts.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-bullhorn"></i></span> Broadcasts
+    <span class="ni"><i class="fas fa-bullhorn"></i></span> {{ __('app.broadcasts') }}
   </a>
   <a href="{{ route('admin.logs.index') }}" class="nav-item {{ request()->routeIs('admin.logs.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-list"></i></span> System Logs
+    <span class="ni"><i class="fas fa-list"></i></span> {{ __('app.system_logs') }}
   </a>
   <a href="{{ route('admin.bank-deposits.index') }}" class="nav-item {{ request()->routeIs('admin.bank-deposits.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-bank"></i></span> Bank Deposits
+    <span class="ni"><i class="fas fa-bank"></i></span> {{ __('app.bank_deposits') }}
   </a>
   <a href="{{ route('admin.settings') }}" class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-cog"></i></span> Settings
+    <span class="ni"><i class="fas fa-cog"></i></span> {{ __('app.settings') }}
   </a>
   @endif
 
   @if($role === 'local_shop')
-  <div class="sb-section">Shop</div>
+  <div class="sb-section">{{ __('app.shop') }}</div>
   <a href="{{ route('shop.dashboard') }}" class="nav-item {{ request()->routeIs('shop.dashboard') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-store"></i></span> Dashboard
+    <span class="ni"><i class="fas fa-store"></i></span> {{ __('app.dashboard') }}
   </a>
   <a href="{{ route('shop.listings.index') }}" class="nav-item {{ request()->routeIs('shop.listings.index') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-list"></i></span> My Listings
+    <span class="ni"><i class="fas fa-list"></i></span> {{ __('app.my_listings') }}
   </a>
   <a href="{{ route('shop.listings.create') }}" class="nav-item {{ request()->routeIs('shop.listings.create') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-plus-circle"></i></span> Add Listing
+    <span class="ni"><i class="fas fa-plus-circle"></i></span> {{ __('app.add_listing') }}
   </a>
   <a href="{{ route('shop.redemptions') }}" class="nav-item {{ request()->routeIs('shop.redemptions') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-check-circle"></i></span> Redemptions
+    <span class="ni"><i class="fas fa-check-circle"></i></span> {{ __('app.redemptions') }}
   </a>
   <a href="{{ route('shop.verify') }}" class="nav-item {{ request()->routeIs('shop.verify') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-qrcode"></i></span> Verify Voucher
+    <span class="ni"><i class="fas fa-qrcode"></i></span> {{ __('app.verify_voucher') }}
   </a>
-  <div class="sb-section">Reports & Finance</div>
+  <div class="sb-section">{{ __('app.reports_finance') }}</div>
   <a href="{{ route('shop.payouts.index') }}" class="nav-item {{ request()->routeIs('shop.payouts.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-money-bill-transfer"></i></span> My Payouts
+    <span class="ni"><i class="fas fa-money-bill-transfer"></i></span> {{ __('app.my_payouts') }}
   </a>
   <a href="{{ route('shop.reports.index') }}" class="nav-item {{ request()->routeIs('shop.reports.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-bar"></i></span> All Reports
+    <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.all_reports') }}
   </a>
   @endif
 
   @if($role === 'recipient')
-  <div class="sb-section">My Account</div>
+  <div class="sb-section">{{ __('app.my_account') }}
   <a href="{{ route('recipient.dashboard') }}" class="nav-item {{ request()->routeIs('recipient.dashboard') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-home"></i></span> Dashboard
+    <span class="ni"><i class="fas fa-home"></i></span> {{ __('app.dashboard') }}
   </a>
   <a href="{{ route('recipient.vouchers') }}" class="nav-item {{ request()->routeIs('recipient.vouchers') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-ticket"></i></span> My Vouchers
+    <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.my_vouchers') }}
   </a>
   <a href="{{ route('recipient.food.browse') }}" class="nav-item {{ request()->routeIs('recipient.food.browse') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-basket-shopping"></i></span> Browse Food
+    <span class="ni"><i class="fas fa-basket-shopping"></i></span> {{ __('app.browse_food') }}
   </a>
   <a href="{{ route('recipient.cart') }}" class="nav-item {{ request()->routeIs('recipient.cart') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-shopping-cart"></i></span> My Cart
+    <span class="ni"><i class="fas fa-shopping-cart"></i></span> {{ __('app.my_cart') }}
     @php $cartCount = count(session('recipient_cart', [])); @endphp
     @if($cartCount > 0)
     <span class="nb" style="background:#dc2626;color:#fff">{{ $cartCount }}</span>
@@ -290,71 +290,71 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   </a>
   <div class="sb-section">Reports</div>
   <a href="{{ route('recipient.history') }}" class="nav-item {{ request()->routeIs('recipient.history') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-history"></i></span> Redemption History
+    <span class="ni"><i class="fas fa-history"></i></span> {{ __('app.redemption_history') }}
   </a>
   <a href="{{ route('recipient.reports.export-pdf') }}" class="nav-item">
-    <span class="ni"><i class="fas fa-file-pdf"></i></span> Export PDF
+    <span class="ni"><i class="fas fa-file-pdf"></i></span> {{ __('app.export_pdf') }}
   </a>
   <a href="{{ route('recipient.reports.export-excel') }}" class="nav-item">
-    <span class="ni"><i class="fas fa-file-excel"></i></span> Export Excel
+    <span class="ni"><i class="fas fa-file-excel"></i></span> {{ __('app.export_excel') }}
   </a>
   @endif
 
   @if($role === 'vcfse')
-  <div class="sb-section">Organisation</div>
+  <div class="sb-section">{{ __('app.organisation') }}</div>
   <a href="{{ route('vcfse.dashboard') }}" class="nav-item {{ request()->routeIs('vcfse.dashboard') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-building"></i></span> Dashboard
+    <span class="ni"><i class="fas fa-building"></i></span> {{ __('app.dashboard') }}
   </a>
   <a href="{{ route('vcfse.fund-load') }}" class="nav-item {{ request()->routeIs('vcfse.fund-load') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-wallet"></i></span> Load Funds
+    <span class="ni"><i class="fas fa-wallet"></i></span> {{ __('app.load_funds') }}
   </a>
   <a href="{{ route('vcfse.food') }}" class="nav-item {{ request()->routeIs('vcfse.food') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-box-open"></i></span> Browse Food
+    <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.browse_food') }}
   </a>
-  <div class="sb-section">Vouchers</div>
+  <div class="sb-section">{{ __('app.vouchers') }}</div>
   <a href="{{ route('vcfse.vouchers.create') }}" class="nav-item {{ request()->routeIs('vcfse.vouchers.create') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-plus-circle"></i></span> Issue Voucher
+    <span class="ni"><i class="fas fa-plus-circle"></i></span> {{ __('app.issue_voucher') }}
   </a>
   <a href="{{ route('vcfse.vouchers.index') }}" class="nav-item {{ request()->routeIs('vcfse.vouchers.index', 'vcfse.vouchers.show') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-ticket"></i></span> My Vouchers
+    <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.my_vouchers') }}
   </a>
   <div class="sb-section">Reports</div>
   <a href="{{ route('vcfse.reports') }}" class="nav-item {{ request()->routeIs('vcfse.reports') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-bar"></i></span> Reports
+    <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.reports') }}
   </a>
   <a href="{{ route('vcfse.bank-deposit-notification.create') }}" class="nav-item {{ request()->routeIs('vcfse.bank-deposit-notification.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-university"></i></span> Bank Deposit
+    <span class="ni"><i class="fas fa-university"></i></span> {{ __('app.bank_deposit') }}
   </a>
   @endif
 
   @if($role === 'school_care')
-  <div class="sb-section">Organisation</div>
+  <div class="sb-section">{{ __('app.organisation') }}</div>
   <a href="{{ route('school.dashboard') }}" class="nav-item {{ request()->routeIs('school.dashboard') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-school"></i></span> Dashboard
+    <span class="ni"><i class="fas fa-school"></i></span> {{ __('app.dashboard') }}
   </a>
   <a href="{{ route('school.fund-load') }}" class="nav-item {{ request()->routeIs('school.fund-load') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-wallet"></i></span> Load Funds
+    <span class="ni"><i class="fas fa-wallet"></i></span> {{ __('app.load_funds') }}
   </a>
   <a href="{{ route('school.food') }}" class="nav-item {{ request()->routeIs('school.food') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-box-open"></i></span> Browse Food
+    <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.browse_food') }}
   </a>
-  <div class="sb-section">Vouchers</div>
+  <div class="sb-section">{{ __('app.vouchers') }}</div>
   <a href="{{ route('school.vouchers.create') }}" class="nav-item {{ request()->routeIs('school.vouchers.create') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-plus-circle"></i></span> Issue Voucher
+    <span class="ni"><i class="fas fa-plus-circle"></i></span> {{ __('app.issue_voucher') }}
   </a>
   <a href="{{ route('school.vouchers.index') }}" class="nav-item {{ request()->routeIs('school.vouchers.index', 'school.vouchers.show') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-ticket"></i></span> My Vouchers
+    <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.my_vouchers') }}
   </a>
   <div class="sb-section">Reports</div>
   <a href="{{ route('school.reports') }}" class="nav-item {{ request()->routeIs('school.reports') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-bar"></i></span> Reports
+    <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.reports') }}
   </a>
   <a href="{{ route('school.bank-deposit-notification.create') }}" class="nav-item {{ request()->routeIs('school.bank-deposit-notification.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-university"></i></span> Bank Deposit
+    <span class="ni"><i class="fas fa-university"></i></span> {{ __('app.bank_deposit') }}
   </a>
   @endif
 
-  <div class="sb-section">Account</div>
+  <div class="sb-section">{{ __('app.account') }}</div>
   @php
     $profileRoute = match($role) {
       'local_shop' => 'shop.profile',
@@ -366,15 +366,15 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   @endphp
   @if($profileRoute)
   <a href="{{ route($profileRoute) }}" class="nav-item {{ request()->routeIs($profileRoute) ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-user-cog"></i></span> Profile Settings
+    <span class="ni"><i class="fas fa-user-cog"></i></span> {{ __('app.profile_settings') }}
   </a>
   @endif
   <a href="{{ route('password.change') }}" class="nav-item {{ request()->routeIs('password.change') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-lock"></i></span> Change Password
+    <span class="ni"><i class="fas fa-lock"></i></span> {{ __('app.change_password') }}
   </a>
   @if($role !== 'recipient')
   <a href="{{ url('/food') }}" class="nav-item">
-    <span class="ni"><i class="fas fa-globe"></i></span> Public Listings
+    <span class="ni"><i class="fas fa-globe"></i></span> {{ __('app.public_listings') }}
   </a>
   @endif
 
@@ -383,7 +383,7 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
       @csrf
       <button type="submit" class="nav-item w-full text-left" style="background:none;border:none;width:100%;">
         <span class="ni"><i class="fas fa-sign-out-alt"></i></span>
-        <span>Sign Out</span>
+        <span>{{ __('app.sign_out') }}</span>
       </button>
     </form>
   </div>
