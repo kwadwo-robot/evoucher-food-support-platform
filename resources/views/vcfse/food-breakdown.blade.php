@@ -392,8 +392,43 @@
         }, 16);
     }
 
+    // Initialize Bootstrap tabs
+    function initializeTabs() {
+        const tabLinks = document.querySelectorAll('.modern-tabs .nav-link');
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the target tab pane
+                const targetId = this.getAttribute('href');
+                const targetPane = document.querySelector(targetId);
+                
+                if (targetPane) {
+                    // Hide all tab panes
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('show', 'active');
+                    });
+                    
+                    // Remove active class from all nav links
+                    tabLinks.forEach(l => {
+                        l.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab pane
+                    targetPane.classList.add('show', 'active');
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                }
+            });
+        });
+    }
+
     // Initialize counters on page load
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialize tabs
+        initializeTabs();
+        
         document.querySelectorAll('.counter').forEach(element => {
             const target = parseInt(element.dataset.target);
             animateCounter(element, target);
