@@ -229,6 +229,9 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('admin.reports.index') }}" class="nav-item {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.reports') }}
   </a>
+  <a href="{{ route('admin.food-breakdown') }}" class="nav-item {{ request()->routeIs('admin.food-breakdown') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.food_breakdown') }}
+  </a>
   <div class="sb-section">{{ __('app.management') }}</div>
   <a href="{{ route('admin.broadcasts.index') }}" class="nav-item {{ request()->routeIs('admin.broadcasts.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-bullhorn"></i></span> {{ __('app.broadcasts') }}
@@ -311,6 +314,9 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('vcfse.food') }}" class="nav-item {{ request()->routeIs('vcfse.food') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.browse_food') }}
   </a>
+  <a href="{{ route('vcfse.food-breakdown') }}" class="nav-item {{ request()->routeIs('vcfse.food-breakdown') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-chart-pie"></i></span> {{ __('app.food_breakdown') }}
+  </a>
   <div class="sb-section">{{ __('app.vouchers') }}</div>
   <a href="{{ route('vcfse.vouchers.create') }}" class="nav-item {{ request()->routeIs('vcfse.vouchers.create') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-plus-circle"></i></span> {{ __('app.issue_voucher') }}
@@ -337,6 +343,9 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   </a>
   <a href="{{ route('school.food') }}" class="nav-item {{ request()->routeIs('school.food') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.browse_food') }}
+  </a>
+  <a href="{{ route('school.food-breakdown') }}" class="nav-item {{ request()->routeIs('school.food-breakdown') ? 'active' : '' }}">
+    <span class="ni"><i class="fas fa-chart-pie"></i></span> {{ __('app.food_breakdown') }}
   </a>
   <div class="sb-section">{{ __('app.vouchers') }}</div>
   <a href="{{ route('school.vouchers.create') }}" class="nav-item {{ request()->routeIs('school.vouchers.create') ? 'active' : '' }}">

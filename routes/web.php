@@ -29,6 +29,7 @@ use App\Http\Controllers\Shop\ReportController as ShopReport;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SurplusClaimController;
+use App\Http\Controllers\FoodBreakdownController;
 use Illuminate\Support\Facades\Route;
 
 // Language Switcher
@@ -124,6 +125,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/bank-deposits/{deposit}', [AdminBankDeposit::class, 'show'])->name('bank-deposits.show');
     Route::patch('/bank-deposits/{deposit}/verify', [AdminBankDeposit::class, 'verify'])->name('bank-deposits.verify');
     Route::patch('/bank-deposits/{deposit}/reject', [AdminBankDeposit::class, 'reject'])->name('bank-deposits.reject');
+    // Food Breakdown
+    Route::get('/food-breakdown', [FoodBreakdownController::class, 'adminBreakdown'])->name('food-breakdown');
     // Reports
     Route::get('/reports/vouchers', [AdminReportGenerator::class, 'vouchersReport'])->name('reports.vouchers');
     Route::get('/reports/redemptions', [AdminReportGenerator::class, 'redemptionsReport'])->name('reports.redemptions');
@@ -193,6 +196,7 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
     Route::post('/fund-load/create-intent', [OrgFundLoad::class, 'createPaymentIntent'])->name('fund-load.create-intent');
     Route::post('/fund-load/confirm', [OrgFundLoad::class, 'confirmPayment'])->name('fund-load.confirm');
     Route::get('/fund-load/history', [OrgFundLoad::class, 'loadHistory'])->name('fund-load.history');
+    Route::get('/food-breakdown', [FoodBreakdownController::class, 'vcfseBreakdown'])->name('food-breakdown');
     Route::get('/reports', [\App\Http\Controllers\Organisation\ReportsController::class, 'index'])->name('reports');
     Route::get('/reports/fund-loads/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsExcel'])->name('reports.fund-loads-excel');
     Route::get('/reports/fund-loads/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsPdf'])->name('reports.fund-loads-pdf');
@@ -227,6 +231,7 @@ Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:
     Route::post('/fund-load/create-intent', [OrgFundLoad::class, 'createPaymentIntent'])->name('fund-load.create-intent');
     Route::post('/fund-load/confirm', [OrgFundLoad::class, 'confirmPayment'])->name('fund-load.confirm');
     Route::get('/fund-load/history', [OrgFundLoad::class, 'loadHistory'])->name('fund-load.history');
+    Route::get('/food-breakdown', [FoodBreakdownController::class, 'schoolBreakdown'])->name('food-breakdown');
     Route::get('/reports', [\App\Http\Controllers\Organisation\ReportsController::class, 'index'])->name('reports');
     Route::get('/reports/fund-loads/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsExcel'])->name('reports.fund-loads-excel');
     Route::get('/reports/fund-loads/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsPdf'])->name('reports.fund-loads-pdf');
