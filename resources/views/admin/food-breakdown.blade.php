@@ -16,9 +16,9 @@
     </div>
 
     <!-- Modern Statistics Widgets -->
-    <div class="row mb-4">
+    <div class="row mb-4 g-3">
         <!-- Total Redemptions Widget -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
             <div class="modern-stat-widget widget-primary">
                 <div class="widget-icon">
                     <i class="fas fa-check-circle"></i>
@@ -32,7 +32,7 @@
         </div>
 
         <!-- Total Value Widget -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
             <div class="modern-stat-widget widget-success">
                 <div class="widget-icon">
                     <i class="fas fa-pound-sign"></i>
@@ -46,7 +46,7 @@
         </div>
 
         <!-- Total Owed Widget -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
             <div class="modern-stat-widget widget-warning">
                 <div class="widget-icon">
                     <i class="fas fa-exclamation-circle"></i>
@@ -60,7 +60,7 @@
         </div>
 
         <!-- Payment Collected Widget -->
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-lg-3 mb-3">
             <div class="modern-stat-widget widget-info">
                 <div class="widget-icon">
                     <i class="fas fa-credit-card"></i>
@@ -285,6 +285,26 @@
     }
 
     /* Responsive */
+    /* Force 4-column layout for widgets */
+    .row.mb-4.g-3 > [class*="col-"] {
+        flex: 0 0 calc(25% - 0.75rem);
+        max-width: calc(25% - 0.75rem);
+    }
+
+    @media (max-width: 1200px) {
+        .row.mb-4.g-3 > [class*="col-"] {
+            flex: 0 0 calc(25% - 0.75rem);
+            max-width: calc(25% - 0.75rem);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .row.mb-4.g-3 > [class*="col-"] {
+            flex: 0 0 calc(50% - 0.75rem);
+            max-width: calc(50% - 0.75rem);
+        }
+    }
+
     @media (max-width: 768px) {
         .modern-stat-widget {
             flex-direction: column;
@@ -298,6 +318,18 @@
 
         .widget-value {
             font-size: 1.75rem;
+        }
+
+        .row.mb-4.g-3 > [class*="col-"] {
+            flex: 0 0 calc(50% - 0.75rem);
+            max-width: calc(50% - 0.75rem);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .row.mb-4.g-3 > [class*="col-"] {
+            flex: 0 0 100%;
+            max-width: 100%;
         }
     }
 </style>

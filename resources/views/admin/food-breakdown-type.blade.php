@@ -1,38 +1,167 @@
-<!-- Statistics Cards for this Type -->
-<div class="row mb-3">
-    <div class="col-md-3">
-        <div class="card border-left-primary">
-            <div class="card-body">
-                <div class="text-primary font-weight-bold text-uppercase mb-1 small">{{ __('app.total_redemptions') }}</div>
-                <div class="h4 mb-0">{{ $stats['total_redemptions'] }}</div>
+<!-- Modern Statistics Widgets for this Type -->
+<div class="row mb-4">
+    <!-- Total Redemptions Widget -->
+    <div class="col-md-3 mb-3">
+        <div class="modern-stat-widget widget-primary">
+            <div class="widget-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="widget-content">
+                <div class="widget-label">{{ __('app.total_redemptions') }}</div>
+                <div class="widget-value">{{ $stats['total_redemptions'] }}</div>
+                <div class="widget-subtext">{{ __('app.total_redemptions') }}</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border-left-success">
-            <div class="card-body">
-                <div class="text-success font-weight-bold text-uppercase mb-1 small">{{ __('app.total_value') }}</div>
-                <div class="h4 mb-0">£{{ number_format($stats['total_value'], 2) }}</div>
+
+    <!-- Total Value Widget -->
+    <div class="col-md-3 mb-3">
+        <div class="modern-stat-widget widget-success">
+            <div class="widget-icon">
+                <i class="fas fa-pound-sign"></i>
+            </div>
+            <div class="widget-content">
+                <div class="widget-label">{{ __('app.total_value') }}</div>
+                <div class="widget-value">£{{ number_format($stats['total_value'], 2) }}</div>
+                <div class="widget-subtext">{{ __('app.total_value') }}</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border-left-warning">
-            <div class="card-body">
-                <div class="text-warning font-weight-bold text-uppercase mb-1 small">{{ __('app.avg_value') }}</div>
-                <div class="h4 mb-0">£{{ number_format($stats['average_value'], 2) }}</div>
+
+    <!-- Average Value Widget -->
+    <div class="col-md-3 mb-3">
+        <div class="modern-stat-widget widget-warning">
+            <div class="widget-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <div class="widget-content">
+                <div class="widget-label">{{ __('app.avg_value') }}</div>
+                <div class="widget-value">£{{ number_format($stats['average_value'], 2) }}</div>
+                <div class="widget-subtext">{{ __('app.avg_value') }}</div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="card border-left-info">
-            <div class="card-body">
-                <div class="text-info font-weight-bold text-uppercase mb-1 small">{{ __('app.payment_collected') }}</div>
-                <div class="h4 mb-0">{{ $stats['total_collected'] }} / {{ $stats['total_redemptions'] }}</div>
+
+    <!-- Payment Collected Widget -->
+    <div class="col-md-3 mb-3">
+        <div class="modern-stat-widget widget-info">
+            <div class="widget-icon">
+                <i class="fas fa-credit-card"></i>
+            </div>
+            <div class="widget-content">
+                <div class="widget-label">{{ __('app.payment_collected') }}</div>
+                <div class="widget-value">{{ $stats['total_collected'] }}<span style="font-size: 0.6em; margin-left: 0.25rem;">/{{ $stats['total_redemptions'] }}</span></div>
+                <div class="widget-subtext">{{ __('app.payment_collected') }}</div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /* Modern Stat Widget Styles */
+    .modern-stat-widget {
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .modern-stat-widget::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--widget-color-start), var(--widget-color-end));
+    }
+
+    .modern-stat-widget:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .widget-primary {
+        --widget-color-start: #4e73df;
+        --widget-color-end: #224abe;
+    }
+
+    .widget-success {
+        --widget-color-start: #1cc88a;
+        --widget-color-end: #13855c;
+    }
+
+    .widget-warning {
+        --widget-color-start: #f6c23e;
+        --widget-color-end: #dda15e;
+    }
+
+    .widget-info {
+        --widget-color-start: #36b9cc;
+        --widget-color-end: #224abe;
+    }
+
+    .widget-icon {
+        font-size: 2.5rem;
+        margin-right: 1.5rem;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--widget-color-start), var(--widget-color-end));
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .widget-content {
+        flex: 1;
+    }
+
+    .widget-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #6c757d;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .widget-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2e3338;
+        margin-bottom: 0.25rem;
+    }
+
+    .widget-subtext {
+        font-size: 0.8rem;
+        color: #adb5bd;
+    }
+
+    @media (max-width: 768px) {
+        .modern-stat-widget {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .widget-icon {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+
+        .widget-value {
+            font-size: 1.75rem;
+        }
+    }
+</style>
 
 <!-- Redemptions Table -->
 <div class="table-responsive">
