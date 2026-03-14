@@ -1,7 +1,7 @@
 <!-- Modern Statistics Widgets for this Type -->
-<div class="row mb-4">
+<div class="row mb-4 g-3 type-stats-grid">
     <!-- Total Redemptions Widget -->
-    <div class="col-md-3 mb-3">
+    <div class="col-12 col-sm-6 col-lg-3 mb-3">
         <div class="modern-stat-widget widget-primary">
             <div class="widget-icon">
                 <i class="fas fa-check-circle"></i>
@@ -108,17 +108,52 @@
     }
 
     .widget-icon {
-        font-size: 2.5rem;
-        margin-right: 1.5rem;
-        width: 60px;
-        height: 60px;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 10px;
+        border-radius: 8px;
         background: linear-gradient(135deg, var(--widget-color-start), var(--widget-color-end));
         color: white;
         flex-shrink: 0;
+    }
+
+    /* Grid layout for type stats */
+    .type-stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
+    .type-stats-grid > [class*="col-"] {
+        grid-column: span 1;
+    }
+
+    @media (max-width: 1200px) {
+        .type-stats-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @media (max-width: 992px) {
+        .type-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .type-stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .type-stats-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     .widget-content {

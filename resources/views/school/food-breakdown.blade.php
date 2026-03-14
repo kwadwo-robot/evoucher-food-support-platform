@@ -192,14 +192,14 @@
     }
 
     .widget-icon {
-        font-size: 2.5rem;
-        margin-right: 1.5rem;
-        width: 60px;
-        height: 60px;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 10px;
+        border-radius: 8px;
         background: linear-gradient(135deg, var(--widget-color-start), var(--widget-color-end));
         color: white;
         flex-shrink: 0;
@@ -286,22 +286,25 @@
 
     /* Responsive */
     /* Force 4-column layout for widgets */
+    .row.mb-4.g-3 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+    }
+
     .row.mb-4.g-3 > [class*="col-"] {
-        flex: 0 0 calc(25% - 0.75rem);
-        max-width: calc(25% - 0.75rem);
+        grid-column: span 1;
     }
 
     @media (max-width: 1200px) {
-        .row.mb-4.g-3 > [class*="col-"] {
-            flex: 0 0 calc(25% - 0.75rem);
-            max-width: calc(25% - 0.75rem);
+        .row.mb-4.g-3 {
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 
     @media (max-width: 992px) {
-        .row.mb-4.g-3 > [class*="col-"] {
-            flex: 0 0 calc(50% - 0.75rem);
-            max-width: calc(50% - 0.75rem);
+        .row.mb-4.g-3 {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
@@ -313,23 +316,25 @@
 
         .widget-icon {
             margin-right: 0;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .widget-value {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
         }
 
-        .row.mb-4.g-3 > [class*="col-"] {
-            flex: 0 0 calc(50% - 0.75rem);
-            max-width: calc(50% - 0.75rem);
+        .widget-label {
+            font-size: 0.75rem;
+        }
+
+        .row.mb-4.g-3 {
+            grid-template-columns: repeat(2, 1fr);
         }
     }
 
     @media (max-width: 576px) {
-        .row.mb-4.g-3 > [class*="col-"] {
-            flex: 0 0 100%;
-            max-width: 100%;
+        .row.mb-4.g-3 {
+            grid-template-columns: 1fr;
         }
     }
 </style>
