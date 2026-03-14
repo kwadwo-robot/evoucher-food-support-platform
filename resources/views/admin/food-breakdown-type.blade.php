@@ -108,10 +108,10 @@
     }
 
     .widget-icon {
-        font-size: 1.5rem;
-        margin-right: 1rem;
-        width: 40px;
-        height: 40px;
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;

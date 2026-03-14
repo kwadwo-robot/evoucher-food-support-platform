@@ -192,10 +192,10 @@
     }
 
     .widget-icon {
-        font-size: 1.5rem;
-        margin-right: 1rem;
-        width: 40px;
-        height: 40px;
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -203,6 +203,11 @@
         background: linear-gradient(135deg, var(--widget-color-start), var(--widget-color-end));
         color: white;
         flex-shrink: 0;
+    }
+
+    .tab-icon {
+        font-size: 1rem;
+        margin-right: 0.5rem;
     }
 
     .widget-content {
@@ -234,6 +239,11 @@
     .modern-tabs {
         border-bottom: 2px solid #e3e6f0;
         gap: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
     }
 
     .modern-tabs .nav-link {
