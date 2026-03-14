@@ -74,6 +74,11 @@
         </div>
     </div>
 
+    <!-- Type-Specific Breakdown Heading -->
+    <h5 class="mb-3 mt-4 text-muted">
+        <i class="fas fa-chart-line"></i> {{ __('app.food_breakdown_title') }} - Type Details
+    </h5>
+
     <!-- Tabs for Food Types -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -106,13 +111,6 @@
                     </a>
                 </li>
             </ul>
-        </div>
-
-        <!-- Type-Specific Breakdown Heading -->
-        <div class="card-header bg-light border-bottom">
-            <h5 class="mb-0 text-muted">
-                <i class="fas fa-chart-line"></i> {{ __('app.food_breakdown_title') }} - Type Details
-            </h5>
         </div>
 
         <div class="card-body">
@@ -268,7 +266,7 @@
 
     .modern-tabs .nav-link:hover {
         color: #495057;
-        background-color: rgba(0, 0, 0, 0.01);
+        background-color: rgba(0, 0, 0, 0.001);
     }
 
     .modern-tabs .nav-link.active {
