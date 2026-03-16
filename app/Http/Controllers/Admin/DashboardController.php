@@ -13,6 +13,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Calculate voucher activity for last 6 months
+        $voucherActivityData = $this->getVoucherActivityData();
+        
         $stats = [
             'total_users'          => User::count(),
             'new_users_this_month' => User::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
@@ -29,7 +32,38 @@ class DashboardController extends Controller
         $recentListings  = FoodListing::with('shop')->latest()->take(5)->get();
         $recentDonations = Donation::where('status', 'completed')->latest()->take(5)->get();
         $recentVouchers  = Voucher::with('recipient')->latest()->take(5)->get();
-        return view('admin.dashboard', compact('stats','pendingUsers','recentListings','recentDonations','recentVouchers'));
+        return view('admin.dashboard', compact('stats','pendingUsers','recentListings','recentDonations','recentVouchers','voucherActivityData'));
+    }
+    
+    private function getVoucherActivityData()
+    {
+        $months = [];
+        $issuedData = [];
+        $redeemedData = [];
+        
+        // Get data for last 6 months
+        for ($i = 5; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $months[] = $date->format('M');
+            
+            // Count vouchers issued in this month
+            $issued = Voucher::whereMonth('created_at', $date->month)
+                ->whereYear('created_at', $date->year)
+                ->count();
+            $issuedData[] = $issued;
+            
+            // Count redemptions in this month
+            $redeemed = Redemption::whereMonth('created_at', $date->month)
+                ->whereYear('created_at', $date->year)
+                ->count();
+            $redeemedData[] = $redeemed;
+        }
+        
+        return [
+            'months' => $months,
+            'issued' => $issuedData,
+            'redeemed' => $redeemedData
+        ];
     }
 
     public function listings(Request $request)

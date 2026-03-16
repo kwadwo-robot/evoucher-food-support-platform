@@ -214,10 +214,10 @@ if(ctx){
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Oct','Nov','Dec','Jan','Feb','Mar'],
+      labels: {!! json_encode($voucherActivityData['months'] ?? ['Oct','Nov','Dec','Jan','Feb','Mar']) !!},
       datasets: [
-        { label: 'Issued', data: [3,5,4,8,6,{{ $stats['active_vouchers'] ?? 1 }}], backgroundColor: 'rgba(22,163,74,.8)', borderRadius: 6 },
-        { label: 'Redeemed', data: [1,3,2,5,4,{{ $stats['total_redemptions'] ?? 0 }}], backgroundColor: 'rgba(59,130,246,.8)', borderRadius: 6 }
+        { label: 'Issued', data: {!! json_encode($voucherActivityData['issued'] ?? [0,0,0,0,0,0]) !!}, backgroundColor: 'rgba(22,163,74,.8)', borderRadius: 6 },
+        { label: 'Redeemed', data: {!! json_encode($voucherActivityData['redeemed'] ?? [0,0,0,0,0,0]) !!}, backgroundColor: 'rgba(59,130,246,.8)', borderRadius: 6 }
       ]
     },
     options: {
