@@ -506,7 +506,7 @@ return [
     'payment_collected' => 'Payment Collected',
     'collected' => 'Collected',
     'pending' => 'Pending',
-    'no_redemptions_found' => 'No redemptions found',
+    'no_redemptions_found' => 'No redeem found',
     'avg_value' => 'Average Value',
     'back' => 'Back',
     'food_breakdown' => 'Food Breakdown',
