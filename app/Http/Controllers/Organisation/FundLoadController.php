@@ -142,16 +142,16 @@ class FundLoadController extends Controller
                 'ip_address'  => $request->ip(),
             ]);
 
-            // 4. Notify admin
-            $admin = User::where('role', 'admin')->orWhere('role', 'super_admin')->first();
-            if ($admin) {
+            // 4. Notify all admins
+            $admins = User::where('role', 'admin')->orWhere('role', 'super_admin')->get();
+            foreach ($admins as $admin) {
                 Notification::create([
                     'user_id' => $admin->id,
                     'title'   => 'New Fund Load',
                     'message' => "{$user->name} loaded £{$request->amount} via Stripe",
                     'type'    => 'fund_load',
-                    'icon'    => 'wallet',
-                    'link'    => '/admin/load-funds',
+                    'icon'    => 'fas fa-wallet',
+                    'link'    => route('admin.load-funds'),
                 ]);
             }
 
