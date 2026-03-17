@@ -118,11 +118,11 @@
         </tr>
       </thead>
       <tbody>
-        @forelse($bankDeposits as $deposit)
+        @forelse($fundLoads as $load)
         <tr>
-          <td style="font-weight:600">£{{ number_format($deposit->amount, 2) }}</td>
-          <td>{{ $deposit->created_at->format('d M Y H:i') }}</td>
-          <td><span class="badge badge-green">Verified</span></td>
+          <td style="font-weight:600">£{{ number_format($load->amount, 2) }}</td>
+          <td>{{ $load->created_at->format('d M Y H:i') }}</td>
+          <td><span class="badge badge-{{ $load->payment_method === 'stripe' ? 'blue' : 'green' }}">{{ ucfirst($load->payment_method) }}</span></td>
         </tr>
         @empty
         <tr>

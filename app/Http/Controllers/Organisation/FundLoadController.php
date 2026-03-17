@@ -29,7 +29,13 @@ class FundLoadController extends Controller
             ->latest()
             ->get();
 
-        return view('organisation.fund-load', compact('walletBalance', 'bankDeposits', 'user'));
+        // Get recent fund loads for this organisation
+        $fundLoads = FundLoad::where('organisation_user_id', $user->id)
+            ->latest()
+            ->limit(10)
+            ->get();
+
+        return view('organisation.fund-load', compact('walletBalance', 'bankDeposits', 'fundLoads', 'user'));
     }
 
     public function createPaymentIntent(Request $request)
