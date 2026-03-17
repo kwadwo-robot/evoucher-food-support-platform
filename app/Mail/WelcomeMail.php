@@ -51,6 +51,7 @@ class WelcomeMail extends Mailable
                 'userName'     => $this->user->name,
                 'userEmail'    => $this->user->email,
                 'roleLabel'    => $this->roleLabel,
+                'userRole'     => $this->user->role,
                 'loginUrl'     => $this->loginUrl,
                 'supportEmail' => $this->supportEmail,
             ],

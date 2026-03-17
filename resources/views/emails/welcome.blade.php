@@ -72,6 +72,22 @@
     <div class="body">
       <h1>Welcome, {{ $userName }}! 👋</h1>
       <div class="role-badge">{{ $roleLabel }}</div>
+      @if($userRole === 'recipient')
+      <p>Thank you for registering with the <strong>eVoucher Food Support Platform</strong>. Your account has been created successfully and you can now access vouchers immediately.</p>
+
+      <div class="info-box">
+        <p><strong>Name:</strong> {{ $userName }}</p>
+        <p><strong>Email:</strong> {{ $userEmail }}</p>
+        <p><strong>Account Type:</strong> {{ $roleLabel }}</p>
+        <p><strong>Status:</strong> Active</p>
+      </div>
+
+      <div class="notice" style="background:#dcfce7;border-color:#86efac;color:#166534">
+        <strong>✓ Account Active:</strong> Your account is ready to use. You can now log in and start browsing available vouchers and food listings.
+      </div>
+
+      <p>You can log in immediately to access your dashboard and start using the platform. If you have any questions, please contact our support team.</p>
+      @else
       <p>Thank you for registering with the <strong>eVoucher Food Support Platform</strong>. Your account has been created and is currently <strong>pending approval</strong> by our admin team.</p>
 
       <div class="info-box">
@@ -86,6 +102,7 @@
       </div>
 
       <p>Once approved, you will be able to log in and access your dashboard. If you have any questions in the meantime, please contact our support team.</p>
+      @endif
     </div>
 
     <div class="cta-wrap">

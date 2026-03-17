@@ -146,7 +146,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
       <!-- Recipient Fields -->
       <div x-show="role === 'recipient'" x-cloak>
         <div style="padding:12px 16px;background:#f0fdf4;border-radius:10px;margin-bottom:16px;font-size:13px;color:#15803d;display:flex;align-items:center;gap:8px">
-          <i class="fas fa-info-circle"></i> Your account will be reviewed and approved by an admin before you can access vouchers.
+          <i class="fas fa-check-circle"></i> Your account has been created successfully. You can now access vouchers immediately.
         </div>
         <div class="mb-4">
           <label class="form-label">Address</label>
