@@ -77,6 +77,13 @@ Route::middleware('auth')->group(function () {
 // Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:admin,super_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
+    // Shops Management
+    Route::get('/shops', [\App\Http\Controllers\Admin\AdminShopController::class, 'index'])->name('shops.index');
+    Route::get('/shops/{shop}', [\App\Http\Controllers\Admin\AdminShopController::class, 'show'])->name('shops.show');
+    Route::patch('/shops/{shop}/approve', [\App\Http\Controllers\Admin\AdminShopController::class, 'approve'])->name('shops.approve');
+    Route::patch('/shops/{shop}/reject', [\App\Http\Controllers\Admin\AdminShopController::class, 'reject'])->name('shops.reject');
+    Route::patch('/shops/{shop}/toggle-active', [\App\Http\Controllers\Admin\AdminShopController::class, 'toggleActive'])->name('shops.toggle');
+    Route::delete('/shops/{shop}', [\App\Http\Controllers\Admin\AdminShopController::class, 'destroy'])->name('shops.destroy');
     Route::get('/users', [AdminUser::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [AdminUser::class, 'show'])->name('users.show');
     Route::patch('/users/{user}/approve', [AdminUser::class, 'approve'])->name('users.approve');

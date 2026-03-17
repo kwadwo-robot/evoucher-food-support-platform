@@ -55,7 +55,7 @@
     <div class="stat-label">Redeems</div>
     <div class="stat-value" style="font-size:22px">{{ $stats['total_redemptions'] ?? 0 }}</div>
   </a>
-  <a href="{{ route('admin.users.index', ['role' => 'local_shop']) }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  <a href="{{ route('admin.shops.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
     <div class="stat-icon mb-3" style="background:#fff7ed;color:#f97316;width:36px;height:36px;font-size:15px;border-radius:9px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-store"></i></div>
     <div class="stat-label">Local Shops</div>
     <div class="stat-value" style="font-size:22px">{{ $stats['total_shops'] ?? 0 }}</div>
