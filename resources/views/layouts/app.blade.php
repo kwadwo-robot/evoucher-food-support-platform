@@ -72,6 +72,11 @@
                 @endauth
             </div>
             <div class="flex items-center gap-2">
+                <!-- PWA Install Button -->
+                <button id="pwa-install-btn" onclick="window.installPWA()" style="display: none;" class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-green-100 text-green-700 hover:bg-green-200 transition-colors" title="Install eVoucher app">
+                    <i class="fas fa-download text-xs"></i>
+                    <span>Install App</span>
+                </button>
                 @auth
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" class="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700 px-3 py-2 rounded-lg hover:bg-gray-50">
@@ -224,14 +229,24 @@
         }
     });
     
-    // Fallback: Show install button after 3 seconds if beforeinstallprompt didn't fire
+    // Fallback: Show install button after 2 seconds if beforeinstallprompt didn't fire
     setTimeout(() => {
         if (!deferredPrompt) {
             console.log('Note: beforeinstallprompt did not fire. This is normal on iOS or if PWA is already installed.');
             console.log('On iOS: Use Safari menu > Add to Home Screen');
             console.log('On Android: Look for install prompt or use browser menu > Install app');
+            
+            // Show install button as fallback for Android users
+            const installBtn = document.getElementById('pwa-install-btn');
+            if (installBtn && !window.matchMedia('(display-mode: standalone)').matches) {
+                // Check if on mobile
+                if (window.innerWidth < 768) {
+                    installBtn.style.display = 'flex';
+                    console.log('✓ Showing fallback install button for mobile users');
+                }
+            }
         }
-    }, 3000);
+    }, 2000);
     
     // Handle app installed event
     window.addEventListener('appinstalled', () => {
@@ -257,8 +272,20 @@
                 }
                 deferredPrompt = null;
             });
+        } else {
+            // If no deferred prompt, show instructions
+            alert('To install the app:\n\nAndroid: Tap the menu (⋮) and select "Install app"\n\niOS: Tap Share and select "Add to Home Screen"');
         }
     };
+    
+    // Check if app is already installed
+    window.addEventListener('load', () => {
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('✓ App is running in standalone mode (already installed)');
+            const installBtn = document.getElementById('pwa-install-btn');
+            if (installBtn) installBtn.style.display = 'none';
+        }
+    });
 </script>
 
 </body>
