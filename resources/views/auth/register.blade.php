@@ -370,14 +370,13 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
         </div>
       </div>
 
-      <button type="submit" class="btn-submit" @click="handleSubmit" :disabled="isSubmitting" :style="isSubmitting ? 'opacity:0.7;cursor:not-allowed' : ''">
+      <button type="submit" class="btn-submit" @click="handleSubmit" :disabled="isSubmitting" :style="isSubmitting ? 'opacity:0.7;cursor:not-allowed;min-height:48px' : ''">
         <template x-if="!isSubmitting">
-          <span><i class="fas fa-user-plus"></i> Create Account</span>
+          <i class="fas fa-user-plus"></i> Create Account
         </template>
         <template x-if="isSubmitting">
-          <span style="display:flex;align-items:center;justify-content:center;gap:8px">
-            <div class="manus-spinner"></div> Creating Account...
-          </span>
+          <div class="manus-spinner"></div>
+          <span>Creating Account...</span>
         </template>
       </button>
     </form>
