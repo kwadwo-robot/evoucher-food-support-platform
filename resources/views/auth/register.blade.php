@@ -60,14 +60,34 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
 <div class="reg-wrap" x-data="{
   role: '{{ old('role', 'recipient') }}',
   isSubmitting: false,
+  showSuccess: false,
+  successMessage: '',
+  redirectCountdown: 3,
   setRole(r) {
     this.role = r;
     document.getElementById('role_input').value = r;
   },
   handleSubmit(e) {
     this.isSubmitting = true;
+  },
+  showSuccessMessage(message) {
+    this.showSuccess = true;
+    this.successMessage = message;
+    this.redirectCountdown = 3;
+    const countdown = setInterval(() => {
+      this.redirectCountdown--;
+      if (this.redirectCountdown <= 0) {
+        clearInterval(countdown);
+        window.location.href = window.location.href.split('/register')[0] + '/dashboard';
+      }
+    }, 1000);
   }
-}" x-init="document.getElementById('role_input').value = role">
+}" x-init="document.getElementById('role_input').value = role
+@if(session('success'))
+  setTimeout(() => {
+    document.querySelector('[x-data]').__x.$data.showSuccessMessage('{{ session('success') }}');
+  }, 500);
+@endif">
   <div class="reg-header">
     <a href="/" class="reg-logo" style="text-decoration:none">
       <img src="{{ asset('images/logo.png') }}" alt="eVoucher" style="width:44px;height:44px;object-fit:contain">
@@ -80,6 +100,18 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
     <p style="font-size:14px;color:#94a3b8">Join the Northamptonshire eVoucher Food Support Programme</p>
   </div>
 
+  <!-- Success Message -->
+  <div x-show="showSuccess" x-cloak style="background:#dcfce7;border:2px solid #22c55e;border-radius:12px;padding:20px;margin-bottom:20px;text-align:center">
+    <div style="font-size:18px;color:#16a34a;margin-bottom:10px;font-weight:700">
+      <i class="fas fa-check-circle" style="font-size:24px;margin-right:8px"></i>
+      Account Successfully Created!
+    </div>
+    <p style="font-size:14px;color:#15803d;margin-bottom:12px" x-text="successMessage"></p>
+    <p style="font-size:13px;color:#15803d">
+      Redirecting to dashboard in <span x-text="redirectCountdown" style="font-weight:700"></span> seconds...
+    </p>
+  </div>
+
   @if($errors->any())
   <div style="background:#fee2e2;border:1px solid #fecaca;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#b91c1c">
     <i class="fas fa-exclamation-circle mr-2"></i>
@@ -88,7 +120,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
   @endif
 
   <!-- Role Selector -->
-  <div style="margin-bottom:20px">
+  <div x-show="!showSuccess" x-cloak style="margin-bottom:20px">
     <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:10px;text-align:center">I am registering as a...</div>
     <div class="role-tabs">
       <div class="role-tab" :class="role === 'recipient' ? 'active' : ''" @click="setRole('recipient')">
@@ -114,7 +146,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" x-show="!showSuccess" x-cloak>
     <form method="POST" action="{{ route('register') }}">
       @csrf
       {{-- Plain hidden input updated by JS on role change --}}
@@ -382,10 +414,10 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
     </form>
   </div>
 
-  <div style="text-align:center;margin-top:20px;font-size:13.5px;color:#94a3b8">
+  <div x-show="!showSuccess" x-cloak style="text-align:center;margin-top:20px;font-size:13.5px;color:#94a3b8">
     Already have an account? <a href="{{ route('login') }}" style="color:#16a34a;font-weight:700;text-decoration:none">Sign in here</a>
   </div>
-  <div style="text-align:center;margin-top:10px">
+  <div x-show="!showSuccess" x-cloak style="text-align:center;margin-top:10px">
     <a href="/" style="font-size:12.5px;color:#94a3b8;text-decoration:none"><i class="fas fa-arrow-left mr-1"></i> Back to Home</a>
   </div>
 </div>
