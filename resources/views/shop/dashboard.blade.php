@@ -100,7 +100,7 @@
       </table>
     </div>
   </div>
-  <!-- Recent Redemptions -->
+  <!-- Recent Redeems -->
   <div class="card">
     <div class="card-hd">
       <div class="card-title"><i class="fas fa-check-circle text-green-600"></i> Recent Redeems</div>

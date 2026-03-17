@@ -119,7 +119,7 @@
         </div>
         <div class="mb-4">
           <label class="form-label">Collection Address *</label>
-          <input type="text" name="collection_address" value="{{ old('collection_address', auth()->user()->shop?->address ?? '') }}" placeholder="Full address for collection" class="form-input" required>
+          <input type="text" name="collection_address" value="{{ old('collection_address', $shopProfile?->address ?? '') }}" placeholder="Full address for collection" class="form-input" required>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>

@@ -13,7 +13,7 @@
 </div>
 
 <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px" class="responsive-grid">
-  {{-- Redemptions included --}}
+  {{-- Redeems included --}}
   <div class="card">
     <div class="card-hd">
       <div class="card-title"><i class="fas fa-basket-shopping text-green-600"></i> Items Included</div>
