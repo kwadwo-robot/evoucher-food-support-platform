@@ -7,8 +7,8 @@
   <p>All your system notifications and alerts</p>
 </div>
 
-<div class="card">
-  <div class="card-hd" style="display:flex;justify-content:space-between;align-items:center">
+  <div class="card">
+  <div class="card-hd" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
     <div class="card-title"><i class="fas fa-bell text-blue-500"></i> All Notifications</div>
     @if($notifications->count() > 0)
     <button onclick="markAllRead()" class="btn btn-secondary btn-sm">Mark all as read</button>
@@ -18,7 +18,7 @@
   @if($notifications->count() > 0)
   <div style="max-height:600px;overflow-y:auto">
     @foreach($notifications as $notif)
-    <div class="notification-item" style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:12px;align-items:flex-start;background:{{ $notif->isRead() ? '#fff' : '#f0fdf4' }}">
+    <div class="notification-item" style="padding:12px;border-bottom:1px solid #f0f0f0;display:flex;gap:12px;align-items:flex-start;background:{{ $notif->isRead() ? '#fff' : '#f0fdf4' }};flex-wrap:wrap;word-break:break-word">
       <div style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
         @if($notif->type === 'success') background:#dcfce7;color:#16a34a
         @elseif($notif->type === 'warning') background:#fef9c3;color:#ca8a04
@@ -27,10 +27,10 @@
         @endif">
         <i class="{{ $notif->icon ?? 'fas fa-bell' }}"></i>
       </div>
-      <div style="flex:1">
-        <div style="font-weight:600;color:#0f172a;margin-bottom:4px">{{ $notif->title }}</div>
-        <div style="font-size:13px;color:#64748b;line-height:1.5">{{ $notif->message }}</div>
-        <div style="font-size:11px;color:#94a3b8;margin-top:6px">{{ $notif->created_at->diffForHumans() }}</div>
+      <div style="flex:1;min-width:0;word-break:break-word">
+        <div style="font-weight:600;color:#0f172a;margin-bottom:4px;word-break:break-word">{{ $notif->title }}</div>
+        <div style="font-size:13px;color:#64748b;line-height:1.5;word-break:break-word">{{ $notif->message }}</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:6px;white-space:nowrap">{{ $notif->created_at->diffForHumans() }}</div>
       </div>
       <div style="display:flex;gap:6px;flex-shrink:0">
         @if(!$notif->isRead())

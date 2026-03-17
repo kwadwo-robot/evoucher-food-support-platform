@@ -46,18 +46,18 @@
 @endif
 
 <!-- Stats Row -->
-<div class="grid grid-cols-3 gap-4 mb-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
   <div class="stat-card text-center">
-    <div style="font-size:24px;font-weight:800;color:#16a34a">{{ $totalVouchers ?? 0 }}</div>
-    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">{{ __('app.recipient_total_vouchers') }}</div>
+    <div style="font-size:28px;font-weight:800;color:#16a34a;word-break:break-word">{{ $totalVouchers ?? 0 }}</div>
+    <div style="font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:6px;word-break:break-word;line-height:1.4">{{ __('app.recipient_total_vouchers') }}</div>
   </div>
   <div class="stat-card text-center">
-    <div style="font-size:24px;font-weight:800;color:#3b82f6">{{ $totalRedemptions ?? 0 }}</div>
-    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">{{ __('app.recipient_redemptions') }}</div>
+    <div style="font-size:28px;font-weight:800;color:#3b82f6;word-break:break-word">{{ $totalRedemptions ?? 0 }}</div>
+    <div style="font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:6px;word-break:break-word;line-height:1.4">{{ __('app.recipient_redemptions') }}</div>
   </div>
   <div class="stat-card text-center">
-    <div style="font-size:24px;font-weight:800;color:#a855f7">{{ $availableItems ?? 0 }}</div>
-    <div style="font-size:11.5px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:4px">{{ __('app.recipient_items_available') }}</div>
+    <div style="font-size:28px;font-weight:800;color:#a855f7;word-break:break-word">{{ $availableItems ?? 0 }}</div>
+    <div style="font-size:12px;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-top:6px;word-break:break-word;line-height:1.4">{{ __('app.recipient_items_available') }}</div>
   </div>
 </div>
 

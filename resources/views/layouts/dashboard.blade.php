@@ -48,9 +48,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a;min-height:
   border-bottom:1px solid var(--border);display:flex;align-items:center;
   padding:0 24px;gap:14px;z-index:40;}
 .topbar-title{font-size:14.5px;font-weight:700;color:#0f172a;flex:1;}
-.tb-btn{width:34px;height:34px;border-radius:8px;background:#f8fafc;border:1px solid var(--border);
+.tb-btn{width:38px;height:38px;border-radius:8px;background:#f8fafc;border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;color:#64748b;cursor:pointer;
-  transition:all .15s;text-decoration:none;font-size:13px;}
+  transition:all .15s;text-decoration:none;font-size:16px;padding:0;min-width:38px;}
 .tb-btn:hover{background:#f1f5f9;color:#0f172a;}
 .user-pill{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;
   background:#f8fafc;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;}
@@ -157,7 +157,9 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a;min-height:
   .topbar{left:0;}
   .main-wrap{margin-left:0;}
   .page-content{padding:20px 16px 40px;}
-  .topbar-title{font-size:13px;}
+  .topbar-title{font-size:13px;flex:1;}
+  .tb-btn{width:40px;height:40px;font-size:18px;}
+  .topbar{padding:0 16px;}
 }
 /* Direct element overrides — force proper form styling regardless of Tailwind reset */
 input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],input[type=tel],input[type=url],select,textarea{
