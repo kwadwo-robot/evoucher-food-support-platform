@@ -50,6 +50,7 @@ class DonationController extends Controller
                 Donation::create([
                     'amount' => $validated['amount'],
                     'donor_email' => $validated['email'],
+                    'email' => $validated['email'],
                     'stripe_payment_id' => $paymentIntent->id,
                     'status' => 'completed',
                     'currency' => 'GBP',
@@ -70,6 +71,7 @@ class DonationController extends Controller
                 Donation::create([
                     'amount' => $validated['amount'],
                     'donor_email' => $validated['email'],
+                    'email' => $validated['email'],
                     'stripe_payment_id' => $paymentIntent->id,
                     'status' => 'failed',
                     'currency' => 'GBP',
@@ -87,6 +89,7 @@ class DonationController extends Controller
                 Donation::create([
                     'amount' => $validated['amount'] ?? 0,
                     'donor_email' => $validated['email'] ?? 'unknown',
+                    'email' => $validated['email'] ?? 'unknown@example.com',
                     'status' => 'failed',
                     'currency' => 'GBP',
                     'notes' => json_encode(['error' => $e->getMessage()])
@@ -97,7 +100,7 @@ class DonationController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Error: ' . $e->getMessage()
+                'message' => 'Error saving donation: ' . $e->getMessage()
             ], 400);
         }
     }
