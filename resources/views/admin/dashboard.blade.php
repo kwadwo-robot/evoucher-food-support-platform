@@ -68,7 +68,7 @@
   <a href="{{ route('admin.users.index', ['filter' => 'pending']) }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
     <div class="stat-icon mb-3" style="background:#fef2f2;color:#ef4444;width:36px;height:36px;font-size:15px;border-radius:9px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-clock"></i></div>
     <div class="stat-label">Pending Approvals</div>
-    <div class="stat-value" style="font-size:22px">{{ $pendingCount ?? 0 }}</div>
+    <div class="stat-value" style="font-size:22px">{{ $stats['pending_approvals'] ?? 0 }}</div>
   </a>
 </div>
 
