@@ -227,10 +227,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
       <div class="stat-num">6</div>
       <div class="stat-lbl">{{ __('app.user_roles') }}</div>
     </div>
-    <div class="stat-item">
-      <div class="stat-num">NHS</div>
-      <div class="stat-lbl">{{ __('app.community_backed') }}</div>
-    </div>
+
   </div>
 </div>
 

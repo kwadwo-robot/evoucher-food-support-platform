@@ -19,7 +19,7 @@ $linkClass = $isDark ? 'hover:text-green-400' : 'hover:text-green-600';
                     <span class="text-base font-bold {{ $textClass }}">eVoucher</span>
                 </div>
                 <p class="text-sm {{ $mutedClass }} leading-relaxed max-w-xs">
-                    Connecting near-expiry food with families in need across Northamptonshire. Free to use, community powered, and backed by the NHS.
+                    Connecting near-expiry food with families in need across Northamptonshire. Free to use and community powered.
                 </p>
             </div>
 
@@ -50,7 +50,7 @@ $linkClass = $isDark ? 'hover:text-green-400' : 'hover:text-green-600';
                 <h3 class="text-xs font-bold {{ $textClass }} uppercase tracking-wider mb-4 opacity-60">Community</h3>
                 <ul class="space-y-3">
                     <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">BAKUP CIC</a></li>
-                    <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">NHS Partnership</a></li>
+
                     <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Volunteer</a></li>
                     <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Donate</a></li>
                 </ul>
@@ -61,7 +61,7 @@ $linkClass = $isDark ? 'hover:text-green-400' : 'hover:text-green-600';
         <div class="border-t {{ $borderClass }} pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
             <div class="{{ $mutedClass }}">© {{ date('Y') }} eVoucher Food Support Platform — Built for BAKUP CIC · Northamptonshire Pilot</div>
             <div class="flex gap-3">
-                <span class="px-3 py-1 rounded text-xs font-semibold {{ $isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-600' }}">NHS Backed</span>
+
                 <span class="px-3 py-1 rounded text-xs font-semibold {{ $isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-600' }}">BAKUP CIC</span>
                 <span class="px-3 py-1 rounded text-xs font-semibold {{ $isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-600' }}">Zero Waste</span>
             </div>
