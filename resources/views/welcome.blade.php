@@ -141,16 +141,24 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
         <span style="font-size:12px;font-weight:700;text-transform:uppercase" id="langCode">{{ app()->getLocale() }}</span>
         <i class="fas fa-chevron-down" style="font-size:10px"></i>
       </button>
-      <div x-show="open" @click.away="open = false" x-transition style="position:absolute;right:0;top:110%;background:#fff;border:1px solid var(--gray-border);border-radius:10px;min-width:160px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.1)">
-        <a href="#" onclick="switchLanguage('en'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:8px 8px 0 0">🇬🇧 English</a>
-        <a href="#" onclick="switchLanguage('ar'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px">🇸🇦 العربية</a>
-        <a href="#" onclick="switchLanguage('ro'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px">🇷🇴 Română</a>
-        <a href="#" onclick="switchLanguage('pl'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:0 0 8px 8px">🇵🇱 Polski</a>
+      <div x-show="open" @click.away="open = false" x-transition style="position:absolute;right:0;top:110%;background:#fff;border:1px solid var(--gray-border);border-radius:10px;min-width:160px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.1);max-height:300px;overflow-y:auto">
+        <a href="#" onclick="switchLanguage('en', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:8px 8px 0 0;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇬🇧 English</a>
+        <a href="#" onclick="switchLanguage('ar', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇸🇦 العربية</a>
+        <a href="#" onclick="switchLanguage('ro', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇷🇴 Română</a>
+        <a href="#" onclick="switchLanguage('pl', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:0 0 8px 8px;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇵🇱 Polski</a>
       </div>
     </div>
     <script>
-      function switchLanguage(locale) {
+      function switchLanguage(locale, event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
         const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (!token) {
+          console.error('CSRF token not found');
+          return;
+        }
         fetch(`/lang/${locale}`, {
           method: 'POST',
           headers: {
@@ -159,14 +167,19 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
             'Accept': 'application/json'
           }
         })
-          .then(response => response.json())
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+          })
           .then(data => {
             if (data.success) {
               document.getElementById('langCode').textContent = locale.toUpperCase();
-              window.location.reload();
+              setTimeout(() => window.location.reload(), 100);
+            } else {
+              console.error('Language switch failed:', data);
             }
           })
-          .catch(error => console.error('Error:', error));
+          .catch(error => console.error('Error switching language:', error));
       }
     </script>
 
