@@ -18,7 +18,7 @@ class FoodListingController extends Controller
 
     public function create()
     {
-        $shopProfile = Auth::user()->load('shopProfile')->shopProfile;
+        $shopProfile = Auth::user()->shopProfile;
         return view('shop.listings.create', compact('shopProfile'));
     }
 
