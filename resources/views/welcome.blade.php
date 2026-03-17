@@ -237,14 +237,14 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
 <!-- HOW IT WORKS -->
 <div class="section section-alt">
   <h2 class="section-title">{{ __('app.how_it_works') }}</h2>
-  <p class="section-sub">{{ __('app.how_it_works_desc') }}</p>
+  <p class="section-sub">{{ __('app.how_it_works_description') }}</p>
   <div class="cards-grid">
     <div class="card">
       <div class="card-icon">🏪</div>
       <div class="card-body">
         <div class="card-num">1</div>
         <div class="card-title">{{ __('app.shops_list_food') }}</div>
-        <div class="card-desc">{{ __('app.shops_list_food_desc') }}</div>
+        <div class="card-desc">{{ __('app.shops_list_food_description') }}</div>
       </div>
     </div>
     <div class="card">
@@ -252,7 +252,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
       <div class="card-body">
         <div class="card-num">2</div>
         <div class="card-title">{{ __('app.recipients_get_vouchers') }}</div>
-        <div class="card-desc">{{ __('app.recipients_get_vouchers_desc') }}</div>
+        <div class="card-desc">{{ __('app.recipients_get_vouchers_description') }}</div>
       </div>
     </div>
     <div class="card">
@@ -260,7 +260,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
       <div class="card-body">
         <div class="card-num">3</div>
         <div class="card-title">{{ __('app.organisations_fund_it') }}</div>
-        <div class="card-desc">{{ __('app.organisations_fund_it_desc') }}</div>
+        <div class="card-desc">{{ __('app.organisations_fund_it_description') }}</div>
       </div>
     </div>
   </div>
@@ -269,37 +269,37 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
 <!-- WHO USES EVOUCHER -->
 <div class="section">
   <h2 class="section-title">{{ __('app.who_uses_evoucher') }}</h2>
-  <p class="section-sub">{{ __('app.who_uses_evoucher_desc') }}</p>
+  <p class="section-sub">{{ __('app.who_uses_evoucher_description') }}</p>
   <div class="roles-grid">
     <div class="role-card">
       <div class="role-icon" style="background:#e0e7ff;color:#4f46e5">👑</div>
       <div class="role-name">{{ __('app.super_admin') }}</div>
-      <div class="role-desc">{{ __('app.super_admin_desc') }}</div>
+      <div class="role-desc">{{ __('app.super_admin_description') }}</div>
     </div>
     <div class="role-card">
       <div class="role-icon" style="background:#fef3c7;color:#d97706">🔐</div>
       <div class="role-name">{{ __('app.admin') }}</div>
-      <div class="role-desc">{{ __('app.admin_desc') }}</div>
+      <div class="role-desc">{{ __('app.admin_description') }}</div>
     </div>
     <div class="role-card">
       <div class="role-icon" style="background:#dbeafe;color:#0284c7">🏪</div>
       <div class="role-name">{{ __('app.local_shops') }}</div>
-      <div class="role-desc">{{ __('app.local_shops_desc') }}</div>
+      <div class="role-desc">{{ __('app.local_shops_description') }}</div>
     </div>
     <div class="role-card">
       <div class="role-icon" style="background:#f0fdf4;color:#16a34a">👤</div>
       <div class="role-name">{{ __('app.recipients') }}</div>
-      <div class="role-desc">{{ __('app.recipients_desc') }}</div>
+      <div class="role-desc">{{ __('app.recipients_description') }}</div>
     </div>
     <div class="role-card">
       <div class="role-icon" style="background:#fce7f3;color:#ec4899">🤲</div>
       <div class="role-name">{{ __('app.vcfse') }}</div>
-      <div class="role-desc">{{ __('app.vcfse_desc') }}</div>
+      <div class="role-desc">{{ __('app.vcfse_description') }}</div>
     </div>
     <div class="role-card">
       <div class="role-icon" style="background:#f3e8ff;color:#a855f7">🎓</div>
       <div class="role-name">{{ __('app.schools_care') }}</div>
-      <div class="role-desc">{{ __('app.schools_care_desc') }}</div>
+      <div class="role-desc">{{ __('app.schools_care_description') }}</div>
     </div>
   </div>
 </div>
@@ -307,7 +307,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
 <!-- CTA -->
 <div class="cta-section">
   <h2>{{ __('app.ready_to_get_started') }}</h2>
-  <p>{{ __('app.ready_to_get_started_desc') }}</p>
+  <p>{{ __('app.ready_to_get_started_description') }}</p>
   <a href="{{ route('register') }}" class="btn btn-primary" style="background:#fff;color:var(--primary)"><i class="fas fa-rocket"></i> {{ __('app.get_started_free') }}</a>
 </div>
 
