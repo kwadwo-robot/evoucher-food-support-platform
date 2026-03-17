@@ -73,8 +73,8 @@
             </div>
             <div class="flex items-center gap-2">
                 <!-- PWA Install Button -->
-                <button id="pwa-install-btn" onclick="window.installPWA()" style="display: none;" class="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg text-sm bg-green-100 text-green-700 hover:bg-green-200 transition-colors" title="Install eVoucher app">
-                    <i class="fas fa-download text-xs"></i>
+                <button id="pwa-install-btn" onclick="window.installPWA()" style="display: none; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; background-color: #dcfce7; color: #15803d; cursor: pointer; align-items: center; transition: background-color 0.2s;" title="Install eVoucher app" onmouseover="this.style.backgroundColor='#bbf7d0'" onmouseout="this.style.backgroundColor='#dcfce7'">
+                    <i class="fas fa-download" style="font-size: 0.75rem; margin-right: 0.25rem;"></i>
                     <span>Install App</span>
                 </button>
                 @auth
