@@ -39,55 +39,10 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
 .section-divider{height:1px;background:#f1f5f9;margin:4px 0 16px}
 .section-title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px}
 [x-cloak]{display:none!important}
-@keyframes manusSpin {
-  0% { transform: rotate(0deg) scale(1); opacity: 1; }
-  50% { transform: rotate(180deg) scale(1.1); opacity: 0.8; }
-  100% { transform: rotate(360deg) scale(1); opacity: 1; }
-}
-.manus-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255,255,255,0.3);
-  border-top-color: #fff;
-  border-right-color: #fff;
-  border-radius: 50%;
-  animation: manusSpin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-}
 </style>
 </head>
 <body>
-<div class="reg-wrap" x-data="{
-  role: '{{ old('role', 'recipient') }}',
-  isSubmitting: false,
-  showSuccess: false,
-  successMessage: '',
-  redirectCountdown: 3,
-  setRole(r) {
-    this.role = r;
-    document.getElementById('role_input').value = r;
-  },
-  handleSubmit(e) {
-    this.isSubmitting = true;
-  },
-  showSuccessMessage(message) {
-    this.showSuccess = true;
-    this.successMessage = message;
-    this.redirectCountdown = 3;
-    const countdown = setInterval(() => {
-      this.redirectCountdown--;
-      if (this.redirectCountdown <= 0) {
-        clearInterval(countdown);
-        window.location.href = window.location.href.split('/register')[0] + '/dashboard';
-      }
-    }, 1000);
-  }
-}" x-init="document.getElementById('role_input').value = role
-@if(session('success'))
-  setTimeout(() => {
-    document.querySelector('[x-data]').__x.$data.showSuccessMessage('{{ session('success') }}');
-  }, 500);
-@endif">
+<div class="reg-wrap" x-data="registerForm()" x-init="init()">
   <div class="reg-header">
     <a href="/" class="reg-logo" style="text-decoration:none">
       <img src="{{ asset('images/logo.png') }}" alt="eVoucher" style="width:44px;height:44px;object-fit:contain">
@@ -147,7 +102,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
   </div>
 
   <div class="card" x-show="!showSuccess" x-cloak>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" @submit="handleSubmit">
       @csrf
       {{-- Plain hidden input updated by JS on role change --}}
       <input type="hidden" id="role_input" name="role" value="{{ old('role', 'recipient') }}">
@@ -261,16 +216,12 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
           </div>
         </div>
         <div class="mb-4">
-          <label class="form-label">Business Registration Number</label>
-          <input type="text" name="business_reg" value="{{ old('business_reg') }}" class="form-input" placeholder="Optional">
-        </div>
-        <div class="mb-4">
           <label class="form-label">Opening Hours</label>
-          <input type="text" name="opening_hours" value="{{ old('opening_hours') }}" class="form-input" placeholder="e.g. Mon–Fri 9am–6pm, Sat 9am–4pm">
+          <input type="text" name="opening_hours" value="{{ old('opening_hours') }}" class="form-input" placeholder="e.g. Mon-Fri 9am-5pm, Sat 9am-1pm">
         </div>
         <div class="mb-4">
           <label class="form-label">Shop Description</label>
-          <textarea name="shop_description" class="form-textarea" placeholder="Brief description of your shop and the products you offer">{{ old('shop_description') }}</textarea>
+          <textarea name="shop_description" class="form-textarea" placeholder="Tell us about your shop...">{{ old('shop_description') }}</textarea>
         </div>
       </div>
 
@@ -281,7 +232,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label class="form-label">Organisation Name *</label>
-            <input type="text" name="org_name" id="vcfse_org_name" value="{{ old('role') === 'vcfse' ? old('org_name') : '' }}" class="form-input" placeholder="Organisation name">
+            <input type="text" name="org_name" value="{{ old('role') === 'vcfse' ? old('org_name') : '' }}" class="form-input" placeholder="Your organisation name">
           </div>
           <div>
             <label class="form-label">Charity / Registration Number</label>
@@ -349,6 +300,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
               <option value="school" {{ old('org_type') === 'school' ? 'selected' : '' }}>School</option>
               <option value="care_home" {{ old('org_type') === 'care_home' ? 'selected' : '' }}>Care Home</option>
               <option value="ngo" {{ old('org_type') === 'ngo' ? 'selected' : '' }}>NGO</option>
+              <option value="youth_centre" {{ old('org_type') === 'youth_centre' ? 'selected' : '' }}>Youth Centre</option>
               <option value="other" {{ old('org_type') === 'other' ? 'selected' : '' }}>Other</option>
             </select>
           </div>
@@ -402,7 +354,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
         </div>
       </div>
 
-      <button type="submit" class="btn-submit" @click="handleSubmit">
+      <button type="submit" class="btn-submit">
         <i class="fas fa-user-plus"></i> Create Account
       </button>
     </form>
@@ -419,12 +371,60 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
 function togglePassword(fieldId) {
   const field = document.getElementById(fieldId);
   const button = event.target.closest('.password-toggle');
+  const icon = button.querySelector('i');
   if (field.type === 'password') {
     field.type = 'text';
-    button.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
   } else {
     field.type = 'password';
-    button.innerHTML = '<i class="fas fa-eye"></i>';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
+}
+
+function registerForm() {
+  return {
+    role: '{{ old('role', 'recipient') }}',
+    showSuccess: false,
+    successMessage: '',
+    redirectCountdown: 3,
+    
+    setRole(r) {
+      this.role = r;
+      document.getElementById('role_input').value = r;
+    },
+    
+    handleSubmit(e) {
+      // Form will submit normally
+    },
+    
+    showSuccessMessage(message) {
+      this.showSuccess = true;
+      this.successMessage = message;
+      this.redirectCountdown = 3;
+      
+      const countdown = setInterval(() => {
+        this.redirectCountdown--;
+        if (this.redirectCountdown <= 0) {
+          clearInterval(countdown);
+          // Redirect to dashboard
+          const dashboardUrl = window.location.href.split('/register')[0] + '/dashboard';
+          window.location.href = dashboardUrl;
+        }
+      }, 1000);
+    },
+    
+    init() {
+      document.getElementById('role_input').value = this.role;
+      
+      // Check if there's a success message in the page
+      @if(session('success'))
+        setTimeout(() => {
+          this.showSuccessMessage('{{ session('success') }}');
+        }, 500);
+      @endif
+    }
   }
 }
 </script>
