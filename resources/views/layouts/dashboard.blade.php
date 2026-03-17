@@ -418,8 +418,8 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
         <span id="notif-badge" class="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center" style="display:none;font-size:10px;font-weight:bold">0</span>
       </button>
       <div x-show="notifOpen" x-cloak @click.away="notifOpen=false"
-           class="absolute right-0 top-full mt-2 bg-white rounded-xl border border-slate-200 shadow-lg py-2 z-50 max-h-96 overflow-y-auto"
-           style="width:360px;min-width:360px;max-width:90vw;left:auto;right:0"
+           class="absolute top-full mt-2 bg-white rounded-xl border border-slate-200 shadow-lg py-2 z-50 max-h-96 overflow-y-auto"
+           style="width:360px;min-width:360px;max-width:90vw;left:50%;transform:translateX(-50%);right:auto"
            x-transition>
         <div class="px-4 py-2 border-b border-slate-100 flex justify-between items-center">
           <span class="font-semibold text-sm">Notifications</span>
