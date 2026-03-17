@@ -31,6 +31,50 @@ class NotificationService
     }
 
     /**
+     * Notify admins about a new VCFSE registration
+     */
+    public static function notifyNewVCFSERegistration(User $vcfse)
+    {
+        $admins = User::where('role', 'admin')->orWhere('role', 'super_admin')->get();
+        
+        foreach ($admins as $admin) {
+            Notification::create([
+                'user_id' => $admin->id,
+                'title' => 'New VCFSE Organisation Registered',
+                'message' => $vcfse->name . ' has registered as a VCFSE organisation and is ready to support recipients with food vouchers.',
+                'type' => 'new_vcfse',
+                'icon' => 'fas fa-building',
+                'link' => route('admin.users'),
+                'read_at' => null,
+            ]);
+        }
+        
+        Log::info("New VCFSE registration notification sent for: {$vcfse->name}");
+    }
+
+    /**
+     * Notify admins about a new School/Care registration
+     */
+    public static function notifyNewSchoolCareRegistration(User $schoolCare)
+    {
+        $admins = User::where('role', 'admin')->orWhere('role', 'super_admin')->get();
+        
+        foreach ($admins as $admin) {
+            Notification::create([
+                'user_id' => $admin->id,
+                'title' => 'New School/Care Organisation Registered',
+                'message' => $schoolCare->name . ' has registered as a School/Care organisation and is ready to support recipients with food vouchers.',
+                'type' => 'new_school_care',
+                'icon' => 'fas fa-school',
+                'link' => route('admin.users'),
+                'read_at' => null,
+            ]);
+        }
+        
+        Log::info("New School/Care registration notification sent for: {$schoolCare->name}");
+    }
+
+    /**
      * Notify admins about a new donation
      */
     public static function notifyNewDonation($amount, $donorEmail = null)

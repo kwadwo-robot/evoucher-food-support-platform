@@ -128,6 +128,11 @@ class RegisterController extends Controller
                 'postcode'       => $validated['org_postcode'],
                 'website'        => $validated['org_website'] ?? null,
             ]);
+            try {
+                NotificationService::notifyNewVCFSERegistration($user);
+            } catch (\Exception $e) {
+                \Log::warning('VCFSE registration notification failed: ' . $e->getMessage());
+            }
         } else { // school_care
             OrganisationProfile::create([
                 'user_id'        => $user->id,
@@ -140,6 +145,11 @@ class RegisterController extends Controller
                 'postcode'       => $validated['school_postcode'],
                 'website'        => $validated['school_website'] ?? null,
             ]);
+            try {
+                NotificationService::notifyNewSchoolCareRegistration($user);
+            } catch (\Exception $e) {
+                \Log::warning('School/Care registration notification failed: ' . $e->getMessage());
+            }
         }
 
         // Send welcome email to new user
