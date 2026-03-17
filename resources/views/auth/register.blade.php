@@ -39,14 +39,22 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
 .section-divider{height:1px;background:#f1f5f9;margin:4px 0 16px}
 .section-title{font-size:13px;font-weight:700;color:#0f172a;margin-bottom:12px}
 [x-cloak]{display:none!important}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
 <div class="reg-wrap" x-data="{
   role: '{{ old('role', 'recipient') }}',
+  isSubmitting: false,
   setRole(r) {
     this.role = r;
     document.getElementById('role_input').value = r;
+  },
+  handleSubmit(e) {
+    this.isSubmitting = true;
   }
 }" x-init="document.getElementById('role_input').value = role">
   <div class="reg-header">
@@ -351,8 +359,15 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;min-height:100vh;padding:
         </div>
       </div>
 
-      <button type="submit" class="btn-submit">
-        <i class="fas fa-user-plus"></i> Create Account
+      <button type="submit" class="btn-submit" @click="handleSubmit" :disabled="isSubmitting" :style="isSubmitting ? 'opacity:0.7;cursor:not-allowed' : ''">
+        <template x-if="!isSubmitting">
+          <span><i class="fas fa-user-plus"></i> Create Account</span>
+        </template>
+        <template x-if="isSubmitting">
+          <span style="display:flex;align-items:center;justify-content:center;gap:8px">
+            <i class="fas fa-spinner" style="animation:spin 1s linear infinite"></i> Creating Account...
+          </span>
+        </template>
       </button>
     </form>
   </div>
