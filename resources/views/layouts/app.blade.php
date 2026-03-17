@@ -212,52 +212,32 @@
     
     // Handle PWA installation prompt
     let deferredPrompt;
-    console.log('PWA: Waiting for beforeinstallprompt event...');
+    const installBtn = document.getElementById('pwa-install-btn');
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    console.log('PWA: Initializing... Mobile:', isMobile);
     
     window.addEventListener('beforeinstallprompt', (e) => {
-        console.log('✓ PWA install prompt event fired!');
+        console.log('✓ beforeinstallprompt fired');
         e.preventDefault();
         deferredPrompt = e;
-        
-        // Show install button if not already installed
-        const installBtn = document.getElementById('pwa-install-btn');
-        if (installBtn) {
-            installBtn.style.display = 'block';
-            console.log('✓ Install button shown');
-        } else {
-            console.warn('✗ Install button element not found');
+        if (installBtn) installBtn.style.display = 'flex';
+    });
+    
+    // Always show button for mobile users
+    window.addEventListener('load', () => {
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+        if (!isStandalone && isMobile && installBtn) {
+            installBtn.style.display = 'flex';
+            console.log('✓ Install button shown (mobile fallback)');
         }
     });
     
-    // Fallback: Show install button after 2 seconds if beforeinstallprompt didn't fire
-    setTimeout(() => {
-        if (!deferredPrompt) {
-            console.log('Note: beforeinstallprompt did not fire. This is normal on iOS or if PWA is already installed.');
-            console.log('On iOS: Use Safari menu > Add to Home Screen');
-            console.log('On Android: Look for install prompt or use browser menu > Install app');
-            
-            // Show install button as fallback for Android users
-            const installBtn = document.getElementById('pwa-install-btn');
-            if (installBtn && !window.matchMedia('(display-mode: standalone)').matches) {
-                // Check if on mobile
-                if (window.innerWidth < 768) {
-                    installBtn.style.display = 'flex';
-                    console.log('✓ Showing fallback install button for mobile users');
-                }
-            }
-        }
-    }, 2000);
-    
     // Handle app installed event
     window.addEventListener('appinstalled', () => {
-        console.log('PWA was installed');
+        console.log('✓ App installed successfully');
         deferredPrompt = null;
-        
-        // Hide install button
-        const installBtn = document.getElementById('pwa-install-btn');
-        if (installBtn) {
-            installBtn.style.display = 'none';
-        }
+        if (installBtn) installBtn.style.display = 'none';
     });
     
     // Expose install function globally
@@ -266,26 +246,25 @@
             deferredPrompt.prompt();
             deferredPrompt.userChoice.then((choiceResult) => {
                 if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the install prompt');
+                    console.log('✓ User accepted install');
                 } else {
-                    console.log('User dismissed the install prompt');
+                    console.log('User dismissed install');
                 }
                 deferredPrompt = null;
             });
         } else {
-            // If no deferred prompt, show instructions
-            alert('To install the app:\n\nAndroid: Tap the menu (⋮) and select "Install app"\n\niOS: Tap Share and select "Add to Home Screen"');
+            const ua = navigator.userAgent.toLowerCase();
+            let msg = 'To install:\n\n';
+            if (ua.includes('iphone') || ua.includes('ipad')) {
+                msg += 'iOS: Tap Share > Add to Home Screen';
+            } else if (ua.includes('android')) {
+                msg += 'Android: Tap menu (⋮) > Install app';
+            } else {
+                msg += 'Android: Menu > Install app\niOS: Share > Add to Home Screen';
+            }
+            alert(msg);
         }
     };
-    
-    // Check if app is already installed
-    window.addEventListener('load', () => {
-        if (window.matchMedia('(display-mode: standalone)').matches) {
-            console.log('✓ App is running in standalone mode (already installed)');
-            const installBtn = document.getElementById('pwa-install-btn');
-            if (installBtn) installBtn.style.display = 'none';
-        }
-    });
 </script>
 
 </body>

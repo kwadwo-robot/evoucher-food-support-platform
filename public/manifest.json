@@ -1,28 +1,13 @@
 {
   "name": "eVoucher Food Support Platform",
   "short_name": "eVoucher",
-  "description": "A comprehensive platform for managing food vouchers and supporting vulnerable families in Northamptonshire",
+  "description": "Connect food with people in need. Support vulnerable families in Northamptonshire.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#16a34a",
-  "categories": ["food", "social", "utilities"],
-  "screenshots": [
-    {
-      "src": "/images/screenshot-1.png",
-      "sizes": "540x720",
-      "form_factor": "narrow",
-      "type": "image/png"
-    },
-    {
-      "src": "/images/screenshot-2.png",
-      "sizes": "1280x720",
-      "form_factor": "wide",
-      "type": "image/png"
-    }
-  ],
   "icons": [
     {
       "src": "/images/icon-192.png",
@@ -49,55 +34,18 @@
       "purpose": "maskable"
     }
   ],
-  "shortcuts": [
+  "screenshots": [
     {
-      "name": "Browse Food",
-      "short_name": "Food",
-      "description": "Browse available food items",
-      "url": "/food",
-      "icons": [
-        {
-          "src": "/images/shortcut-food.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "src": "/images/screenshot-1.png",
+      "sizes": "540x720",
+      "form_factor": "narrow",
+      "type": "image/png"
     },
     {
-      "name": "My Vouchers",
-      "short_name": "Vouchers",
-      "description": "View your vouchers",
-      "url": "/recipient/vouchers",
-      "icons": [
-        {
-          "src": "/images/shortcut-vouchers.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Dashboard",
-      "short_name": "Dashboard",
-      "description": "Access your dashboard",
-      "url": "/dashboard",
-      "icons": [
-        {
-          "src": "/images/shortcut-dashboard.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
+      "src": "/images/screenshot-2.png",
+      "sizes": "1280x720",
+      "form_factor": "wide",
+      "type": "image/png"
     }
-  ],
-  "share_target": {
-    "action": "/share",
-    "method": "POST",
-    "enctype": "multipart/form-data",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
-  }
+  ]
 }
