@@ -40,8 +40,8 @@ $linkClass = $isDark ? 'hover:text-green-400' : 'hover:text-green-600';
                 <ul class="space-y-3">
                     <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">About Us</a></li>
                     <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Contact</a></li>
-                    <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Privacy Policy</a></li>
-                    <li><a href="#" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Terms of Use</a></li>
+                    <li><a href="/privacy-policy" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Privacy Policy</a></li>
+                    <li><a href="/terms-of-use" class="text-sm {{ $mutedClass }} {{ $linkClass }} transition-colors">Terms of Use</a></li>
                 </ul>
             </div>
 

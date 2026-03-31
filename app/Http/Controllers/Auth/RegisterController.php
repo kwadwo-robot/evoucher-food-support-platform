@@ -110,6 +110,7 @@ class RegisterController extends Controller
                 'phone'         => $validated['phone'] ?? null,
                 'opening_hours' => $validated['opening_hours'] ?? null,
                 'description'   => $validated['shop_description'] ?? null,
+                'is_verified'   => true,  // Auto-verify shops on registration
             ]);
             try {
                 NotificationService::notifyNewShopRegistration($user);

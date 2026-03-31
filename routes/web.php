@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PayoutController as AdminPayout;
 use App\Http\Controllers\Admin\BroadcastController as AdminBroadcast;
 use App\Http\Controllers\Admin\SystemLogController as AdminSystemLog;
 use App\Http\Controllers\Admin\BankDepositController as AdminBankDeposit;
+use App\Http\Controllers\Admin\ShopController as AdminShop;
 use App\Http\Controllers\Admin\ReportGeneratorController as AdminReportGenerator;
 use App\Http\Controllers\Organisation\FundLoadController as OrgFundLoad;
 use App\Http\Controllers\Auth\RegisterController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SurplusClaimController;
 use App\Http\Controllers\FoodBreakdownController;
+use RecipientBroadcast as RecipientBroadcast;
 use Illuminate\Support\Facades\Route;
 
 // Language Switcher
@@ -52,6 +54,8 @@ Route::get('/lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch.get');
 
+Route::get("/privacy-policy", function () { return view("privacy-policy"); })->name("privacy");
+Route::get("/terms-of-use", function () { return view("terms-of-use"); })->name("terms");
 // Public
 Route::get('/', function () { return view('welcome'); })->name('home');
 Route::get('/food', [FoodListingController::class, 'index'])->name('food.index');
@@ -77,15 +81,11 @@ Route::middleware('auth')->group(function () {
 // Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:admin,super_admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
-    // Shops Management
-    Route::get('/shops', [\App\Http\Controllers\Admin\AdminShopController::class, 'index'])->name('shops.index');
-    Route::get('/shops/{shop}', [\App\Http\Controllers\Admin\AdminShopController::class, 'show'])->name('shops.show');
-    Route::patch('/shops/{shop}/approve', [\App\Http\Controllers\Admin\AdminShopController::class, 'approve'])->name('shops.approve');
-    Route::patch('/shops/{shop}/reject', [\App\Http\Controllers\Admin\AdminShopController::class, 'reject'])->name('shops.reject');
-    Route::patch('/shops/{shop}/toggle-active', [\App\Http\Controllers\Admin\AdminShopController::class, 'toggleActive'])->name('shops.toggle');
-    Route::delete('/shops/{shop}', [\App\Http\Controllers\Admin\AdminShopController::class, 'destroy'])->name('shops.destroy');
     Route::get('/users', [AdminUser::class, 'index'])->name('users.index');
     Route::get('/users/{user}', [AdminUser::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [AdminUser::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [AdminUser::class, 'update'])->name('users.update');
+    Route::post('/users/{user}/reset-password', [AdminUser::class, 'resetPassword'])->name('users.reset-password');
     Route::patch('/users/{user}/approve', [AdminUser::class, 'approve'])->name('users.approve');
     Route::patch('/users/{user}/reject', [AdminUser::class, 'reject'])->name('users.reject');
     Route::patch('/users/{user}/toggle-active', [AdminUser::class, 'toggleActive'])->name('users.toggle');
@@ -99,6 +99,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/listings', [AdminDashboard::class, 'listings'])->name('listings.index');
     Route::patch('/listings/{listing}/status', [AdminDashboard::class, 'updateListingStatus'])->name('listings.status');
     Route::delete('/listings/{listing}', [AdminDashboard::class, 'destroyListing'])->name('listings.destroy');
+    Route::get('/redemptions', [AdminDashboard::class, 'redemptions'])->name('redemptions.index');
     Route::get('/donations', [\App\Http\Controllers\Admin\DonationController::class, 'index'])->name('donations.index');
     Route::post('/donations/sync-stripe', [\App\Http\Controllers\Admin\DonationController::class, 'syncFromStripe'])->name('donations.sync-stripe');
     Route::get('/donations/{donation}', [\App\Http\Controllers\Admin\DonationController::class, 'show'])->name('donations.show');
@@ -123,6 +124,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/broadcasts/{broadcast}', [AdminBroadcast::class, 'show'])->name('broadcasts.show');
     Route::post('/broadcasts/{broadcast}/send', [AdminBroadcast::class, 'send'])->name('broadcasts.send');
     Route::delete('/broadcasts/{broadcast}', [AdminBroadcast::class, 'destroy'])->name('broadcasts.destroy');
+    Route::get('/api/users', [AdminBroadcast::class, 'getAllUsers'])->name('api.users.all');
     // System Logs
     Route::get('/logs', [AdminSystemLog::class, 'index'])->name('logs.index');
     Route::get('/logs/{log}', [AdminSystemLog::class, 'show'])->name('logs.show');
@@ -132,6 +134,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/bank-deposits/{deposit}', [AdminBankDeposit::class, 'show'])->name('bank-deposits.show');
     Route::patch('/bank-deposits/{deposit}/verify', [AdminBankDeposit::class, 'verify'])->name('bank-deposits.verify');
     Route::patch('/bank-deposits/{deposit}/reject', [AdminBankDeposit::class, 'reject'])->name('bank-deposits.reject');
+    // Shops
+    Route::get('/shops', [AdminShop::class, 'index'])->name('shops.index');
+    Route::get('/shops/{shop}', [AdminShop::class, 'show'])->name('shops.show');
+    Route::get('/shops/{shop}/edit', [AdminShop::class, 'edit'])->name('shops.edit');
+    Route::put('/shops/{shop}', [AdminShop::class, 'update'])->name('shops.update');
+    Route::patch('/shops/{shop}/suspend', [AdminShop::class, 'suspend'])->name('shops.suspend');
+    Route::patch('/shops/{shop}/reactivate', [AdminShop::class, 'reactivate'])->name('shops.reactivate');
+    Route::delete('/shops/{shop}', [AdminShop::class, 'destroy'])->name('shops.destroy');
     // Food Breakdown
     Route::get('/food-breakdown', [FoodBreakdownController::class, 'adminBreakdown'])->name('food-breakdown');
     // Reports
@@ -189,6 +199,9 @@ Route::prefix('recipient')->name('recipient.')->middleware(['auth', 'role:recipi
     // Reports
     Route::get('/reports/export-pdf', [RecipientReport::class, 'exportPDF'])->name('reports.export-pdf');
     Route::get('/reports/export-excel', [RecipientReport::class, 'exportExcel'])->name('reports.export-excel');
+    // Broadcasts
+    Route::get("/broadcasts/{broadcast}", [RecipientBroadcast::class, "show"])->name("broadcasts.show");
+    Route::post("/broadcasts/{broadcast}/mark-read", [RecipientBroadcast::class, "markRead"])->name("broadcasts.mark-read");
 });
 
 // VCFSE
@@ -196,7 +209,7 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
     Route::get('/dashboard', [OrgDashboard::class, 'vcfseDashboard'])->name('dashboard');
     Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
     Route::post('/food/{foodListingId}/claim', [SurplusClaimController::class, 'claim'])->name('food.claim');
-    Route::get('/donate', [DonationController::class, 'showDonateForm'])->name('donate');
+    Route::get('/donate', [DonationController::class, 'showForm'])->name('donate');
     Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
     Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
     Route::get('/fund-load', [OrgFundLoad::class, 'showLoadForm'])->name('fund-load');
@@ -231,7 +244,7 @@ Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:
     Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
     Route::post('/food/{foodListingId}/claim', [SurplusClaimController::class, 'claim'])->name('food.claim');
     Route::post('/food/{listing}/redeem', [RecipientVoucher::class, 'redeem'])->name('food.redeem');
-    Route::get('/donate', [DonationController::class, 'showDonateForm'])->name('donate');
+    Route::get('/donate', [DonationController::class, 'showForm'])->name('donate');
     Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
     Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
     Route::get('/fund-load', [OrgFundLoad::class, 'showLoadForm'])->name('fund-load');

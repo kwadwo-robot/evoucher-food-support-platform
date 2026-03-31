@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Broadcast extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'admin_user_id',
         'title',
@@ -25,23 +28,40 @@ class Broadcast extends Model
         'sent_at' => 'datetime',
     ];
 
+    /**
+     * Get the admin user who created this broadcast.
+     */
     public function admin()
     {
         return $this->belongsTo(User::class, 'admin_user_id');
     }
 
+    /**
+     * Get all read records for this broadcast.
+     */
     public function reads()
     {
         return $this->hasMany(BroadcastRead::class);
     }
 
-    public function scopeDraft($query)
+    /**
+     * Get all delivery records for this broadcast.
+     */
+    public function deliveries()
     {
-        return $query->where('status', 'draft');
+        return $this->hasMany(BroadcastDelivery::class);
     }
 
-    public function scopeSent($query)
+    /**
+     * Get delivery statistics for this broadcast.
+     */
+    public function getDeliveryStats()
     {
-        return $query->where('status', 'sent');
+        return [
+            'total' => $this->deliveries()->count(),
+            'sent' => $this->deliveries()->where('status', 'sent')->count(),
+            'failed' => $this->deliveries()->where('status', 'failed')->count(),
+            'pending' => $this->deliveries()->where('status', 'pending')->count(),
+        ];
     }
 }

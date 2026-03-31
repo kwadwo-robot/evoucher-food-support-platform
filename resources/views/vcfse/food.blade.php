@@ -176,7 +176,11 @@
       </div>
       @endif
       <div class="flex items-center justify-between gap-2">
-        <span style="font-size:18px;font-weight:800;color:#16a34a">FREE</span>
+        @if($item->listing_type === 'discounted' && $item->discounted_price > 0)
+          <span style="font-size:18px;font-weight:800;color:#dc2626">£{{ number_format($item->discounted_price, 2) }}</span>
+        @else
+          <span style="font-size:18px;font-weight:800;color:#16a34a">FREE</span>
+        @endif
         <span style="font-size:11px;color:#94a3b8">{{ $item->listing_type === 'surplus' ? 'VCFSE Collection' : 'Available to All' }}</span>
       </div>
       <!-- Claim Button Footer -->

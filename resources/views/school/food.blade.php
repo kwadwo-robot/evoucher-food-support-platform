@@ -4,7 +4,7 @@
 @section('content')
 <div class="page-hd">
   <h1>Browse Food</h1>
-  <p>View free, discounted and surplus food listings available for School/Care collection in Northamptonshire.</p>
+  <p>Browse discounted food items (Food to Go) available for your organisation in Northamptonshire.</p>
 </div>
 
 <!-- Filter Bar -->
@@ -19,9 +19,7 @@
         <label class="form-label">Listing Type</label>
         <select name="type" class="form-select">
           <option value="">All Types</option>
-          <option value="free" {{ request('type') === 'free' ? 'selected' : '' }}>Free Items</option>
           <option value="discounted" {{ request('type') === 'discounted' ? 'selected' : '' }}>Discounted Items</option>
-          <option value="surplus" {{ request('type') === 'surplus' ? 'selected' : '' }}>Surplus Food</option>
         </select>
       </div>
       <div>
@@ -39,16 +37,8 @@
 <!-- Legend -->
 <div class="flex flex-wrap gap-3 mb-5">
   <div class="flex items-center gap-2" style="font-size:12.5px;color:#64748b">
-    <span class="badge badge-green"><i class="fas fa-gift"></i> Free</span>
-    <span>Free items available to all</span>
-  </div>
-  <div class="flex items-center gap-2" style="font-size:12.5px;color:#64748b">
     <span class="badge badge-blue"><i class="fas fa-tag"></i> Discounted</span>
-    <span>Discounted food items</span>
-  </div>
-  <div class="flex items-center gap-2" style="font-size:12.5px;color:#64748b">
-    <span class="badge badge-purple"><i class="fas fa-boxes-stacked"></i> Surplus</span>
-    <span>Surplus food for School/Care collection only</span>
+    <span>Discounted food items (Food to Go)</span>
   </div>
 </div>
 
@@ -72,7 +62,9 @@
         <!-- Type Badge -->
         <div class="mb-2">
           @if($item->listing_type === 'surplus')
-            <span class="badge badge-purple"><i class="fas fa-boxes-stacked"></i> Free Surplus</span>
+            <span class="badge badge-purple"><i class="fas fa-boxes-stacked"></i> Surplus</span>
+          @elseif($item->listing_type === 'discounted')
+            <span class="badge badge-blue"><i class="fas fa-tag"></i> Discounted</span>
           @else
             <span class="badge badge-green"><i class="fas fa-gift"></i> Free</span>
           @endif
@@ -169,7 +161,11 @@
         </div>
         @endif
         <div class="flex items-center justify-between">
-          <span style="font-size:18px;font-weight:800;color:#16a34a">FREE</span>
+          @if($item->listing_type === 'discounted' && $item->discounted_price > 0)
+            <span style="font-size:18px;font-weight:800;color:#dc2626">£{{ number_format($item->discounted_price, 2) }}</span>
+          @else
+            <span style="font-size:18px;font-weight:800;color:#16a34a">FREE</span>
+          @endif
           <span style="font-size:11px;color:#94a3b8">{{ $item->listing_type === 'surplus' ? 'School/Care Collection' : 'Available to All' }}</span>
         </div>
         <!-- Action Buttons for School/Care -->

@@ -14,62 +14,62 @@
 
 <!-- Stats Grid -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <a href="{{ route('admin.users.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  <div class="stat-card">
     <div class="flex items-start justify-between mb-3">
       <div class="stat-icon" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-users"></i></div>
       <span class="badge badge-green">+{{ $stats['new_users_this_month'] ?? 0 }} this month</span>
     </div>
     <div class="stat-label">{{ __('app.total_users') }}</div>
     <div class="stat-value">{{ $stats['total_users'] ?? 0 }}</div>
-  </a>
-  <a href="{{ route('admin.vouchers.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  </div>
+  <div class="stat-card">
     <div class="flex items-start justify-between mb-3">
       <div class="stat-icon" style="background:#eff6ff;color:#3b82f6"><i class="fas fa-ticket"></i></div>
       <span class="badge badge-blue">{{ __('app.active') }}</span>
     </div>
     <div class="stat-label">{{ __('app.active_vouchers') }}</div>
     <div class="stat-value">{{ $stats['active_vouchers'] ?? 0 }}</div>
-  </a>
-  <a href="{{ route('admin.listings.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  </div>
+  <div class="stat-card">
     <div class="flex items-start justify-between mb-3">
       <div class="stat-icon" style="background:#fef9c3;color:#ca8a04"><i class="fas fa-basket-shopping"></i></div>
       <span class="badge badge-yellow">{{ __('app.available') }}</span>
     </div>
     <div class="stat-label">{{ __('app.food_listings') }}</div>
     <div class="stat-value">{{ $stats['total_food_listings'] ?? 0 }}</div>
-  </a>
-  <a href="{{ route('admin.donations.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  </div>
+  <div class="stat-card">
     <div class="flex items-start justify-between mb-3">
       <div class="stat-icon" style="background:#f0fdf4;color:#16a34a"><i class="fas fa-sterling-sign"></i></div>
       <span class="badge badge-green">{{ __('app.donations') }}</span>
     </div>
     <div class="stat-label">{{ __('app.total_donated') }}</div>
     <div class="stat-value">£{{ number_format($stats['total_donated'] ?? 0, 2) }}</div>
-  </a>
+  </div>
 </div>
 
 <!-- Second row stats -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-  <a href="{{ route('admin.reports.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  <a href="{{ route('admin.redemptions.index') }}" class="stat-card hover:shadow-lg transition">
     <div class="stat-icon mb-3" style="background:#fdf4ff;color:#a855f7;width:36px;height:36px;font-size:15px;border-radius:9px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-check-double"></i></div>
     <div class="stat-label">Redeems</div>
     <div class="stat-value" style="font-size:22px">{{ $stats['total_redemptions'] ?? 0 }}</div>
   </a>
-  <a href="{{ route('admin.shops.index') }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  <div class="stat-card">
     <div class="stat-icon mb-3" style="background:#fff7ed;color:#f97316;width:36px;height:36px;font-size:15px;border-radius:9px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-store"></i></div>
     <div class="stat-label">Local Shops</div>
     <div class="stat-value" style="font-size:22px">{{ $stats['total_shops'] ?? 0 }}</div>
-  </a>
-  <a href="{{ route('admin.users.index', ['role' => 'donor']) }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  </div>
+  <a href="{{ route('admin.users.index', ['role' => 'donor']) }}" class="stat-card hover:shadow-lg transition">
     <div class="stat-icon mb-3" style="background:#ecfeff;color:#0891b2;width:36px;height:36px;font-size:15px;border-radius:9px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-hand-holding-heart"></i></div>
-    <div class="stat-label">Donors</div>
+    <div class="stat-label">Organisations</div>
     <div class="stat-value" style="font-size:22px">{{ $stats['total_donors'] ?? 0 }}</div>
   </a>
-  <a href="{{ route('admin.users.index', ['filter' => 'pending']) }}" class="stat-card hover:shadow-lg hover:scale-105 transition-all cursor-pointer">
+  <div class="stat-card">
     <div class="stat-icon mb-3" style="background:#fef2f2;color:#ef4444;width:36px;height:36px;font-size:15px;border-radius:9px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-clock"></i></div>
     <div class="stat-label">Pending Approvals</div>
-    <div class="stat-value" style="font-size:22px">{{ $stats['pending_approvals'] ?? 0 }}</div>
-  </a>
+    <div class="stat-value" style="font-size:22px">{{ $pendingCount ?? 0 }}</div>
+  </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">

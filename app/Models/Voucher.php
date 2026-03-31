@@ -10,6 +10,7 @@ class Voucher extends Model
     protected $fillable = [
         'code', 'recipient_user_id', 'issued_by',
         'value', 'remaining_value', 'status', 'expiry_date', 'notes',
+        'description', 'conditions', 'organization',
     ];
 
     protected $casts = [

@@ -141,24 +141,16 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
         <span style="font-size:12px;font-weight:700;text-transform:uppercase" id="langCode">{{ app()->getLocale() }}</span>
         <i class="fas fa-chevron-down" style="font-size:10px"></i>
       </button>
-      <div x-show="open" @click.away="open = false" x-transition style="position:absolute;right:0;top:110%;background:#fff;border:1px solid var(--gray-border);border-radius:10px;min-width:160px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.1);max-height:300px;overflow-y:auto">
-        <a href="#" onclick="switchLanguage('en', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:8px 8px 0 0;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇬🇧 English</a>
-        <a href="#" onclick="switchLanguage('ar', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇸🇦 العربية</a>
-        <a href="#" onclick="switchLanguage('ro', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇷🇴 Română</a>
-        <a href="#" onclick="switchLanguage('pl', event); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:0 0 8px 8px;cursor:pointer" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">🇵🇱 Polski</a>
+      <div x-show="open" @click.away="open = false" x-transition style="position:absolute;right:0;top:110%;background:#fff;border:1px solid var(--gray-border);border-radius:10px;min-width:160px;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,.1)">
+        <a href="#" onclick="switchLanguage('en'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:8px 8px 0 0">🇬🇧 English</a>
+        <a href="#" onclick="switchLanguage('ar'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px">🇸🇦 العربية</a>
+        <a href="#" onclick="switchLanguage('ro'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px">🇷🇴 Română</a>
+        <a href="#" onclick="switchLanguage('pl'); return false;" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#0f172a;text-decoration:none;font-size:13px;border-radius:0 0 8px 8px">🇵🇱 Polski</a>
       </div>
     </div>
     <script>
-      function switchLanguage(locale, event) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
+      function switchLanguage(locale) {
         const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        if (!token) {
-          console.error('CSRF token not found');
-          return;
-        }
         fetch(`/lang/${locale}`, {
           method: 'POST',
           headers: {
@@ -167,19 +159,14 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
             'Accept': 'application/json'
           }
         })
-          .then(response => {
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            return response.json();
-          })
+          .then(response => response.json())
           .then(data => {
             if (data.success) {
               document.getElementById('langCode').textContent = locale.toUpperCase();
-              setTimeout(() => window.location.reload(), 100);
-            } else {
-              console.error('Language switch failed:', data);
+              window.location.reload();
             }
           })
-          .catch(error => console.error('Error switching language:', error));
+          .catch(error => console.error('Error:', error));
       }
     </script>
 
@@ -220,41 +207,22 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
     <div class="hero-btns">
       <a href="{{ route('register') }}" class="btn btn-primary"><i class="fas fa-rocket"></i> {{ __('app.get_started_free') }}</a>
       <a href="{{ url('/food') }}" class="btn btn-secondary"><i class="fas fa-basket-shopping"></i> {{ __('app.browse_food') }}</a>
-      <button onclick="openDonateModal()" class="btn btn-secondary"><i class="fas fa-heart"></i> {{ __('app.donate') }}</button>
+      <a href="{{ auth()->check() ? (auth()->user()->isVcfse() ? route('vcfse.donate') : (auth()->user()->isSchoolCare() ? route('school.donate') : '#')) : route('login') }}" class="btn btn-secondary"><i class="fas fa-heart"></i> {{ __('app.donate') }}</a>
     </div>
   </div>
 </div>
-
-<!-- STATS -->
-<div class="section">
-  <div class="stats-grid">
-    <div class="stat-item">
-      <div class="stat-num">100%</div>
-      <div class="stat-lbl">{{ __('app.free_to_use') }}</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">0</div>
-      <div class="stat-lbl">{{ __('app.food_wasted') }}</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">6</div>
-      <div class="stat-lbl">{{ __('app.user_roles') }}</div>
-    </div>
-
-  </div>
-</div>
-
 <!-- HOW IT WORKS -->
-<div class="section section-alt">
+<div class="section section-alt" style="margin-top: 60px; margin-bottom: 60px;">
+
   <h2 class="section-title">{{ __('app.how_it_works') }}</h2>
-  <p class="section-sub">{{ __('app.how_it_works_description') }}</p>
+  <p class="section-sub">{{ __('app.how_it_works_desc') }}</p>
   <div class="cards-grid">
     <div class="card">
       <div class="card-icon">🏪</div>
       <div class="card-body">
         <div class="card-num">1</div>
         <div class="card-title">{{ __('app.shops_list_food') }}</div>
-        <div class="card-desc">{{ __('app.shops_list_food_description') }}</div>
+        <div class="card-desc">{{ __('app.shops_list_food_desc') }}</div>
       </div>
     </div>
     <div class="card">
@@ -262,7 +230,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
       <div class="card-body">
         <div class="card-num">2</div>
         <div class="card-title">{{ __('app.recipients_get_vouchers') }}</div>
-        <div class="card-desc">{{ __('app.recipients_get_vouchers_description') }}</div>
+        <div class="card-desc">{{ __('app.recipients_get_vouchers_desc') }}</div>
       </div>
     </div>
     <div class="card">
@@ -270,54 +238,18 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
       <div class="card-body">
         <div class="card-num">3</div>
         <div class="card-title">{{ __('app.organisations_fund_it') }}</div>
-        <div class="card-desc">{{ __('app.organisations_fund_it_description') }}</div>
+        <div class="card-desc">{{ __('app.organisations_fund_it_desc') }}</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- WHO USES EVOUCHER -->
-<div class="section">
-  <h2 class="section-title">{{ __('app.who_uses_evoucher') }}</h2>
-  <p class="section-sub">{{ __('app.who_uses_evoucher_description') }}</p>
-  <div class="roles-grid">
-    <div class="role-card">
-      <div class="role-icon" style="background:#e0e7ff;color:#4f46e5">👑</div>
-      <div class="role-name">{{ __('app.super_admin') }}</div>
-      <div class="role-desc">{{ __('app.super_admin_description') }}</div>
-    </div>
-    <div class="role-card">
-      <div class="role-icon" style="background:#fef3c7;color:#d97706">🔐</div>
-      <div class="role-name">{{ __('app.admin') }}</div>
-      <div class="role-desc">{{ __('app.admin_description') }}</div>
-    </div>
-    <div class="role-card">
-      <div class="role-icon" style="background:#dbeafe;color:#0284c7">🏪</div>
-      <div class="role-name">{{ __('app.local_shops') }}</div>
-      <div class="role-desc">{{ __('app.local_shops_description') }}</div>
-    </div>
-    <div class="role-card">
-      <div class="role-icon" style="background:#f0fdf4;color:#16a34a">👤</div>
-      <div class="role-name">{{ __('app.recipients') }}</div>
-      <div class="role-desc">{{ __('app.recipients_description') }}</div>
-    </div>
-    <div class="role-card">
-      <div class="role-icon" style="background:#fce7f3;color:#ec4899">🤲</div>
-      <div class="role-name">{{ __('app.vcfse') }}</div>
-      <div class="role-desc">{{ __('app.vcfse_description') }}</div>
-    </div>
-    <div class="role-card">
-      <div class="role-icon" style="background:#f3e8ff;color:#a855f7">🎓</div>
-      <div class="role-name">{{ __('app.schools_care') }}</div>
-      <div class="role-desc">{{ __('app.schools_care_description') }}</div>
-    </div>
-  </div>
-</div>
 
 <!-- CTA -->
 <div class="cta-section">
   <h2>{{ __('app.ready_to_get_started') }}</h2>
-  <p>{{ __('app.ready_to_get_started_description') }}</p>
+  <p>{{ __('app.ready_to_get_started_desc') }}</p>
   <a href="{{ route('register') }}" class="btn btn-primary" style="background:#fff;color:var(--primary)"><i class="fas fa-rocket"></i> {{ __('app.get_started_free') }}</a>
 </div>
 
@@ -345,8 +277,8 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
     </div>
     <div>
       <div class="footer-col-title">{{ __('app.legal') }}</div>
-      <a href="#" class="footer-link">{{ __('app.privacy_policy') }}</a>
-      <a href="#" class="footer-link">{{ __('app.terms_of_use') }}</a>
+      <a href="/privacy-policy" class="footer-link">{{ __('app.privacy_policy') }}</a>
+      <a href="/terms-of-use" class="footer-link">{{ __('app.terms_of_use') }}</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -360,7 +292,9 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
 
 <script>
 function openDonateModal() {
-  alert('Donate functionality coming soon!');
+  // Check if user is authenticated by looking for auth token or making a request
+  // For now, redirect to login - user will be redirected to donate page after login
+  window.location.href = '{{ route("login") }}';
 }
 </script>
 </body>

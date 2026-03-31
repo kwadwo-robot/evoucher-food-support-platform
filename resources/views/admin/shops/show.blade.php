@@ -1,124 +1,130 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
+
+@section('title', 'Shop Details')
+@section('page-title', 'Shop Management')
 
 @section('content')
-<div class="min-h-screen bg-gray-50">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header -->
-        <div class="mb-8">
-            <a href="{{ route('admin.shops.index') }}" class="text-green-600 hover:text-green-700 mb-4 inline-flex items-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-                Back to Shops
-            </a>
-            <h1 class="text-3xl font-bold text-gray-900">{{ $shop->name }}</h1>
-            <p class="mt-2 text-gray-600">{{ $shop->email }}</p>
+<div class="container mx-auto px-4 py-8">
+    <a href="{{ route('admin.shops.index') }}" class="text-blue-600 hover:text-blue-900 mb-4 inline-flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Back to Shops
+    </a>
+
+    @if(session('success'))
+        <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-start justify-between mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">{{ $shop->shop_name }}</h1>
+                <p class="text-gray-600 mt-2">
+                    <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        @if($shop->is_verified) bg-green-100 text-green-800 @else bg-yellow-100 text-yellow-800 @endif">
+                        {{ $shop->is_verified ? '✓ Verified' : '⚠ Unverified' }}
+                    </span>
+                    <span class="ml-2 px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                        @if($shop->user->is_active) bg-blue-100 text-blue-800 @else bg-red-100 text-red-800 @endif">
+                        {{ $shop->user->is_active ? '● Active' : '● Suspended' }}
+                    </span>
+                </p>
+            </div>
         </div>
 
-        <!-- Shop Details -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Basic Information -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
-                <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Shop Information</h2>
+                <div class="space-y-3">
                     <div>
-                        <label class="text-sm font-medium text-gray-600">Name</label>
-                        <p class="text-gray-900">{{ $shop->name }}</p>
+                        <p class="text-gray-600 text-sm">Email</p>
+                        <p class="text-gray-900">{{ $shop->user->email ?? 'N/A' }}</p>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-gray-600">Email</label>
-                        <p class="text-gray-900">{{ $shop->email }}</p>
+                        <p class="text-gray-600 text-sm">Phone</p>
+                        <p class="text-gray-900">{{ $shop->phone ?? 'N/A' }}</p>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-gray-600">Phone</label>
-                        <p class="text-gray-900">{{ $shop->phone ?? 'Not provided' }}</p>
+                        <p class="text-gray-600 text-sm">Address</p>
+                        <p class="text-gray-900">{{ $shop->address ?? 'N/A' }}</p>
                     </div>
                     <div>
-                        <label class="text-sm font-medium text-gray-600">Joined</label>
-                        <p class="text-gray-900">{{ $shop->created_at->format('d M Y H:i') }}</p>
+                        <p class="text-gray-600 text-sm">Town</p>
+                        <p class="text-gray-900">{{ $shop->town ?? 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm">Postcode</p>
+                        <p class="text-gray-900">{{ $shop->postcode ?? 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-600 text-sm">Category</p>
+                        <p class="text-gray-900">{{ $shop->category ?? 'N/A' }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Status & Actions -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Status & Actions</h2>
-                <div class="space-y-4">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Additional Details</h2>
+                <div class="space-y-3">
                     <div>
-                        <label class="text-sm font-medium text-gray-600">Approval Status</label>
-                        <div class="mt-2">
-                            @if($shop->is_approved)
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                                    Approved
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-                                    Pending Approval
-                                </span>
-                            @endif
-                        </div>
+                        <p class="text-gray-600 text-sm">Joined Date</p>
+                        <p class="text-gray-900">{{ $shop->created_at->format('d M Y') }}</p>
                     </div>
-
                     <div>
-                        <label class="text-sm font-medium text-gray-600">Active Status</label>
-                        <div class="mt-2">
-                            @if($shop->is_active)
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                                    Active
-                                </span>
-                            @else
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
-                                    Inactive
-                                </span>
-                            @endif
-                        </div>
+                        <p class="text-gray-600 text-sm">Last Updated</p>
+                        <p class="text-gray-900">{{ $shop->updated_at->format('d M Y H:i') }}</p>
                     </div>
-
-                    <div class="pt-4 border-t border-gray-200">
-                        <div class="space-y-2">
-                            @if(!$shop->is_approved)
-                                <form action="{{ route('admin.shops.approve', $shop) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                                        Approve Shop
-                                    </button>
-                                </form>
-                            @endif
-
-                            <form action="{{ route('admin.shops.toggle', $shop) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" class="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
-                                    {{ $shop->is_active ? 'Deactivate' : 'Activate' }} Shop
-                                </button>
-                            </form>
+                    @if($shop->opening_hours)
+                        <div>
+                            <p class="text-gray-600 text-sm">Opening Hours</p>
+                            <p class="text-gray-900">{{ $shop->opening_hours }}</p>
                         </div>
-                    </div>
+                    @endif
+                    @if($shop->description)
+                        <div>
+                            <p class="text-gray-600 text-sm">Description</p>
+                            <p class="text-gray-900">{{ $shop->description }}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
 
-        <!-- Shop Profile -->
-        @if($shop->shopProfile)
-            <div class="mt-6 bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">Shop Profile</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">Address</label>
-                        <p class="text-gray-900">{{ $shop->shopProfile->address ?? 'Not provided' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">Postcode</label>
-                        <p class="text-gray-900">{{ $shop->shopProfile->postcode ?? 'Not provided' }}</p>
-                    </div>
-                    <div>
-                        <label class="text-sm font-medium text-gray-600">Bank Account</label>
-                        <p class="text-gray-900">{{ $shop->shopProfile->bank_account_number ? '****' . substr($shop->shopProfile->bank_account_number, -4) : 'Not provided' }}</p>
-                    </div>
-                </div>
+        <!-- Action Buttons -->
+        <div class="border-t pt-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Actions</h2>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ route('admin.shops.edit', $shop) }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-edit mr-2"></i> Edit Shop
+                </a>
+
+                @if($shop->user->is_active)
+                    <form action="{{ route('admin.shops.suspend', $shop) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to suspend this shop?');">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition">
+                            <i class="fas fa-pause mr-2"></i> Suspend Shop
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('admin.shops.reactivate', $shop) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to reactivate this shop?');">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
+                            <i class="fas fa-play mr-2"></i> Reactivate Shop
+                        </button>
+                    </form>
+                @endif
+
+                <form action="{{ route('admin.shops.destroy', $shop) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to permanently delete this shop? This action cannot be undone.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <i class="fas fa-trash mr-2"></i> Delete Shop
+                    </button>
+                </form>
             </div>
-        @endif
+        </div>
     </div>
 </div>
 @endsection

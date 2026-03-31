@@ -6,21 +6,13 @@
   <h1>Edit Food Listing</h1>
   <p>Update the details for "{{ $listing->item_name }}"</p>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6" x-data="{
+<div class="grid grid-cols-1 xl:grid-cols-4 gap-6" x-data="{
   listingType: '{{ old('listing_type', $listing->listing_type ?? 'free') }}',
-  originalPrice: parseFloat('{{ old('original_price', $listing->original_price ?? 0) }}') || 0,
-  discountedPrice: parseFloat('{{ old('discounted_price', $listing->discounted_price ?? 0) }}') || 0,
-  voucherValue: parseFloat('{{ old('voucher_value', $listing->voucher_value ?? 0) }}') || 0,
   get isDiscounted() { return this.listingType === 'discounted'; },
   get isSurplus()    { return this.listingType === 'surplus'; },
-   get isFree()       { return this.listingType === 'free'; },
-  updateVoucherValue() {
-    if (this.isDiscounted && this.discountedPrice > 0) {
-      this.voucherValue = parseFloat(this.discountedPrice.toFixed(2));
-    }
-  }
-}>
-  <div class="card lg:col-span-2">
+  get isFree()       { return this.listingType === 'free'; }
+}">
+  <div class="card xl:col-span-3">
     <div class="card-hd"><div class="card-title"><i class="fas fa-edit text-green-600"></i> Edit Details</div></div>
     <div class="card-body">
       <form method="POST" action="{{ route('shop.listings.update', $listing->id) }}" enctype="multipart/form-data">
@@ -36,9 +28,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🎁</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Free</span>
-                <span class="badge badge-green ml-auto" style="font-size:10px">Free</span>
+                <span class="badge badge-green ml-auto" style="font-size:10px">VCFSE Only</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Recipients and VCFSE groups can redeem for free.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to VCFSE groups only. Schools/Care and Recipients cannot see this.</p>
             </label>
             <label :class="listingType==='discounted' ? 'ring-2 ring-orange-500 bg-orange-50' : 'bg-white hover:bg-slate-50'"
                    class="flex flex-col gap-1 p-4 rounded-xl border border-slate-200 cursor-pointer transition-all">
@@ -46,9 +38,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🏷️</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Food to Go</span>
-                <span class="badge badge-orange ml-auto" style="font-size:10px">Discounted</span>
+                <span class="badge badge-orange ml-auto" style="font-size:10px">For All Users</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Sell at a discount. Recipients only.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Sell near-expiry food at a discount. Visible to Recipients, Schools/Care, and VCFSE groups.</p>
             </label>
             <label :class="listingType==='surplus' ? 'ring-2 ring-purple-500 bg-purple-50' : 'bg-white hover:bg-slate-50'"
                    class="flex flex-col gap-1 p-4 rounded-xl border border-slate-200 cursor-pointer transition-all">
@@ -58,7 +50,7 @@
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Free Surplus</span>
                 <span class="badge badge-purple ml-auto" style="font-size:10px">VCFSE Only</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Bulk surplus for VCFSE collection only.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to VCFSE groups only. Schools/Care and Recipients cannot see this.</p>
             </label>
           </div>
         </div>
@@ -76,7 +68,7 @@
             </div>
             <div>
               <label class="form-label">Discounted Price (£) *</label>
-              <input type="number" name="discounted_price" x-model.number="discountedPrice" @input="updateVoucherValue()" value="{{ old('discounted_price', $listing->discounted_price) }}" min="0.01" step="0.01" placeholder="e.g. 1.00" class="form-input">
+              <input type="number" name="discounted_price" value="{{ old('discounted_price', $listing->discounted_price) }}" min="0.01" step="0.01" placeholder="e.g. 1.00" class="form-input">
             </div>
           </div>
         </div>
@@ -84,9 +76,7 @@
         {{-- ── Voucher Value ───────────────────────────────────────────────── --}}
         <div x-show="!isSurplus" x-cloak class="mb-4">
           <label class="form-label">Voucher Redeem Value (£)</label>
-          <input type="number" name="voucher_value" x-model.number="voucherValue" value="{{ old('voucher_value', $listing->voucher_value) }}" min="0" step="0.01" class="form-input" :readonly="isDiscounted">
-          <p style="font-size:11px;color:#94a3b8;margin-top:4px" x-show="isDiscounted">The amount the recipient will pay using their voucher.</p>
-          <p style="font-size:11px;color:#94a3b8;margin-top:4px" x-show="isFree">Set to £0.00 for completely free items.</p>
+          <input type="number" name="voucher_value" value="{{ old('voucher_value', $listing->voucher_value) }}" min="0" step="0.01" class="form-input">
         </div>
         <input x-show="isSurplus" type="hidden" name="voucher_value" value="0">
 
@@ -150,22 +140,22 @@
   </div>
 
   {{-- ── Listing Type Guide ──────────────────────────────────────────────── --}}
-  <div>
+  <div class="xl:col-span-1">
     <div class="card">
       <div class="card-hd"><div class="card-title"><i class="fas fa-info-circle text-blue-500"></i> Listing Types</div></div>
       <div class="card-body" style="padding:16px">
         <div style="font-size:13px;color:#64748b;line-height:1.7">
           <div class="mb-3 p-3 rounded-lg" style="background:#f0fdf4;border:1px solid #bbf7d0">
             <div style="font-weight:700;color:#15803d;margin-bottom:2px">🎁 Free</div>
-            <div style="font-size:12px">Visible to <strong>Recipients</strong> and <strong>VCFSE</strong>.</div>
+            <div style="font-size:12px">Visible to <strong>VCFSE groups</strong> only. Schools/Care and Recipients cannot see this.</div>
           </div>
           <div class="mb-3 p-3 rounded-lg" style="background:#fff7ed;border:1px solid #fed7aa">
             <div style="font-weight:700;color:#c2410c;margin-bottom:2px">🏷️ Food to Go</div>
-            <div style="font-size:12px">Visible to <strong>Recipients only</strong>. Discounted price.</div>
+            <div style="font-size:12px">Visible to <strong>Recipients</strong>, <strong>Schools/Care</strong>, and <strong>VCFSE groups</strong>. They pay the discounted price at your shop (voucher covers part or all).</div>
           </div>
           <div class="p-3 rounded-lg" style="background:#faf5ff;border:1px solid #e9d5ff">
             <div style="font-weight:700;color:#7e22ce;margin-bottom:2px">📦 Free Surplus</div>
-            <div style="font-size:12px">Visible to <strong>VCFSE only</strong>. Bulk collection.</div>
+            <div style="font-size:12px">Visible to <strong>VCFSE groups</strong> only. Schools/Care and Recipients cannot see this.</div>
           </div>
         </div>
       </div>

@@ -98,19 +98,21 @@ class DashboardController extends Controller
      */
     public function verifyVoucher(Request $request)
     {
-        $voucher      = null;
-        $foodListings = collect();
-        $error        = null;
-        $code         = $request->query('code');
+        $voucher          = null;
+        $foodListings     = collect();
+        $redemptionHistory = collect();
+        $error            = null;
+        $code             = $request->query('code');
 
         if ($code) {
             $result = $this->resolveVoucher(strtoupper(trim($code)));
-            $voucher      = $result['voucher'];
-            $foodListings = $result['foodListings'];
-            $error        = $result['error'];
+            $voucher             = $result['voucher'];
+            $foodListings        = $result['foodListings'];
+            $redemptionHistory   = $result['redemptionHistory'];
+            $error               = $result['error'];
         }
 
-        return view('shop.verify', compact('voucher', 'foodListings', 'error', 'code'));
+        return view('shop.verify', compact('voucher', 'foodListings', 'redemptionHistory', 'error', 'code'));
     }
 
     /**
@@ -158,22 +160,32 @@ class DashboardController extends Controller
             return back()->withErrors(['code' => 'This voucher has expired.'])->withInput();
         }
 
-        $foodListing = FoodListing::where('id', $listingId)
-            ->where('shop_user_id', $shopUserId)
-            ->where('status', 'available')
+        // Check if this is a continuation of a previous redemption (same item)
+        $previousRedemption = Redemption::where('voucher_id', $voucher->id)
+            ->where('food_listing_id', $listingId)
             ->first();
+        
+        $isContinuationRedemption = $previousRedemption !== null;
+        
+        // For continuation redemptions, allow the item even if status is 'redeemed'
+        // For new redemptions, only allow items with 'available' status
+        if ($isContinuationRedemption) {
+            $foodListing = FoodListing::where('id', $listingId)
+                ->where('shop_user_id', $shopUserId)
+                ->first();
+        } else {
+            $foodListing = FoodListing::where('id', $listingId)
+                ->where('shop_user_id', $shopUserId)
+                ->where('status', 'available')
+                ->first();
+        }
 
         if (!$foodListing) {
             return back()->withErrors(['code' => 'Food listing not found or not available at your shop.'])->withInput();
         }
 
-        // Prevent double redemption of the same voucher on the same item
-        $alreadyRedeemed = Redemption::where('voucher_id', $voucher->id)
-            ->where('food_listing_id', $listingId)
-            ->whereIn('status', ['pending', 'collected'])
-            ->exists();
-
-        if ($alreadyRedeemed) {
+        // Prevent double redemption of the same voucher on the same item (same status)
+        if ($previousRedemption && in_array($previousRedemption->status, ['pending', 'collected'])) {
             return back()->withErrors(['code' => 'This voucher has already been redeemed for this item.'])->withInput();
         }
 
@@ -272,9 +284,10 @@ class DashboardController extends Controller
 
     private function resolveVoucher(string $code): array
     {
-        $voucher      = null;
-        $foodListings = collect();
-        $error        = null;
+        $voucher             = null;
+        $foodListings        = collect();
+        $redemptionHistory   = collect();
+        $error               = null;
 
         $voucher = Voucher::with(['recipient.recipientProfile', 'redemptions.foodListing'])
             ->where('code', $code)
@@ -282,8 +295,14 @@ class DashboardController extends Controller
 
         if (!$voucher) {
             $error = 'No voucher found with code "' . $code . '". Please check and try again.';
-            return compact('voucher', 'foodListings', 'error');
+            return compact('voucher', 'foodListings', 'redemptionHistory', 'error');
         }
+
+        // Get redemption history for this voucher
+        $redemptionHistory = Redemption::where('voucher_id', $voucher->id)
+            ->with(['foodListing', 'recipient.recipientProfile'])
+            ->orderBy('redeemed_at', 'desc')
+            ->get();
 
         if ($voucher->status === 'redeemed') {
             $error = 'This voucher has already been fully redeemed.';
@@ -295,12 +314,29 @@ class DashboardController extends Controller
             $error = 'This voucher has no remaining balance.';
         }
 
-        // Get available food listings at this shop
-        $foodListings = FoodListing::where('shop_user_id', Auth::id())
-            ->where('status', 'available')
-            ->orderBy('expiry_date')
-            ->get();
+        // If voucher has been redeemed before, only show the original item
+        if ($redemptionHistory->isNotEmpty()) {
+            // Get the first (original) item that was redeemed
+            $originalItemId = $redemptionHistory->first()->food_listing_id;
+            $originalListing = FoodListing::where('id', $originalItemId)
+                ->where('shop_user_id', Auth::id())
+                ->first();
+            
+            if ($originalListing) {
+                // Show only the original item for continued redemption
+                $foodListings = collect([$originalListing]);
+            } else {
+                // Original item no longer exists, show empty (cannot redeem further)
+                $foodListings = collect();
+            }
+        } else {
+            // First redemption - show all available items at this shop
+            $foodListings = FoodListing::where('shop_user_id', Auth::id())
+                ->where('status', 'available')
+                ->orderBy('expiry_date')
+                ->get();
+        }
 
-        return compact('voucher', 'foodListings', 'error');
+        return compact('voucher', 'foodListings', 'redemptionHistory', 'error');
     }
 }

@@ -172,7 +172,7 @@ class NotificationService
             'message' => 'Your payout request of £' . number_format($payout->total_amount, 2) . ' has been processed. Reference: ' . $payout->payment_reference,
             'type' => 'payout_processed',
             'icon' => 'fas fa-money-bill-wave',
-            'link' => route('shop.payouts'),
+            'link' => route('shop.payouts.index'),
             'read_at' => null,
         ]);
         
@@ -192,7 +192,7 @@ class NotificationService
             'message' => 'Your payout request of £' . number_format($payout->total_amount, 2) . ' has been approved and is being processed.',
             'type' => 'payout_approved',
             'icon' => 'fas fa-check-circle',
-            'link' => route('shop.payouts'),
+            'link' => route('shop.payouts.index'),
             'read_at' => null,
         ]);
         
@@ -212,7 +212,7 @@ class NotificationService
             'message' => 'Your payout request of £' . number_format($payout->total_amount, 2) . ' has been rejected. Reason: ' . ($payout->admin_notes ?? 'No reason provided'),
             'type' => 'payout_rejected',
             'icon' => 'fas fa-times-circle',
-            'link' => route('shop.payouts'),
+            'link' => route('shop.payouts.index'),
             'read_at' => null,
         ]);
         

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class SurplusClaimController extends Controller
 {
     /**
-     * Claim a food item (VCFSE member claims a surplus, free, or discounted item)
+     * Claim a food item (VCFSE member or School/Care claims a surplus, free, or discounted item)
      */
     public function claim(Request $request, $foodListingId)
     {
@@ -51,7 +51,7 @@ class SurplusClaimController extends Controller
                 return redirect()->back()->with('error', 'Voucher not found');
             }
 
-            // Check if voucher belongs to the VCFSE user
+            // Check if voucher belongs to the user
             if ($voucher->recipient_user_id !== $user->id) {
                 return redirect()->back()->with('error', 'This voucher does not belong to you');
             }
@@ -100,12 +100,13 @@ class SurplusClaimController extends Controller
             $allocation->update(['status' => 'claimed', 'claimed_at' => now()]);
         }
 
-        // Create redemption record
+        // Create redemption record with PENDING status (shop owner needs to confirm)
         $redemptionData = [
             'food_listing_id' => $foodListingId,
+            'shop_user_id' => $foodListing->shop_user_id, // Set the shop owner
             'recipient_user_id' => $user->id,
             'redeemed_at' => now(),
-            'status' => 'confirmed',
+            'status' => 'pending', // Changed from 'confirmed' to 'pending'
             'amount_used' => 0, // Default amount for free/surplus items
         ];
         
@@ -132,16 +133,25 @@ class SurplusClaimController extends Controller
             $foodListing->update(['status' => 'redeemed']);
         }
 
-        // Send notification
+        // Send notification to the claiming user (School/VCFSE)
         $itemType = $foodListing->listing_type === 'surplus' ? 'Surplus Item' : ($foodListing->listing_type === 'discounted' ? 'Discounted Item' : 'Free Item');
         Notification::create([
             'user_id' => $user->id,
-            'type' => 'item_redeemed',
-            'title' => $itemType . ' Redeemed',
-            'message' => 'You have successfully redeemed: ' . $foodListing->item_name,
+            'type' => 'item_claimed',
+            'title' => $itemType . ' Claimed',
+            'message' => 'You have successfully claimed: ' . $foodListing->item_name . '. Please collect it from the shop.',
             'icon' => 'fas fa-check-circle',
         ]);
 
-        return redirect()->back()->with('success', 'Item claimed successfully! You can now collect it from the shop.');
+        // Send notification to shop owner about the claim
+        Notification::create([
+            'user_id' => $foodListing->shop_user_id,
+            'type' => 'item_claimed',
+            'title' => 'Food Item Claimed',
+            'message' => $foodListing->item_name . ' has been claimed by ' . $user->name . ' (' . ucfirst(str_replace('_', ' ', $user->role)) . '). Please confirm when collected.',
+            'icon' => 'fas fa-bell',
+        ]);
+
+        return redirect()->back()->with('success', 'Item claimed successfully! The shop owner has been notified. Please collect it from the shop.');
     }
 }

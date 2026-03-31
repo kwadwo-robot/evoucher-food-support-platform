@@ -18,7 +18,7 @@ class FoodListingController extends Controller
 
     public function create()
     {
-        $shopProfile = Auth::user()->shopProfile;
+        $shopProfile = Auth::user()->load('shopProfile')->shopProfile;
         return view('shop.listings.create', compact('shopProfile'));
     }
 
@@ -30,7 +30,7 @@ class FoodListingController extends Controller
             'item_name'               => 'required|string|max:200',
             'description'             => 'nullable|string',
             'quantity'                => 'required|integer|min:1',
-            'expiry_date'             => 'required|date|after_or_equal:today',
+            'expiry_date'             => 'required|date',
             'image'                   => 'nullable|image|max:2048',
             'collection_address'      => 'nullable|string',
             'collection_instructions' => 'nullable|string',
@@ -92,13 +92,13 @@ class FoodListingController extends Controller
 
     public function edit(FoodListing $listing)
     {
-        abort_if($listing->shop_user_id !== Auth::id(), 403);
+        abort_if((int)$listing->shop_user_id !== Auth::id(), 403);
         return view('shop.listings.edit', compact('listing'));
     }
 
     public function update(Request $request, FoodListing $listing)
     {
-        abort_if($listing->shop_user_id !== Auth::id(), 403);
+        abort_if((int)$listing->shop_user_id !== Auth::id(), 403);
         $listingType = $request->input('listing_type', $listing->listing_type ?? 'free');
         $rules = [
             'item_name'               => 'required|string|max:200',

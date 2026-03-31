@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\AccountApprovedMail;
+use App\Mail\PasswordResetMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -11,7 +12,16 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::with(['recipientProfile','shopProfile','organisationProfile']);
-        if ($request->role) $query->where('role', $request->role);
+        
+        // Handle special filter for 'donor' role (vcfse and school_care organizations)
+        if ($request->role) {
+            if ($request->role === 'donor') {
+                $query->whereIn('role', ['vcfse', 'school_care']);
+            } else {
+                $query->where('role', $request->role);
+            }
+        }
+        
         if ($request->status === 'pending') $query->where('is_approved', false);
         if ($request->search) $query->where(function($q) use ($request) {
             $q->where('name','like','%'.$request->search.'%')
@@ -58,6 +68,47 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted.');
+    }
+
+    public function edit(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function update(Request $request, User $user)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'postcode' => 'nullable|string|max:20',
+        ]);
+
+        $user->update($request->only(['name', 'email', 'phone']));
+
+        // Update recipient profile if it exists
+        if ($user->recipientProfile) {
+            $user->recipientProfile->update($request->only(['address', 'postcode']));
+        }
+
+        return redirect()->route('admin.users.show', $user)->with('success', 'User updated successfully.');
+    }
+
+    public function resetPassword(Request $request, User $user)
+    {
+        $request->validate(['password' => 'required|string|min:8|confirmed']);
+
+        $user->update(['password' => bcrypt($request->password)]);
+
+        // Send password reset email
+        try {
+            Mail::to($user->email)->send(new PasswordResetMail($user, $request->password));
+        } catch (\Exception $e) {
+            \Log::warning('Password reset email failed for ' . $user->email . ': ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Password reset successfully for ' . $user->name . '. An email with the new password has been sent.');
     }
 
     public function updateRole(Request $request, User $user)

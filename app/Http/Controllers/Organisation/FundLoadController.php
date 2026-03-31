@@ -151,7 +151,7 @@ class FundLoadController extends Controller
                     'message' => "{$user->name} loaded £{$request->amount} via Stripe",
                     'type'    => 'fund_load',
                     'icon'    => 'fas fa-wallet',
-                    'link'    => route('admin.load-funds'),
+                    'link'    => route('admin.fund-loads.index'),
                 ]);
             }
 

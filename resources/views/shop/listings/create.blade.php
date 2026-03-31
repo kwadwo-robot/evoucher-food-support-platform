@@ -8,17 +8,9 @@
 </div>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6" x-data="{
   listingType: '{{ old('listing_type', 'free') }}',
-  originalPrice: parseFloat('{{ old('original_price', 0) }}') || 0,
-  discountedPrice: parseFloat('{{ old('discounted_price', 0) }}') || 0,
-  voucherValue: parseFloat('{{ old('voucher_value', 0) }}') || 0,
   get isDiscounted() { return this.listingType === 'discounted'; },
   get isSurplus()    { return this.listingType === 'surplus'; },
-  get isFree()       { return this.listingType === 'free'; },
-  updateVoucherValue() {
-    if (this.isDiscounted && this.discountedPrice > 0) {
-      this.voucherValue = parseFloat(this.discountedPrice.toFixed(2));
-    }
-  }
+  get isFree()       { return this.listingType === 'free'; }
 }">
   <div class="card lg:col-span-2">
     <div class="card-hd"><div class="card-title"><i class="fas fa-plus-circle text-green-600"></i> Listing Details</div></div>
@@ -38,9 +30,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🎁</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Free</span>
-                <span class="badge badge-green ml-auto" style="font-size:10px">Schools/Care & VCFSE</span>
+                <span class="badge badge-green ml-auto" style="font-size:10px">VCFSE Only</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to Schools/Care and VCFSE groups only. Recipients cannot see this.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to VCFSE groups only. Schools/Care and Recipients cannot see this.</p>
             </label>
 
             {{-- Food to Go (Discounted) --}}
@@ -50,7 +42,7 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">🏷️</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Food to Go</span>
-                <span class="badge badge-orange ml-auto" style="font-size:10px">All Users</span>
+                <span class="badge badge-orange ml-auto" style="font-size:10px">For All Users</span>
               </div>
               <p style="font-size:11.5px;color:#64748b;line-height:1.5">Sell near-expiry food at a discount. Visible to Recipients, Schools/Care, and VCFSE groups.</p>
             </label>
@@ -62,9 +54,9 @@
               <div class="flex items-center gap-2">
                 <span class="text-xl">📦</span>
                 <span style="font-size:13px;font-weight:700;color:#0f172a">Free Surplus</span>
-                <span class="badge badge-purple ml-auto" style="font-size:10px">Schools/Care & VCFSE</span>
+                <span class="badge badge-purple ml-auto" style="font-size:10px">VCFSE Only</span>
               </div>
-              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to Schools/Care and VCFSE groups only. Recipients cannot see this.</p>
+              <p style="font-size:11.5px;color:#64748b;line-height:1.5">Visible to VCFSE groups only. Schools/Care and Recipients cannot see this.</p>
             </label>
 
           </div>
@@ -84,7 +76,7 @@
             </div>
             <div>
               <label class="form-label">Discounted Price (£) *</label>
-              <input type="number" name="discounted_price" x-model.number="discountedPrice" @input="updateVoucherValue()" value="{{ old('discounted_price') }}" min="0.01" step="0.01" placeholder="e.g. 1.00" class="form-input">
+              <input type="number" name="discounted_price" value="{{ old('discounted_price') }}" min="0.01" step="0.01" placeholder="e.g. 1.00" class="form-input">
               <p style="font-size:11px;color:#94a3b8;margin-top:4px">What the recipient pays at your shop</p>
             </div>
           </div>
@@ -93,8 +85,8 @@
         {{-- ── Voucher Value (hidden for surplus, shown for free/discounted) ── --}}
         <div x-show="!isSurplus" x-cloak class="mb-4">
           <label class="form-label">Voucher Redeem Value (£)</label>
-          <input type="number" name="voucher_value" x-model.number="voucherValue" value="{{ old('voucher_value', 0) }}" min="0" step="0.01" placeholder="0.00 = free" class="form-input" :readonly="isDiscounted">
-          <p style="font-size:11px;color:#94a3b8;margin-top:4px" x-show="isDiscounted">The amount the recipient will pay using their voucher.</p>
+          <input type="number" name="voucher_value" value="{{ old('voucher_value', 0) }}" min="0" step="0.01" placeholder="0.00 = free" class="form-input">
+          <p style="font-size:11px;color:#94a3b8;margin-top:4px" x-show="isDiscounted">Amount deducted from the recipient's voucher. The rest they pay at your shop.</p>
           <p style="font-size:11px;color:#94a3b8;margin-top:4px" x-show="isFree">Set to £0.00 for completely free items.</p>
         </div>
         {{-- Hidden voucher_value for surplus --}}
@@ -157,7 +149,7 @@
         <div style="font-size:13px;color:#64748b;line-height:1.7">
           <div class="mb-3 p-3 rounded-lg" style="background:#f0fdf4;border:1px solid #bbf7d0">
             <div style="font-weight:700;color:#15803d;margin-bottom:2px">🎁 Free</div>
-            <div style="font-size:12px">Visible to <strong>Schools/Care</strong> and <strong>VCFSE groups</strong> only. Recipients cannot see this.</div>
+            <div style="font-size:12px">Visible to <strong>VCFSE groups</strong> only. Schools/Care and Recipients cannot see this.</div>
           </div>
           <div class="mb-3 p-3 rounded-lg" style="background:#fff7ed;border:1px solid #fed7aa">
             <div style="font-weight:700;color:#c2410c;margin-bottom:2px">🏷️ Food to Go</div>
@@ -165,7 +157,7 @@
           </div>
           <div class="p-3 rounded-lg" style="background:#faf5ff;border:1px solid #e9d5ff">
             <div style="font-weight:700;color:#7e22ce;margin-bottom:2px">📦 Free Surplus</div>
-            <div style="font-size:12px">Visible to <strong>Schools/Care</strong> and <strong>VCFSE groups</strong> only. Recipients cannot see this.</div>
+            <div style="font-size:12px">Visible to <strong>VCFSE groups</strong> only. Schools/Care and Recipients cannot see this.</div>
           </div>
         </div>
       </div>

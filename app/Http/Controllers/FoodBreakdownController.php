@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FoodListing;
 use App\Models\Redemption;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 
 class FoodBreakdownController extends Controller
@@ -16,8 +17,8 @@ class FoodBreakdownController extends Controller
     {
         $user = auth()->user();
         
-        // Get all completed redemptions with their food listings
-        $allRedemptions = Redemption::where('status', 'completed')
+        // Get all redeemed/confirmed/collected redemptions with their food listings
+        $allRedemptions = Redemption::whereIn('status', ['confirmed', 'collected'])
             ->with(['foodListing', 'recipient', 'shop', 'voucher'])
             ->orderByDesc('redeemed_at')
             ->get();
@@ -56,38 +57,35 @@ class FoodBreakdownController extends Controller
 
     /**
      * Show detailed redemptions breakdown for School/Care
-     * Shows all redemptions in the system
+     * Shows only redemptions for items claimed by this school
      */
     public function schoolBreakdown()
     {
         $user = auth()->user();
         
-        // Get all completed redemptions with their food listings
-        $allRedemptions = Redemption::where('status', 'completed')
+        // Get redemptions where this school is the recipient (items they claimed)
+        $allRedemptions = Redemption::where('recipient_user_id', $user->id)
+            ->whereIn('status', ['confirmed', 'collected'])
             ->with(['foodListing', 'recipient', 'shop', 'voucher'])
             ->orderByDesc('redeemed_at')
             ->get();
 
-        // Separate redemptions by food type
-        $freeRedemptions = $allRedemptions->filter(function ($redemption) {
-            return $redemption->foodListing && $redemption->foodListing->listing_type === 'free';
-        })->values();
-
+        // For School/Care, only show discounted items
         $discountedRedemptions = $allRedemptions->filter(function ($redemption) {
             return $redemption->foodListing && $redemption->foodListing->listing_type === 'discounted';
         })->values();
 
-        $surplusRedemptions = $allRedemptions->filter(function ($redemption) {
-            return $redemption->foodListing && $redemption->foodListing->listing_type === 'surplus';
-        })->values();
+        // Set free and surplus to empty for school (they only see discounted)
+        $freeRedemptions = collect([]);
+        $surplusRedemptions = collect([]);
 
         // Calculate statistics for each type
         $freeStats = $this->calculateRedemptionStats($freeRedemptions);
         $discountedStats = $this->calculateRedemptionStats($discountedRedemptions);
         $surplusStats = $this->calculateRedemptionStats($surplusRedemptions);
 
-        // Overall stats
-        $overallStats = $this->calculateRedemptionStats($allRedemptions);
+        // Overall stats - only for discounted items
+        $overallStats = $this->calculateRedemptionStats($discountedRedemptions);
 
         return view('school.food-breakdown', [
             'freeRedeemed' => $freeRedemptions,
@@ -102,14 +100,18 @@ class FoodBreakdownController extends Controller
 
     /**
      * Show detailed redemptions breakdown for VCFSE
-     * Shows all redemptions in the system
+     * Shows redemptions from vouchers issued by this VCFSE
      */
     public function vcfseBreakdown()
     {
         $user = auth()->user();
         
-        // Get all completed redemptions with their food listings
-        $allRedemptions = Redemption::where('status', 'completed')
+        // Get voucher IDs issued by this VCFSE
+        $voucherIds = Voucher::where('issued_by', $user->id)->pluck('id');
+        
+        // Get redemptions from vouchers issued by this VCFSE
+        $allRedemptions = Redemption::whereIn('voucher_id', $voucherIds)
+            ->whereIn('status', ['confirmed', 'collected'])
             ->with(['foodListing', 'recipient', 'shop', 'voucher'])
             ->orderByDesc('redeemed_at')
             ->get();

@@ -200,7 +200,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
               <div style="font-size:16px;font-weight:800">eVoucher</div>
             </div>
           </div>
-          <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6">Connecting near-expiry food with families in need across Northamptonshire. Free to use, community powered, and backed by the NHS.</p>
+          <p style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.6">Connecting culturally appropriate local food with people through a simple, three-step process for convenience, improvement in health, wellbeing, local economy and reduction in food waste.</p>
         </div>
         <div>
           <h4 style="font-size:14px;font-weight:700;margin-bottom:12px">Quick Links</h4>

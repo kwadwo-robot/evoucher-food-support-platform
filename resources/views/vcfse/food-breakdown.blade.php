@@ -45,33 +45,7 @@
             </div>
         </div>
 
-        <!-- Total Owed Widget -->
-        <div class="col-12 col-sm-6 col-lg-3 mb-3">
-            <div class="modern-stat-widget widget-warning">
-                <div class="widget-icon">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <div class="widget-content">
-                    <div class="widget-label">{{ __('app.total_owed') }}</div>
-                    <div class="widget-value currency-counter" data-target="{{ $overallStats['total_owed'] }}">£0.00</div>
-                    <div class="widget-subtext">{{ __('app.total_owed') }}</div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Payment Collected Widget -->
-        <div class="col-12 col-sm-6 col-lg-3 mb-3">
-            <div class="modern-stat-widget widget-info">
-                <div class="widget-icon">
-                    <i class="fas fa-credit-card"></i>
-                </div>
-                <div class="widget-content">
-                    <div class="widget-label">{{ __('app.payment_collected') }}</div>
-                    <div class="widget-value counter" data-target="{{ $overallStats['total_collected'] }}">0</div>
-                    <div class="widget-subtext">{{ __('app.payment_collected') }}</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Type-Specific Breakdown Heading -->

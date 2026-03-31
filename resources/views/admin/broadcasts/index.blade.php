@@ -1,77 +1,64 @@
 @extends('layouts.dashboard')
-@section('title','Broadcast Messages')
-@section('page-title','Broadcast Messages')
-
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold">Broadcast Messages</h1>
-        <a href="{{ route('admin.broadcasts.create') }}" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
-            <i class="fas fa-plus mr-2"></i>New Broadcast
+<div class="px-4 py-6 sm:px-0">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">Broadcasts</h1>
+    </div>
+    
+    <!-- Create Broadcast Button -->
+    <div class="mb-6">
+        <a href="{{ route('admin.broadcasts.create') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
+            </svg>
+            Create Broadcast
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <div class="bg-white rounded-lg shadow">
-        <table class="w-full">
-            <thead class="bg-gray-100">
+    <!-- Broadcasts Table -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
                 <tr>
-                    <th class="px-6 py-3 text-left">Title</th>
-                    <th class="px-6 py-3 text-left">Type</th>
-                    <th class="px-6 py-3 text-left">Recipients</th>
-                    <th class="px-6 py-3 text-left">Status</th>
-                    <th class="px-6 py-3 text-left">Created</th>
-                    <th class="px-6 py-3 text-left">Actions</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recipients</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sent At</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="bg-white divide-y divide-gray-200">
                 @forelse($broadcasts as $broadcast)
-                    <tr class="border-t hover:bg-gray-50">
-                        <td class="px-6 py-3 font-semibold">{{ $broadcast->title }}</td>
-                        <td class="px-6 py-3">
-                            <span class="px-3 py-1 rounded-full text-sm font-semibold
-                                @if($broadcast->recipient_type === 'all') bg-blue-100 text-blue-800
-                                @elseif($broadcast->recipient_type === 'group') bg-purple-100 text-purple-800
-                                @else bg-orange-100 text-orange-800
-                                @endif">
-                                {{ ucfirst($broadcast->recipient_type) }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-3">{{ $broadcast->recipients_count }}</td>
-                        <td class="px-6 py-3">
-                            <span class="px-3 py-1 rounded-full text-sm font-semibold
-                                @if($broadcast->status === 'sent') bg-green-100 text-green-800
-                                @elseif($broadcast->status === 'scheduled') bg-yellow-100 text-yellow-800
-                                @else bg-gray-100 text-gray-800
-                                @endif">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $broadcast->title }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit($broadcast->message, 50) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $broadcast->recipients_count }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                 {{ ucfirst($broadcast->status) }}
                             </span>
                         </td>
-                        <td class="px-6 py-3 text-sm">{{ $broadcast->created_at->format('M d, Y') }}</td>
-                        <td class="px-6 py-3">
-                            <a href="{{ route('admin.broadcasts.show', $broadcast) }}" class="text-blue-600 hover:underline mr-3">View</a>
-                            @if($broadcast->status !== 'sent')
-                                <form action="{{ route('admin.broadcasts.destroy', $broadcast) }}" method="POST" class="inline">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('Delete this broadcast?')">Delete</button>
-                                </form>
-                            @endif
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $broadcast->sent_at?->format('M d, Y H:i') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="{{ route('admin.broadcasts.show', $broadcast) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                            <form action="{{ route('admin.broadcasts.destroy', $broadcast) }}" method="POST" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:text-red-900 ml-4" onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">No broadcasts yet</td>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">No broadcasts found</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
+    <!-- Pagination -->
     <div class="mt-6">
         {{ $broadcasts->links() }}
     </div>

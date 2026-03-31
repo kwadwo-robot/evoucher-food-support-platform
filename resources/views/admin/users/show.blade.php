@@ -99,6 +99,15 @@
         @endif
     </div>
 
+    <div class="flex gap-3 mb-4">
+        <a href="{{ route('admin.users.edit', $user) }}" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-center">
+            <i class="fas fa-edit mr-2"></i>Edit User
+        </a>
+        <button type="button" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2.5 rounded-lg transition-colors" onclick="document.getElementById('resetPasswordModal').classList.remove('hidden')">
+            <i class="fas fa-key mr-2"></i>Reset Password
+        </button>
+    </div>
+
     <div class="flex gap-3">
         @if(!$user->is_approved && !$user->isAdmin() && $user->role !== 'recipient')
         <form method="POST" action="{{ route('admin.users.approve', $user) }}" class="flex-1">
@@ -114,6 +123,34 @@
                 {{ $user->is_active ? 'Deactivate Account' : 'Activate Account' }}
             </button>
         </form>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="resetPasswordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h2 class="text-xl font-bold mb-4">Reset Password</h2>
+            <p class="text-gray-600 mb-4">Enter a new password for {{ $user->name }}</p>
+            <form method="POST" action="{{ route('admin.users.reset-password', $user) }}">
+                @csrf
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                    <input type="password" name="password" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    @error('password')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                    <input type="password" name="password_confirmation" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="flex gap-3">
+                    <button type="button" onclick="document.getElementById('resetPasswordModal').classList.add('hidden')" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium">
+                        Cancel
+                    </button>
+                    <button type="submit" class="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium">
+                        Reset Password
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection

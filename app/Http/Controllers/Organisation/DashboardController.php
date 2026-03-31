@@ -66,44 +66,57 @@ class DashboardController extends Controller
         $recentFoodClaims = [];
         
         if ($type === 'vcfse') {
-            // Count food claims by this VCFSE user
-            $foodClaimsCounted = Redemption::where('recipient_user_id', $user->id)
-                ->where('status', 'confirmed')
+            // Count food claims from vouchers issued by this VCFSE
+            $voucherIds = \App\Models\Voucher::where('issued_by', $user->id)->pluck('id');
+            
+            $foodClaimsCounted = Redemption::whereIn('voucher_id', $voucherIds)
+                ->where('status', '!=', 'pending')
                 ->count();
             
-            $foodClaimsRedeemed = Redemption::where('recipient_user_id', $user->id)
+            $foodClaimsRedeemed = Redemption::whereIn('voucher_id', $voucherIds)
                 ->where('status', 'confirmed')
                 ->whereNotNull('redeemed_at')
                 ->count();
             
             // Get total amount paid through vouchers
-            $foodClaimsPaid = (float)Redemption::where('recipient_user_id', $user->id)
-                ->where('status', 'confirmed')
+            $foodClaimsPaid = (float)Redemption::whereIn('voucher_id', $voucherIds)
+                ->where('status', '!=', 'pending')
                 ->sum('amount_used');
             
             // Get recent food claims
-            $recentFoodClaims = Redemption::where('recipient_user_id', $user->id)
+            $recentFoodClaims = Redemption::whereIn('voucher_id', $voucherIds)
                 ->with('foodListing')
                 ->latest()
                 ->take(5)
                 ->get();
         } else {
-            // School/Care: Get food claims by recipients who received vouchers from this school
-            $foodClaimsCounted = Redemption::whereIn('voucher_id', 
+            // School/Care: Get food claims (both voucher-based and free/surplus items)
+            // Count claims for vouchers issued by this school
+            $voucherBasedClaims = Redemption::whereIn('voucher_id', 
                 \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
-            )->where('status', 'confirmed')->count();
+            )->where('status', '!=', 'pending')->count();
             
-            $foodClaimsRedeemed = Redemption::whereIn('voucher_id',
-                \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
-            )->where('status', 'confirmed')->whereNotNull('redeemed_at')->count();
+            // Count free/surplus food items claimed by this school directly
+            $freeSuplusClaims = Redemption::where('recipient_user_id', $user->id)
+            ->where('status', '!=', 'pending')
+            ->count();
+            
+            $foodClaimsCounted = $voucherBasedClaims + $freeSuplusClaims;
+            
+            $foodClaimsRedeemed = Redemption::where(function($q) use ($user) {
+                $q->whereIn('voucher_id', \App\Models\Voucher::where('issued_by', $user->id)->pluck('id'))
+                  ->orWhereIn('food_listing_id', FoodListing::where('shop_user_id', '!=', $user->id)->pluck('id'))
+                  ->where('recipient_user_id', $user->id);
+            })->where('status', 'confirmed')->whereNotNull('redeemed_at')->count();
             
             $foodClaimsPaid = (float)Redemption::whereIn('voucher_id',
                 \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
-            )->where('status', 'confirmed')->sum('amount_used');
+            )->where('status', '!=', 'pending')->sum('amount_used');
             
-            $recentFoodClaims = Redemption::whereIn('voucher_id',
-                \App\Models\Voucher::where('issued_by', $user->id)->pluck('id')
-            )->with('foodListing')->latest()->take(5)->get();
+            $recentFoodClaims = Redemption::where(function($q) use ($user) {
+                $q->whereIn('voucher_id', \App\Models\Voucher::where('issued_by', $user->id)->pluck('id'))
+                  ->orWhere('recipient_user_id', $user->id);
+            })->with('foodListing')->latest()->take(5)->get();
         }
         
         $view = $type === 'vcfse' ? 'vcfse.dashboard' : 'school.dashboard';
@@ -125,12 +138,21 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         
-        // VCFSE and School/Care see Free, Discounted, and Surplus listings
+        // Apply visibility scopes based on user role
         $query = FoodListing::where('status', 'available')
             ->where('expiry_date', '>=', now()->toDateString())
             ->where('quantity', '>', 0) // Hide out-of-stock items
-            ->whereIn('listing_type', ['free', 'discounted', 'surplus'])
             ->with('shop.shopProfile');
+        
+        // Apply role-based visibility scopes
+        if ($user->role === 'school_care') {
+            $query->visibleToSchoolCare();
+        } elseif ($user->role === 'vcfse') {
+            $query->visibleToVcfse();
+        } else {
+            // Default to discounted only for other roles
+            $query->where('listing_type', 'discounted');
+        }
         
         // For surplus items, only show if user has a valid (non-expired) allocation
         $query->where(function ($q) use ($user) {

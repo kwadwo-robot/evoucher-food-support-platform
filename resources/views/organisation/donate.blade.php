@@ -15,7 +15,7 @@
             <p class="text-sm text-green-700"><i class="fas fa-lock mr-2 text-green-500"></i>Payments are securely processed by Stripe. Your card details are never stored on our servers.</p>
         </div>
 
-        <form method="POST" action="{{ auth()->user()->isVcfse() ? route('vcfse.donate.initiate') : route('school.donate.initiate') }}">
+        <form method="POST" action="{{ auth()->user()->isVcfse() ? route('vcfse.donate.store') : route('school.donate.store') }}">
             @csrf
             <div class="space-y-4">
                 <div>

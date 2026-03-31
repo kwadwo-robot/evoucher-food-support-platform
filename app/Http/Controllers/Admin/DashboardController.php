@@ -133,6 +133,29 @@ class DashboardController extends Controller
         return back()->with('success', 'Listing removed.');
     }
 
+    public function redemptions(Request $request)
+    {
+        $query = Redemption::with(['foodListing', 'recipient', 'voucher']);
+        
+        if ($request->status && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+        
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->whereHas('recipient', function ($q2) use ($request) {
+                    $q2->where('name', 'like', '%' . $request->search . '%');
+                })
+                ->orWhereHas('foodListing', function ($q2) use ($request) {
+                    $q2->where('item_name', 'like', '%' . $request->search . '%');
+                });
+            });
+        }
+        
+        $redemptions = $query->latest()->paginate(20);
+        return view('admin.redemptions.index', compact('redemptions'));
+    }
+
     public function donations()
     {
         $payments        = Donation::with('donor')->latest()->paginate(20);

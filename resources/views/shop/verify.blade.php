@@ -132,12 +132,9 @@
                                 @endif
                             </td>
                         </tr>
+
                         <tr style="border-bottom:1px solid #f1f5f9;">
-                            <td style="padding:8px 0;color:#64748b;font-weight:600;">Original Value</td>
-                            <td style="padding:8px 0;font-weight:700;color:#16a34a;font-size:16px;">&#163;{{ number_format($voucher->value, 2) }}</td>
-                        </tr>
-                        <tr style="border-bottom:1px solid #f1f5f9;">
-                            <td style="padding:8px 0;color:#64748b;font-weight:600;">Remaining Balance</td>
+                            <td style="padding:8px 0;color:#64748b;font-weight:600;">Balance</td>
                             <td style="padding:8px 0;font-weight:700;color:#0f172a;font-size:16px;">&#163;{{ number_format($voucher->remaining_value, 2) }}</td>
                         </tr>
                         <tr style="border-bottom:1px solid #f1f5f9;">
@@ -152,14 +149,60 @@
                             </td>
                         </tr>
                         @if($voucher->notes)
-                        <tr>
-                            <td style="padding:8px 0;color:#64748b;font-weight:600;">Notes</td>
-                            <td style="padding:8px 0;color:#374151;">{{ $voucher->notes }}</td>
-                        </tr>
+
                         @endif
                     </table>
                 </div>
             </div>
+
+            {{-- Redemption History --}}
+            @if($redemptionHistory->isNotEmpty())
+            <div class="card" style="margin-bottom:16px;">
+                <div class="card-hd" style="padding:16px 20px;">
+                    <span class="card-title">Redemption History</span>
+                </div>
+                <div class="card-body" style="padding:16px 20px;">
+                    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                        <thead style="background:#f8fafc;border-bottom:2px solid #e2e8f0;">
+                            <tr>
+                                <th style="padding:10px;text-align:left;color:#64748b;font-weight:600;">Food Item</th>
+                                <th style="padding:10px;text-align:left;color:#64748b;font-weight:600;">Amount Used</th>
+                                <th style="padding:10px;text-align:left;color:#64748b;font-weight:600;">Status</th>
+                                <th style="padding:10px;text-align:left;color:#64748b;font-weight:600;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($redemptionHistory as $redemption)
+                            <tr style="border-bottom:1px solid #f1f5f9;">
+                                <td style="padding:10px;color:#0f172a;font-weight:600;">{{ $redemption->foodListing?->item_name ?? 'N/A' }}</td>
+                                <td style="padding:10px;color:#16a34a;font-weight:700;">£{{ number_format($redemption->amount_used, 2) }}</td>
+                                <td style="padding:10px;">
+                                    @php
+                                        $statusColor = match($redemption->status) {
+                                            'collected' => '#15803d',
+                                            'confirmed' => '#0284c7',
+                                            'pending' => '#b45309',
+                                            default => '#6b7280',
+                                        };
+                                        $statusBg = match($redemption->status) {
+                                            'collected' => '#dcfce7',
+                                            'confirmed' => '#cffafe',
+                                            'pending' => '#fef9c3',
+                                            default => '#f1f5f9',
+                                        };
+                                    @endphp
+                                    <span style="background:{{ $statusBg }};color:{{ $statusColor }};padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;">
+                                        {{ strtoupper(str_replace('_', ' ', $redemption->status)) }}
+                                    </span>
+                                </td>
+                                <td style="padding:10px;color:#64748b;">{{ $redemption->redeemed_at?->format('d M Y H:i') ?? 'N/A' }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @endif
 
             @if($error)
                 {{-- Voucher found but has an issue --}}

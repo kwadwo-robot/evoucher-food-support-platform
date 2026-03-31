@@ -45,33 +45,7 @@
             </div>
         </div>
 
-        <!-- Total Owed Widget -->
-        <div class="col-12 col-sm-6 col-lg-3 mb-3">
-            <div class="modern-stat-widget widget-warning">
-                <div class="widget-icon">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <div class="widget-content">
-                    <div class="widget-label">{{ __('app.total_owed') }}</div>
-                    <div class="widget-value currency-counter" data-target="{{ $overallStats['total_owed'] }}">£0.00</div>
-                    <div class="widget-subtext">{{ __('app.total_owed') }}</div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Payment Collected Widget -->
-        <div class="col-12 col-sm-6 col-lg-3 mb-3">
-            <div class="modern-stat-widget widget-info">
-                <div class="widget-icon">
-                    <i class="fas fa-credit-card"></i>
-                </div>
-                <div class="widget-content">
-                    <div class="widget-label">{{ __('app.payment_collected') }}</div>
-                    <div class="widget-value counter" data-target="{{ $overallStats['total_collected'] }}">0</div>
-                    <div class="widget-subtext">{{ __('app.payment_collected') }}</div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Type-Specific Breakdown Heading -->
@@ -79,21 +53,12 @@
         <i class="fas fa-chart-line"></i> {{ __('app.food_breakdown_title') }} - Type Details
     </h5>
 
-    <!-- Tabs for Food Types -->
+    <!-- Tabs for Food Types - School Only Sees Discounted -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <ul class="nav nav-tabs modern-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="free-tab" data-toggle="tab" href="#free" role="tab">
-                        <span class="tab-icon">
-                            <i class="fas fa-gift text-success"></i>
-                        </span>
-                        <span class="tab-label">{{ __('app.free_food') }}</span>
-                        <span class="badge badge-success ml-2">{{ $freeStats['total_redemptions'] }}</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="discounted-tab" data-toggle="tab" href="#discounted" role="tab">
+                    <a class="nav-link active" id="discounted-tab" data-toggle="tab" href="#discounted" role="tab">
                         <span class="tab-icon">
                             <i class="fas fa-tag text-warning"></i>
                         </span>
@@ -101,44 +66,17 @@
                         <span class="badge badge-warning ml-2">{{ $discountedStats['total_redemptions'] }}</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="surplus-tab" data-toggle="tab" href="#surplus" role="tab">
-                        <span class="tab-icon">
-                            <i class="fas fa-boxes text-purple"></i>
-                        </span>
-                        <span class="tab-label">{{ __('app.surplus_food') }}</span>
-                        <span class="badge badge-purple ml-2">{{ $surplusStats['total_redemptions'] }}</span>
-                    </a>
-                </li>
             </ul>
         </div>
 
         <div class="card-body">
             <div class="tab-content">
-                <!-- Free Food Tab -->
-                <div class="tab-pane fade show active" id="free" role="tabpanel">
-                    @include('school.food-breakdown-type', [
-                        'redemptions' => $freeRedeemed,
-                        'stats' => $freeStats,
-                        'type' => 'free'
-                    ])
-                </div>
-
-                <!-- Discounted Food Tab -->
-                <div class="tab-pane fade" id="discounted" role="tabpanel">
+                <!-- Discounted Food Tab Only -->
+                <div class="tab-pane fade show active" id="discounted" role="tabpanel">
                     @include('school.food-breakdown-type', [
                         'redemptions' => $discountedRedeemed,
                         'stats' => $discountedStats,
                         'type' => 'discounted'
-                    ])
-                </div>
-
-                <!-- Surplus Food Tab -->
-                <div class="tab-pane fade" id="surplus" role="tabpanel">
-                    @include('school.food-breakdown-type', [
-                        'redemptions' => $surplusRedeemed,
-                        'stats' => $surplusStats,
-                        'type' => 'surplus'
                     ])
                 </div>
             </div>

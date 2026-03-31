@@ -23,7 +23,7 @@
     </div>
     <div class="stat-card">
       <div class="stat-icon mb-3" style="background:#fef3c7;color:#d97706;"><i class="fas fa-hourglass-half"></i></div>
-      <div class="stat-label">Pending Redemption</div>
+      <div class="stat-label">Pending Redeem</div>
       <div class="stat-value">{{ $pendingRedemption }}</div>
     </div>
     <div class="stat-card">

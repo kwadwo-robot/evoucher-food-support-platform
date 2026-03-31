@@ -67,10 +67,10 @@ class FoodListing extends Model
         return $query->where('listing_type', 'discounted');
     }
 
-    /** Schools/Care see: free + discounted + surplus (all types) */
+    /** Schools/Care see: discounted only (NOT free or surplus) */
     public function scopeVisibleToSchoolCare($query)
     {
-        return $query->whereIn('listing_type', ['free', 'discounted', 'surplus']);
+        return $query->where('listing_type', 'discounted');
     }
 
     /** VCFSE sees: free + discounted + surplus (all types) */
