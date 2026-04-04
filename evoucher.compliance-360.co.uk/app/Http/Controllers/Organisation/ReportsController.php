@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Http\Controllers\Organisation;
+
+use App\Http\Controllers\Controller;
+use App\Models\FundLoad;
+use App\Models\BankDeposit;
+use App\Models\Voucher;
+use App\Models\Redemption;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
+class ReportsController extends Controller
+{
+    public function index()
+    {
+        $user = Auth::user();
+        $role = $user->role;
+        
+        // Get fund loads for this organisation
+        $fundLoads = FundLoad::where('organisation_user_id', $user->id)
+            ->with('admin')
+            ->latest()
+            ->get();
+        
+        // Get bank deposits for this organisation
+        $bankDeposits = BankDeposit::where('organisation_user_id', $user->id)
+            ->latest()
+            ->get();
+        
+        // Calculate fund load statistics
+        $totalFundsLoaded = $fundLoads->sum('amount');
+        $totalBankDeposits = $bankDeposits->where('status', 'verified')->sum('amount');
+        $bankDepositsCount = $bankDeposits->count();
+        $fundLoadsCount = $fundLoads->count();
+        
+        // Calculate total received (funds loaded + bank deposits)
+        $totalReceived = $totalFundsLoaded + $totalBankDeposits;
+        
+        // Calculate spending from voucher redemptions
+        // Get vouchers issued by this organisation user
+        $voucherRedemptions = Redemption::whereHas('voucher', function($q) use ($user) {
+            $q->where('issued_by', $user->id);
+        })->get();
+        
+        $totalSpent = $voucherRedemptions->sum('amount_used');
+        $redemptionCount = $voucherRedemptions->count();
+        
+        // Calculate balance
+        $totalBalance = $totalReceived - $totalSpent;
+        
+        // Calculate redemption rate (percentage of vouchers that have been redeemed)
+        $organisationVouchers = Voucher::where('issued_by', $user->id)->count();
+        $organisationVouchersRedeemed = Voucher::where('issued_by', $user->id)
+            ->whereIn('status', ['redeemed', 'partially_used'])->count();
+        $redemptionRate = $organisationVouchers > 0 ? round(($organisationVouchersRedeemed / $organisationVouchers) * 100) : 0;
+        
+        // Get spending breakdown by food category
+        $spendingByCategory = Redemption::whereHas('voucher', function($q) use ($user) {
+            $q->where('issued_by', $user->id);
+        })
+        ->with('foodListing')
+        ->get()
+        ->groupBy(function($item) {
+            return $item->foodListing->category ?? 'Uncategorized';
+        })
+        ->map(function($items) {
+            return [
+                'count' => $items->count(),
+                'amount' => $items->sum('amount_used')
+            ];
+        });
+        
+        return view('organisation.reports.index', compact(
+            'fundLoads',
+            'bankDeposits',
+            'totalFundsLoaded',
+            'totalBankDeposits',
+            'bankDepositsCount',
+            'fundLoadsCount',
+            'totalReceived',
+            'totalSpent',
+            'totalBalance',
+            'redemptionCount',
+            'spendingByCategory',
+            'role',
+            'redemptionRate'
+        ));
+    }
+    
+    public function exportFundLoadsExcel()
+    {
+        $user = Auth::user();
+        $fundLoads = FundLoad::where('organisation_user_id', $user->id)
+            ->with('admin')
+            ->latest()
+            ->get();
+        
+        $fileName = 'fund-loads-' . now()->format('Y-m-d-His') . '.xlsx';
+        
+        return \Excel::download(new \App\Exports\FundLoadsExport($fundLoads), $fileName);
+    }
+    
+    public function exportFundLoadsPdf()
+    {
+        $user = Auth::user();
+        $fundLoads = FundLoad::where('organisation_user_id', $user->id)
+            ->with('admin')
+            ->latest()
+            ->get();
+        
+        $totalFundsLoaded = $fundLoads->sum('amount');
+        $orgName = $user->organisation_profile->name ?? 'Organisation';
+        
+        $pdf = \PDF::loadView('organisation.reports.fund-loads-pdf', compact('fundLoads', 'totalFundsLoaded', 'orgName'));
+        return $pdf->download('fund-loads-' . now()->format('Y-m-d-His') . '.pdf');
+    }
+    
+    public function exportBankDepositsExcel()
+    {
+        $user = Auth::user();
+        $bankDeposits = BankDeposit::where('organisation_user_id', $user->id)
+            ->latest()
+            ->get();
+        
+        $fileName = 'bank-deposits-' . now()->format('Y-m-d-His') . '.xlsx';
+        
+        return \Excel::download(new \App\Exports\BankDepositsExport($bankDeposits), $fileName);
+    }
+    
+    public function exportBankDepositsPdf()
+    {
+        $user = Auth::user();
+        $bankDeposits = BankDeposit::where('organisation_user_id', $user->id)
+            ->latest()
+            ->get();
+        
+        $totalDeposits = $bankDeposits->where('status', 'verified')->sum('amount');
+        $orgName = $user->organisation_profile->name ?? 'Organisation';
+        
+        $pdf = \PDF::loadView('organisation.reports.bank-deposits-pdf', compact('bankDeposits', 'totalDeposits', 'orgName'));
+        return $pdf->download('bank-deposits-' . now()->format('Y-m-d-His') . '.pdf');
+    }
+}

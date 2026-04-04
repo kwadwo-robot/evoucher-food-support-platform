@@ -1,0 +1,60 @@
+<?php
+
+namespace App\Mail;
+
+use App\Models\Setting;
+use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class WelcomeMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public User   $user;
+    public string $roleLabel;
+    public string $loginUrl;
+    public string $supportEmail;
+
+    private static array $roleLabels = [
+        'recipient'   => 'Recipient',
+        'shop'        => 'Local Food Shop',
+        'vcfse'       => 'VCFSE Organisation',
+        'school_care' => 'School / Care Organisation',
+        'admin'       => 'Administrator',
+        'super_admin' => 'Super Administrator',
+    ];
+
+    public function __construct(User $user)
+    {
+        $this->user         = $user;
+        $this->roleLabel    = self::$roleLabels[$user->role] ?? ucfirst($user->role);
+        $this->loginUrl     = url('/login');
+        $this->supportEmail = Setting::get('support_email', config('mail.from.address', 'support@evoucher.org'));
+    }
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Welcome to eVoucher Food Support – Registration Received',
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            view: 'emails.welcome',
+            with: [
+                'userName'     => $this->user->name,
+                'userEmail'    => $this->user->email,
+                'roleLabel'    => $this->roleLabel,
+                'userRole'     => $this->user->role,
+                'loginUrl'     => $this->loginUrl,
+                'supportEmail' => $this->supportEmail,
+            ],
+        );
+    }
+}

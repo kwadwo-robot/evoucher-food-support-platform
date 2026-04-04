@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'public_path' => public_path(),
+    'storage_path' => storage_path('dompdf'),
+    'convert_entities' => true,
+    'options' => [
+        'chroot' => public_path(),
+        'allowed_protocols' => ['file://', 'http://', 'https://'],
+        'log_output_file' => storage_path('logs/dompdf.log'),
+        'enable_font_subsetting' => false,
+        'pdf_backend' => 'CPDF',
+        'default_font' => 'serif',
+        'font_dir' => storage_path('fonts/'),
+        'font_cache' => storage_path('fonts/'),
+        'temp_dir' => sys_get_temp_dir(),
+        'fontDir' => storage_path('fonts/'),
+        'fontCache' => storage_path('fonts/'),
+        'tempDir' => sys_get_temp_dir(),
+        'logOutputFile' => storage_path('logs/dompdf.log'),
+        'defaultMediaType' => 'screen',
+        'defaultPaperSize' => 'a4',
+        'defaultFont' => 'serif',
+        'dpi' => 96,
+        'enable_php' => false,
+        'enable_javascript' => false,
+        'enable_remote' => false,
+        'margin_bottom' => 0,
+        'margin_left' => 0,
+        'margin_right' => 0,
+        'margin_top' => 0,
+    ],
+];

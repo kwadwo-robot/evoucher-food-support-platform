@@ -9,6 +9,9 @@ class ShopPayoutRequest extends Model
     protected $fillable = [
         'shop_user_id',
         'total_amount',
+        'service_fee_percentage',
+        'service_fee_amount',
+        'amount_after_fee',
         'redemption_count',
         'status',
         'payment_reference',
@@ -20,6 +23,9 @@ class ShopPayoutRequest extends Model
     protected $casts = [
         'paid_at' => 'datetime',
         'total_amount' => 'decimal:2',
+        'service_fee_percentage' => 'decimal:2',
+        'service_fee_amount' => 'decimal:2',
+        'amount_after_fee' => 'decimal:2',
     ];
 
     public function shop()
@@ -35,6 +41,11 @@ class ShopPayoutRequest extends Model
     public function redemptions()
     {
         return $this->hasMany(Redemption::class, 'payout_request_id');
+    }
+
+    public function serviceFeeTransaction()
+    {
+        return $this->hasOne(ServiceFeeTransaction::class, 'payout_request_id');
     }
 
     public function getStatusBadgeAttribute(): string

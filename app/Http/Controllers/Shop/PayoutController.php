@@ -9,6 +9,7 @@ use App\Models\Redemption;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\BankDetailChangeRequest;
+use App\Services\ServiceFeeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -162,6 +163,9 @@ class PayoutController extends Controller
                 'status'          => 'pending',
             ]);
 
+            // Apply service fee to the payout
+            ServiceFeeService::applyServiceFeeToPayoutRequest($payout);
+
             // Link each redemption to this payout request
             Redemption::whereIn('id', $unpaidRedemptions->pluck('id'))
                 ->update(['payout_request_id' => $payout->id]);
@@ -172,7 +176,7 @@ class PayoutController extends Controller
                 Notification::create([
                     'user_id' => $admin->id,
                     'title' => 'New Payout Request',
-                    'message' => $user->name . ' submitted a payout request for £' . number_format($totalAmount, 2),
+                    'message' => $user->name . ' submitted a payout request for £' . number_format($totalAmount, 2) . ' (Service Fee: £' . number_format($payout->service_fee_amount, 2) . ')',
                     'type' => 'payout_request',
                     'icon' => 'fas fa-money-bill',
                     'read_at' => null,

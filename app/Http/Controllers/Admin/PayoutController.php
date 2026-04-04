@@ -7,6 +7,7 @@ use App\Models\ShopPayoutRequest;
 use App\Models\ShopBankDetail;
 use App\Models\User;
 use App\Services\NotificationService;
+use App\Services\ServiceFeeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -102,6 +103,9 @@ class PayoutController extends Controller
             'processed_by'       => Auth::id(),
             'paid_at'            => now(),
         ]);
+
+        // Mark service fee as collected
+        ServiceFeeService::markServiceFeeAsCollected($payout);
 
         // Notify shop about payment
         NotificationService::notifyShopPayoutProcessed($payout);
