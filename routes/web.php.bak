@@ -286,12 +286,11 @@ Route::middleware('auth')->prefix('notifications')->name('notifications.')->grou
 // Stripe Webhook
 Route::post('/stripe/webhook', [DonationController::class, 'webhook'])->name('stripe.webhook');
 
-
 // Service Fee Management Routes
 Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->group(function () {
     Route::get('/service-fees', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'index'])->name('admin.service-fees.index');
+    Route::get('/service-fees/{id}', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'show'])->name('admin.service-fees.show');
     Route::get('/service-fees/settings', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'settings'])->name('admin.service-fees.settings');
     Route::post('/service-fees/update-percentage', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'updatePercentage'])->name('admin.service-fees.update-percentage');
-    Route::get('/service-fees/{id}', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'show'])->name('admin.service-fees.show');
     Route::get('/service-fees/export/csv', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'export'])->name('admin.service-fees.export');
 });
