@@ -53,6 +53,20 @@ class ServiceFeeController extends Controller
         return redirect()->route('admin.service-fees.settings')->with('success', 'Service fee percentage updated to ' . $request->service_fee_percentage . '%');
     }
 
+    public function updatePercentage(Request $request)
+    {
+        $request->validate([
+            'service_fee_percentage' => 'required|numeric|min:0|max:100',
+        ]);
+
+        DB::table('settings')->updateOrInsert(
+            ['key' => 'service_fee_percentage'],
+            ['value' => $request->service_fee_percentage, 'updated_at' => now()]
+        );
+
+        return redirect()->route('admin.service-fees.settings')->with('success', 'Service fee percentage updated to ' . $request->service_fee_percentage . '%');
+    }
+
     public function show($id)
     {
         $transaction = ServiceFeeTransaction::with('shop')->findOrFail($id);
