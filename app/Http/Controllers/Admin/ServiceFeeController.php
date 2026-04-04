@@ -2,109 +2,148 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\ServiceFeeTransaction;
-use App\Services\ServiceFeeService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ServiceFeeController extends Controller
 {
-    /**
-     * Show service fee dashboard with statistics and transactions
-     */
     public function index(Request $request)
     {
-        $stats = ServiceFeeService::getServiceFeeStats();
-        
-        // Get transactions with pagination
-        $transactions = ServiceFeeTransaction::with(['shop', 'payoutRequest'])
-            ->orderByDesc('created_at')
-            ->paginate(20);
+        $query = ServiceFeeTransaction::query();
 
-        // Get filter options
-        $status = $request->get('status', 'all');
-        if ($status !== 'all') {
-            $transactions = ServiceFeeTransaction::with(['shop', 'payoutRequest'])
-                ->where('status', $status)
-                ->orderByDesc('created_at')
-                ->paginate(20);
+        // Filter by status
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
         }
 
-        return view('admin.service-fees.index', compact('stats', 'transactions', 'status'));
+        $transactions = $query->with('shop')->paginate(15);
+
+        // Calculate statistics
+        $stats = [
+            'total_collected' => ServiceFeeTransaction::where('status', 'collected')->sum('service_fee_amount'),
+            'total_pending' => ServiceFeeTransaction::where('status', 'pending')->sum('service_fee_amount'),
+            'collected_transactions' => ServiceFeeTransaction::where('status', 'collected')->count(),
+            'pending_transactions' => ServiceFeeTransaction::where('status', 'pending')->count(),
+            'total_transactions' => ServiceFeeTransaction::count(),
+            'current_percentage' => DB::table('settings')->where('key', 'service_fee_percentage')->value('value') ?? 10,
+        ];
+
+        return view('admin.service-fees.index', compact('transactions', 'stats'));
     }
 
-    /**
-     * Show service fee settings page
-     */
     public function settings()
     {
-        $currentPercentage = ServiceFeeService::getServiceFeePercentage();
+        $currentPercentage = DB::table('settings')->where('key', 'service_fee_percentage')->value('value') ?? 10;
         return view('admin.service-fees.settings', compact('currentPercentage'));
     }
 
-    /**
-     * Update service fee percentage
-     */
-    public function updatePercentage(Request $request)
+    public function updateSettings(Request $request)
     {
         $request->validate([
             'service_fee_percentage' => 'required|numeric|min:0|max:100',
         ]);
 
-        try {
-            ServiceFeeService::setServiceFeePercentage((float) $request->service_fee_percentage);
-            return back()->with('success', 'Service fee percentage updated to ' . $request->service_fee_percentage . '%');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error updating service fee: ' . $e->getMessage());
-        }
+        DB::table('settings')->updateOrInsert(
+            ['key' => 'service_fee_percentage'],
+            ['value' => $request->service_fee_percentage, 'updated_at' => now()]
+        );
+
+        return redirect()->route('admin.service-fees.settings')->with('success', 'Service fee percentage updated to ' . $request->service_fee_percentage . '%');
     }
 
-    /**
-     * Show detailed view of a single service fee transaction
-     */
     public function show($id)
     {
-        $transaction = ServiceFeeTransaction::with(['shop', 'payoutRequest.redemptions'])
-            ->findOrFail($id);
-
+        $transaction = ServiceFeeTransaction::with('shop')->findOrFail($id);
         return view('admin.service-fees.show', compact('transaction'));
     }
 
-    /**
-     * Export service fee report
-     */
     public function export(Request $request)
     {
-        $query = ServiceFeeTransaction::with(['shop', 'payoutRequest']);
+        $format = $request->get('format', 'csv');
+        $query = ServiceFeeTransaction::with('shop');
 
-        $status = $request->get('status');
-        if ($status) {
-            $query->where('status', $status);
+        // Filter by status if provided
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
         }
 
         $transactions = $query->get();
 
-        $csv = "ID,Shop Name,Payout Request ID,Total Amount,Service Fee %,Service Fee Amount,Amount After Fee,Status,Created At\n";
-        
-        foreach ($transactions as $transaction) {
-            $csv .= sprintf(
-                "%d,%s,%d,%.2f,%.2f,%.2f,%.2f,%s,%s\n",
-                $transaction->id,
-                $transaction->shop->name ?? 'N/A',
-                $transaction->payout_request_id,
-                $transaction->total_amount,
-                $transaction->service_fee_percentage,
-                $transaction->service_fee_amount,
-                $transaction->amount_after_fee,
-                $transaction->status,
-                $transaction->created_at->format('Y-m-d H:i:s')
-            );
+        switch ($format) {
+            case 'excel':
+                return $this->exportExcel($transactions);
+            case 'pdf':
+                return $this->exportPdf($transactions);
+            case 'csv':
+            default:
+                return $this->exportCsv($transactions);
         }
+    }
 
-        return response($csv, 200, [
-            'Content-Type' => 'text/csv',
-            'Content-Disposition' => 'attachment; filename="service-fees-' . now()->format('Y-m-d') . '.csv"',
-        ]);
+    private function exportCsv($transactions)
+    {
+        $filename = 'service-fees-' . now()->format('Y-m-d-H-i-s') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=utf-8',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $callback = function () use ($transactions) {
+            $file = fopen('php://output', 'w');
+            
+            // Add BOM for Excel UTF-8 compatibility
+            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // Header row
+            fputcsv($file, [
+                'ID',
+                'Shop Name',
+                'Total Amount',
+                'Fee Percentage',
+                'Fee Amount',
+                'Amount After Fee',
+                'Status',
+                'Date',
+            ]);
+
+            // Data rows
+            foreach ($transactions as $transaction) {
+                fputcsv($file, [
+                    $transaction->id,
+                    $transaction->shop ? $transaction->shop->name : 'N/A',
+                    '£' . number_format($transaction->total_amount, 2),
+                    $transaction->service_fee_percentage . '%',
+                    '£' . number_format($transaction->service_fee_amount, 2),
+                    '£' . number_format($transaction->amount_after_fee, 2),
+                    ucfirst($transaction->status),
+                    $transaction->created_at->format('M d, Y'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
+
+    private function exportExcel($transactions)
+    {
+        $filename = 'service-fees-' . now()->format('Y-m-d-H-i-s') . '.xlsx';
+
+        // For now, just return CSV if Excel export is not configured
+        return $this->exportCsv($transactions);
+    }
+
+    private function exportPdf($transactions)
+    {
+        $filename = 'service-fees-' . now()->format('Y-m-d-H-i-s') . '.pdf';
+
+        $html = view('admin.service-fees.export-pdf', compact('transactions'))->render();
+        
+        // For now, just return CSV if PDF export is not configured
+        return $this->exportCsv($transactions);
     }
 }
