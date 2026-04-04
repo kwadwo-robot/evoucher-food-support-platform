@@ -5,105 +5,97 @@
 
 @section('content')
 <div class="page-hd">
-    <div class="flex justify-between items-center">
-        <h1 class="text-3xl font-bold text-gray-900">Service Fees Management</h1>
-        <div class="flex gap-2">
-            <a href="{{ route('admin.service-fees.settings') }}" class="btn btn-info btn-sm">
-                ⚙️ Settings
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="font-size: 28px; font-weight: 700; color: #0f172a; margin: 0;">Service Fees Management</h1>
+        <div style="display: flex; gap: 12px;">
+            <a href="{{ route('admin.service-fees.settings') }}" class="tb-btn" style="background: #3b82f6; color: white; border: none;">
+                <i class="fas fa-cog" style="margin-right: 6px;"></i> Settings
             </a>
-            <a href="{{ route('admin.service-fees.export') }}" class="btn btn-success btn-sm">
-                📥 Export CSV
+            <a href="{{ route('admin.service-fees.export') }}" class="tb-btn" style="background: #10b981; color: white; border: none;">
+                <i class="fas fa-download" style="margin-right: 6px;"></i> Export CSV
             </a>
         </div>
     </div>
 </div>
 
 @if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div style="background: #dcfce7; border: 1px solid #86efac; color: #15803d; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+        <span>{{ session('success') }}</span>
+        <button onclick="this.parentElement.style.display='none';" style="background: none; border: none; color: #15803d; cursor: pointer; font-size: 18px;">×</button>
     </div>
 @endif
 
-<!-- Statistics Cards -->
-<div class="row mb-4">
+<!-- Statistics Cards - 4 Column Grid -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
     <!-- Total Collected -->
-    <div class="col-md-3 mb-3">
-        <div class="card border-left-success">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted small font-weight-bold">Total Collected</p>
-                        <p class="text-success h4 font-weight-bold mt-2">£{{ number_format($stats['total_collected'], 2) }}</p>
-                        <p class="text-muted small mt-1">From {{ $stats['collected_transactions'] }} transactions</p>
-                    </div>
-                    <div class="text-success" style="font-size: 2rem;">💰</div>
-                </div>
+    <div class="stat-card" style="border-left: 4px solid #10b981;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="stat-label">Total Collected</div>
+                <div class="stat-value" style="color: #10b981;">£{{ number_format($stats['total_collected'], 2) }}</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">From {{ $stats['collected_transactions'] }} transactions</div>
+            </div>
+            <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">
+                <i class="fas fa-check-circle"></i>
             </div>
         </div>
     </div>
 
     <!-- Total Pending -->
-    <div class="col-md-3 mb-3">
-        <div class="card border-left-warning">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted small font-weight-bold">Total Pending</p>
-                        <p class="text-warning h4 font-weight-bold mt-2">£{{ number_format($stats['total_pending'], 2) }}</p>
-                        <p class="text-muted small mt-1">From {{ $stats['pending_transactions'] }} transactions</p>
-                    </div>
-                    <div class="text-warning" style="font-size: 2rem;">⏳</div>
-                </div>
+    <div class="stat-card" style="border-left: 4px solid #f59e0b;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="stat-label">Total Pending</div>
+                <div class="stat-value" style="color: #f59e0b;">£{{ number_format($stats['total_pending'], 2) }}</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">From {{ $stats['pending_transactions'] }} transactions</div>
+            </div>
+            <div class="stat-icon" style="background: #fffbeb; color: #f59e0b;">
+                <i class="fas fa-hourglass-half"></i>
             </div>
         </div>
     </div>
 
     <!-- Current Fee % -->
-    <div class="col-md-3 mb-3">
-        <div class="card border-left-primary">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted small font-weight-bold">Current Fee %</p>
-                        <p class="text-primary h4 font-weight-bold mt-2">{{ number_format($stats['current_percentage'], 2) }}%</p>
-                        <p class="text-muted small mt-1"><a href="{{ route('admin.service-fees.settings') }}" class="text-primary">Change</a></p>
-                    </div>
-                    <div class="text-primary" style="font-size: 2rem;">⚙️</div>
-                </div>
+    <div class="stat-card" style="border-left: 4px solid #3b82f6;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="stat-label">Current Fee %</div>
+                <div class="stat-value" style="color: #3b82f6;">{{ number_format($stats['current_percentage'], 2) }}%</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;"><a href="{{ route('admin.service-fees.settings') }}" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Change</a></div>
+            </div>
+            <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">
+                <i class="fas fa-sliders-h"></i>
             </div>
         </div>
     </div>
 
     <!-- Total Transactions -->
-    <div class="col-md-3 mb-3">
-        <div class="card border-left-info">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <p class="text-muted small font-weight-bold">Total Transactions</p>
-                        <p class="text-info h4 font-weight-bold mt-2">{{ $stats['total_transactions'] }}</p>
-                        <p class="text-muted small mt-1">All service fees</p>
-                    </div>
-                    <div class="text-info" style="font-size: 2rem;">📊</div>
-                </div>
+    <div class="stat-card" style="border-left: 4px solid #8b5cf6;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <div class="stat-label">Total Transactions</div>
+                <div class="stat-value" style="color: #8b5cf6;">{{ $stats['total_transactions'] }}</div>
+                <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">All service fees</div>
+            </div>
+            <div class="stat-icon" style="background: #faf5ff; color: #8b5cf6;">
+                <i class="fas fa-chart-bar"></i>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Filters -->
-<div class="card mb-4">
-    <div class="card-body">
-        <div class="btn-group" role="group">
-            <a href="{{ route('admin.service-fees.index') }}" class="btn {{ !request('status') ? 'btn-primary' : 'btn-outline-primary' }} btn-sm">
-                All Transactions
+<div class="card" style="margin-bottom: 16px;">
+    <div class="card-body" style="padding: 16px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="{{ route('admin.service-fees.index') }}" class="tb-btn" style="{{ !request('status') ? 'background: #3b82f6; color: white; border: none;' : '' }}">
+                <i class="fas fa-list"></i> All Transactions
             </a>
-            <a href="{{ route('admin.service-fees.index', ['status' => 'pending']) }}" class="btn {{ request('status') === 'pending' ? 'btn-warning' : 'btn-outline-warning' }} btn-sm">
-                Pending
+            <a href="{{ route('admin.service-fees.index', ['status' => 'pending']) }}" class="tb-btn" style="{{ request('status') === 'pending' ? 'background: #f59e0b; color: white; border: none;' : '' }}">
+                <i class="fas fa-clock"></i> Pending
             </a>
-            <a href="{{ route('admin.service-fees.index', ['status' => 'collected']) }}" class="btn {{ request('status') === 'collected' ? 'btn-success' : 'btn-outline-success' }} btn-sm">
-                Collected
+            <a href="{{ route('admin.service-fees.index', ['status' => 'collected']) }}" class="tb-btn" style="{{ request('status') === 'collected' ? 'background: #10b981; color: white; border: none;' : '' }}">
+                <i class="fas fa-check"></i> Collected
             </a>
         </div>
     </div>
@@ -111,71 +103,77 @@
 
 <!-- Transactions Table -->
 <div class="card">
-    <div class="table-responsive">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Shop</th>
+                <th style="text-align: right;">Total Amount</th>
+                <th style="text-align: right;">Fee %</th>
+                <th style="text-align: right;">Fee Amount</th>
+                <th style="text-align: right;">After Fee</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th style="text-align: center;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($transactions as $transaction)
                 <tr>
-                    <th>ID</th>
-                    <th>Shop</th>
-                    <th class="text-right">Total Amount</th>
-                    <th class="text-right">Fee %</th>
-                    <th class="text-right">Fee Amount</th>
-                    <th class="text-right">After Fee</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th class="text-center">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($transactions as $transaction)
-                    <tr>
-                        <td>#{{ $transaction->id }}</td>
-                        <td>
-                            @if($transaction->shop)
-                                {{ $transaction->shop->name }}
+                    <td>#{{ $transaction->id }}</td>
+                    <td>
+                        @if($transaction->shop)
+                            {{ $transaction->shop->name }}
+                        @else
+                            <span style="color: #94a3b8;">N/A</span>
+                        @endif
+                    </td>
+                    <td style="text-align: right;">£{{ number_format($transaction->total_amount, 2) }}</td>
+                    <td style="text-align: right;">{{ number_format($transaction->service_fee_percentage, 2) }}%</td>
+                    <td style="text-align: right; color: #dc2626; font-weight: 600;">£{{ number_format($transaction->service_fee_amount, 2) }}</td>
+                    <td style="text-align: right; color: #10b981; font-weight: 600;">£{{ number_format($transaction->amount_after_fee, 2) }}</td>
+                    <td>
+                        <span class="badge 
+                            @if($transaction->status === 'collected')
+                                badge-green
+                            @elseif($transaction->status === 'pending')
+                                badge-yellow
                             @else
-                                <span class="text-muted">N/A</span>
+                                badge-red
                             @endif
-                        </td>
-                        <td class="text-right">£{{ number_format($transaction->total_amount, 2) }}</td>
-                        <td class="text-right">{{ number_format($transaction->service_fee_percentage, 2) }}%</td>
-                        <td class="text-right text-danger font-weight-bold">£{{ number_format($transaction->service_fee_amount, 2) }}</td>
-                        <td class="text-right text-success font-weight-bold">£{{ number_format($transaction->amount_after_fee, 2) }}</td>
-                        <td>
-                            <span class="badge 
-                                @if($transaction->status === 'collected')
-                                    bg-success
-                                @elseif($transaction->status === 'pending')
-                                    bg-warning
-                                @else
-                                    bg-danger
-                                @endif
-                            ">
-                                {{ ucfirst($transaction->status) }}
-                            </span>
-                        </td>
-                        <td>{{ $transaction->created_at->format('M d, Y') }}</td>
-                        <td class="text-center">
-                            <a href="{{ route('admin.service-fees.show', $transaction->id) }}" class="btn btn-sm btn-info">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="9" class="text-center text-muted py-4">
-                            No service fee transactions yet
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                        ">
+                            @if($transaction->status === 'collected')
+                                <i class="fas fa-check-circle"></i>
+                            @elseif($transaction->status === 'pending')
+                                <i class="fas fa-hourglass-half"></i>
+                            @else
+                                <i class="fas fa-times-circle"></i>
+                            @endif
+                            {{ ucfirst($transaction->status) }}
+                        </span>
+                    </td>
+                    <td>{{ $transaction->created_at->format('M d, Y') }}</td>
+                    <td style="text-align: center;">
+                        <a href="{{ route('admin.service-fees.show', $transaction->id) }}" class="tb-btn" style="font-size: 12px;">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 32px; color: #94a3b8;">
+                        <i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 12px; display: block; opacity: 0.5;"></i>
+                        No service fee transactions yet
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 
 <!-- Pagination -->
 @if($transactions->hasPages())
-    <div class="mt-4">
+    <div style="margin-top: 24px;">
         {{ $transactions->links() }}
     </div>
 @endif

@@ -240,9 +240,6 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
     <span class="ni"><i class="fas fa-list"></i></span> {{ __('app.system_logs') }}
   </a>
   <a href="{{ route('admin.bank-deposits.index') }}" class="nav-item {{ request()->routeIs('admin.bank-deposits.*') ? 'active' : '' }}">
-  <a href="{{ route('admin.service-fees.index') }}" class="nav-item {{ request()->routeIs('admin.service-fees.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-percent"></i></span> {{ __('app.service_fees') }}
-  </a>
     <span class="ni"><i class="fas fa-bank"></i></span> {{ __('app.bank_deposits') }}
   </a>
   <a href="{{ route('admin.settings') }}" class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">

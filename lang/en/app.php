@@ -183,6 +183,7 @@ return [
     'admin_broadcasts'      => 'Broadcasts',
     'admin_system_logs'     => 'System Logs',
     'admin_bank_deposits'   => 'Bank Deposits',
+    'service_fees' => 'Service Fees',
     'admin_public_listings' => 'Public Listings',
 
     // Recipient Dashboard
@@ -398,6 +399,7 @@ return [
     'notes'                 => 'Notes',
     'all_users'             => 'All Users',
     'bank_deposits'         => 'Bank Deposits',
+    'service_fees' => 'Service Fees',
     'back_to_home'          => 'Back to Home',
     'discounted'            => 'Discounted',
     'free'                  => 'Free',
@@ -471,6 +473,7 @@ return [
     'broadcasts' => 'Broadcasts',
     'system_logs' => 'System Logs',
     'bank_deposits' => 'Bank Deposits',
+    'service_fees' => 'Service Fees',
     'settings' => 'Settings',
     'shop' => 'Shop',
     'my_listings' => 'My Listings',
