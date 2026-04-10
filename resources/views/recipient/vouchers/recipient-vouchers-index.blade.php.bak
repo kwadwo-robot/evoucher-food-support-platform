@@ -141,41 +141,194 @@
 </div>
 
 <!-- QR Code Library -->
-<!-- QR Code Library -->
-@push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 <script>
 function showQRCode(voucherId, voucherCode, amount, expiryDate, recipientName, recipientEmail, recipientPhone) {
+    // Clear previous QR code
     document.getElementById('qrCode').innerHTML = '';
+
+    // Prepare QR data
+    const qrData = {
+        voucher_code: voucherCode,
+        recipient_name: recipientName,
+        recipient_email: recipientEmail,
+        recipient_phone: recipientPhone,
+        amount: amount,
+        expiry_date: expiryDate
+    };
+
+    // Generate QR Code using QRCode.js library
     new QRCode(document.getElementById('qrCode'), {
-        text: voucherCode,
-        width: 200,
-        height: 200,
+        text: JSON.stringify(qrData),
+        width: 300,
+        height: 300,
         colorDark: '#000000',
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.H
     });
-    document.getElementById('qrVoucherId').textContent = voucherId;
+
+    // Update voucher details
     document.getElementById('qrVoucherCode').textContent = voucherCode;
-    document.getElementById('qrVoucherAmount').textContent = amount;
+    document.getElementById('qrVoucherAmount').textContent = '£' + parseFloat(amount).toFixed(2);
     document.getElementById('qrVoucherExpiry').textContent = expiryDate;
     document.getElementById('qrRecipientName').textContent = recipientName;
     document.getElementById('qrRecipientEmail').textContent = recipientEmail;
     document.getElementById('qrRecipientPhone').textContent = recipientPhone;
+
+    // Show modal
     $('#qrCodeModal').modal('show');
 }
 
 function printQRCode() {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    const qrElement = document.getElementById('qrCode').innerHTML;
     const voucherCode = document.getElementById('qrVoucherCode').textContent;
     const amount = document.getElementById('qrVoucherAmount').textContent;
     const expiryDate = document.getElementById('qrVoucherExpiry').textContent;
     const recipientName = document.getElementById('qrRecipientName').textContent;
     const recipientEmail = document.getElementById('qrRecipientEmail').textContent;
     const recipientPhone = document.getElementById('qrRecipientPhone').textContent;
-    const canvas = document.querySelector('#qrCode canvas');
-    const qrImage = canvas ? canvas.toDataURL('image/png') : '';
-    const printWindow = window.open('', '', 'height=600,width=800');
-    const printContent = `<!DOCTYPE html><html><head><title>eVoucher QR Code</title><style>body{font-family:Arial,sans-serif;padding:20px}.container{max-width:600px;margin:0 auto;text-align:center}.qr-image{margin:20px 0}.qr-image img{max-width:300px}.details{text-align:left;margin:20px 0}.detail-row{margin:10px 0;display:flex;justify-content:space-between}.detail-label{font-weight:bold}.instructions{background:#f5f5f5;padding:15px;margin:20px 0;border-radius:5px}.footer{margin-top:30px;color:#999;font-size:12px}</style></head><body><div class="container"><h2>eVoucher QR Code</h2><div class="qr-image">${qrImage ? `<img src="${qrImage}" alt="QR Code">` : '<p>QR Code</p>'}</div><div class="details"><div class="detail-row"><span class="detail-label">Voucher Code:</span><span>${voucherCode}</span></div><div class="detail-row"><span class="detail-label">Amount:</span><span><strong>${amount}</strong></span></div><div class="detail-row"><span class="detail-label">Expiry:</span><span>${expiryDate}</span></div><div class="detail-row"><span class="detail-label">Name:</span><span>${recipientName}</span></div><div class="detail-row"><span class="detail-label">Email:</span><span>${recipientEmail}</span></div><div class="detail-row"><span class="detail-label">Phone:</span><span>${recipientPhone}</span></div></div><div class="instructions"><strong>How to use:</strong><br>1. Show this QR code to shop staff<br>2. They will scan it or enter the code<br>3. Select food item<br>4. Complete redemption</div><div class="footer"><p>Valid until ${expiryDate}</p></div></div></body></html>`;
+
+    const printContent = `
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <title>eVoucher - ${voucherCode}</title>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        margin: 0; 
+                        padding: 20px;
+                        background: white;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        border: 2px solid #333;
+                        padding: 30px;
+                        background: white;
+                    }
+                    .header { 
+                        text-align: center; 
+                        margin-bottom: 30px;
+                        border-bottom: 2px solid #28a745;
+                        padding-bottom: 20px;
+                    }
+                    .header h1 {
+                        margin: 0;
+                        color: #28a745;
+                        font-size: 24px;
+                    }
+                    .header p {
+                        margin: 5px 0 0 0;
+                        color: #666;
+                        font-size: 14px;
+                    }
+                    .qr-container { 
+                        text-align: center; 
+                        margin: 30px 0;
+                        padding: 20px;
+                        background: #f9f9f9;
+                        border-radius: 8px;
+                    }
+                    .qr-container img {
+                        max-width: 300px;
+                        height: auto;
+                    }
+                    .details { 
+                        margin: 30px 0;
+                    }
+                    .detail-row { 
+                        display: flex; 
+                        justify-content: space-between; 
+                        padding: 10px 0; 
+                        border-bottom: 1px solid #ddd;
+                    }
+                    .detail-label { 
+                        font-weight: bold;
+                        width: 40%;
+                    }
+                    .detail-value {
+                        width: 60%;
+                        text-align: right;
+                    }
+                    .footer { 
+                        text-align: center; 
+                        margin-top: 30px; 
+                        padding-top: 20px;
+                        border-top: 2px solid #28a745;
+                        font-size: 12px; 
+                        color: #666;
+                    }
+                    .instructions {
+                        background: #e7f3ff;
+                        border-left: 4px solid #2196F3;
+                        padding: 15px;
+                        margin: 20px 0;
+                        font-size: 13px;
+                    }
+                    @media print {
+                        body { margin: 0; padding: 0; }
+                        .container { border: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>eVoucher</h1>
+                        <p>Food Support Platform</p>
+                    </div>
+                    
+                    <div class="qr-container">
+                        ${qrElement}
+                    </div>
+
+                    <div class="details">
+                        <div class="detail-row">
+                            <span class="detail-label">Voucher Code:</span>
+                            <span class="detail-value"><strong>${voucherCode}</strong></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Recipient:</span>
+                            <span class="detail-value">${recipientName}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">${recipientEmail}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value">${recipientPhone}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Amount:</span>
+                            <span class="detail-value"><strong>${amount}</strong></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Expiry Date:</span>
+                            <span class="detail-value">${expiryDate}</span>
+                        </div>
+                    </div>
+
+                    <div class="instructions">
+                        <strong>How to use this voucher:</strong><br>
+                        1. Present this QR code to the shop staff<br>
+                        2. They will scan the code or enter the voucher code manually<br>
+                        3. Select the food item you want to collect<br>
+                        4. Complete the redemption
+                    </div>
+
+                    <div class="footer">
+                        <p>This voucher is valid until ${expiryDate}</p>
+                        <p>For support, contact the eVoucher platform</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+    `;
+
     printWindow.document.write(printContent);
     printWindow.document.close();
     printWindow.print();
@@ -193,22 +346,49 @@ function downloadQRCode() {
     }
 }
 </script>
-@endpush
 
-@push('styles')
 <style>
-.voucher-card { transition: all 0.3s ease; }
-.voucher-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
-.voucher-icon { text-align: center; }
-.action-buttons { display: flex; gap: 5px; flex-wrap: wrap; }
-.action-buttons .btn { white-space: nowrap; flex: 1; min-width: 100px; }
+.voucher-card {
+    transition: all 0.3s ease;
+}
+
+.voucher-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.voucher-icon {
+    text-align: center;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    white-space: nowrap;
+    flex: 1;
+    min-width: 100px;
+}
+
 @media (max-width: 768px) {
-    .voucher-card .row { flex-direction: column; }
-    .voucher-card .col-md-2, .voucher-card .col-md-4 { margin-bottom: 10px; }
-    .action-buttons { flex-direction: column; }
-    .action-buttons .btn { width: 100%; }
+    .voucher-card .row {
+        flex-direction: column;
+    }
+    
+    .voucher-card .col-md-2,
+    .voucher-card .col-md-4 {
+        margin-bottom: 10px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+    }
 }
 </style>
-@endpush
-
 @endsection
