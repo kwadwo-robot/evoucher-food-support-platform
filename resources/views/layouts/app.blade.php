@@ -48,6 +48,38 @@
         .stat-card { @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4; }
     </style>
     @stack('styles')
+    <script src="{{ asset('js/qr-code.js') }}"></script>
+    <script>
+        // Wrapper functions that wait for the qr-code.js script to load
+        function showQRCodeWrapper(voucherCode, amount, expiryDate, recipientName, recipientEmail, recipientPhone) {
+            if (typeof showQRCode === 'function') {
+                showQRCode(voucherCode, amount, expiryDate, recipientName, recipientEmail, recipientPhone);
+            } else {
+                setTimeout(() => showQRCodeWrapper(voucherCode, amount, expiryDate, recipientName, recipientEmail, recipientPhone), 100);
+            }
+        }
+        function closeQRCodeWrapper() {
+            if (typeof closeQRCode === 'function') {
+                closeQRCode();
+            } else {
+                setTimeout(closeQRCodeWrapper, 100);
+            }
+        }
+        function printQRCodeWrapper() {
+            if (typeof printQRCode === 'function') {
+                printQRCode();
+            } else {
+                setTimeout(printQRCodeWrapper, 100);
+            }
+        }
+        function downloadQRCodeWrapper() {
+            if (typeof downloadQRCode === 'function') {
+                downloadQRCode();
+            } else {
+                setTimeout(downloadQRCodeWrapper, 100);
+            }
+        }
+    </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
 

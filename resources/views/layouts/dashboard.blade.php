@@ -693,5 +693,7 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
 </script>
 
 @yield('scripts')
+    <script src="{{ asset('js/qr-code.js') }}"></script>
+    @stack('scripts')
 </body>
 </html>
