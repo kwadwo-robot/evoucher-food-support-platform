@@ -472,10 +472,10 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
           <div x-show="langOpen" x-cloak @click.away="langOpen=false"
                class="absolute left-0 top-0 ml-48 bg-white rounded-xl border border-slate-200 shadow-lg py-1 z-50"
                style="min-width:140px" x-transition>
-            <a href="#" class="lang-option" onclick="switchLanguage('en', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='en' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="en">🇬🇧 English</a>
-            <a href="#" class="lang-option" onclick="switchLanguage('ar', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='ar' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="ar">🇸🇦 العربية</a>
-            <a href="#" class="lang-option" onclick="switchLanguage('ro', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='ro' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="ro">🇷🇴 Română</a>
-            <a href="#" class="lang-option" onclick="switchLanguage('pl', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='pl' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="pl">🇵🇱 Polski</a>
+            <a href="#" onclick="switchLanguage('en', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='en' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="en">🇬🇧 English</a>
+            <a href="#" onclick="switchLanguage('ar', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='ar' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="ar">🇸🇦 العربية</a>
+            <a href="#" onclick="switchLanguage('ro', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='ro' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="ro">🇷🇴 Română</a>
+            <a href="#" onclick="switchLanguage('pl', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='pl' ? 'text-green-600 font-semibold bg-green-50' : 'text-slate-700 hover:bg-slate-50' }}" data-lang="pl">🇵🇱 Polski</a>
           </div>
         </div>
         <div class="border-t border-slate-100 my-1"></div>
@@ -675,8 +675,8 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
     });
     
     // Send AJAX request to switch language
-    const langRoute = '/lang/';
-    fetch(langRoute + lang, {
+    const langRoute = '{{ route("lang.switch", "") }}';
+    fetch(langRoute + '/' + lang, {
       method: 'GET',
       headers: {
         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content

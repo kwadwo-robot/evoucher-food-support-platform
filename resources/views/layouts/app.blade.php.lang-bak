@@ -78,21 +78,6 @@
                     <span>Install App</span>
                 </button>
                 @auth
-                <div class="relative" x-data="{ langOpen: false }">
-                    <button @click="langOpen=!langOpen" class="flex items-center gap-1 text-sm text-gray-700 hover:text-green-700 px-3 py-2 rounded-lg hover:bg-gray-50">
-                        <i class="fas fa-language w-4"></i>
-                        <span id="langCode" class="hidden sm:inline">{{ strtoupper(app()->getLocale()) }}</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div x-show="langOpen" x-cloak @click.away="langOpen=false"
-                         class="absolute right-0 mt-1 bg-white rounded-xl border border-gray-200 shadow-lg py-1 z-50"
-                         style="min-width:140px" x-transition>
-                        <a href="#" onclick="switchLanguageApp('en', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='en' ? 'text-green-600 font-semibold bg-green-50' : 'text-gray-700 hover:bg-gray-50' }} lang-option" data-lang="en">🇬🇧 English</a>
-                        <a href="#" onclick="switchLanguageApp('ar', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='ar' ? 'text-green-600 font-semibold bg-green-50' : 'text-gray-700 hover:bg-gray-50' }} lang-option" data-lang="ar">🇸🇦 العربية</a>
-                        <a href="#" onclick="switchLanguageApp('ro', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='ro' ? 'text-green-600 font-semibold bg-green-50' : 'text-gray-700 hover:bg-gray-50' }} lang-option" data-lang="ro">🇷🇴 Română</a>
-                        <a href="#" onclick="switchLanguageApp('pl', event)" class="flex items-center gap-2 px-4 py-2 text-sm {{ app()->getLocale()==='pl' ? 'text-green-600 font-semibold bg-green-50' : 'text-gray-700 hover:bg-gray-50' }} lang-option" data-lang="pl">🇵🇱 Polski</a>
-                    </div>
-                </div>
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" class="flex items-center gap-2 text-sm text-gray-700 hover:text-green-700 px-3 py-2 rounded-lg hover:bg-gray-50">
                         <div class="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center">
@@ -187,12 +172,6 @@
 
 <!-- Footer removed - using page-specific footers -->
 
-<script>
-function switchLanguageApp(lang, event) {
-    event.preventDefault();
-    window.location.href = '/lang/' + lang;
-}
-</script>
 @stack('scripts')
 
 <!-- PWA Service Worker Registration -->
