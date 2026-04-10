@@ -482,38 +482,4 @@ class VoucherController extends Controller
         return redirect()->route('vcfse.dashboard')
             ->with('success', 'Voucher deleted successfully!');
     }
-
-    public function revoke(Voucher $voucher)
-    {
-        try {
-            // Check if the organisation owns this voucher
-            if ($voucher->organisation_id !== Auth::user()->organisation_id) {
-                return redirect()->back()
-                    ->withErrors(['error' => 'Unauthorized action.']);
-            }
-            
-            $voucher->update(['status' => 'cancelled']);
-            
-            // Log the revocation
-            SystemLog::create([
-                'user_id' => Auth::id(),
-                'action' => 'revoke',
-                'entity_type' => 'Voucher',
-                'entity_id' => $voucher->id,
-                'description' => 'Revoked voucher #' . $voucher->code . ' for recipient ' . ($voucher->recipient->name ?? 'Unknown'),
-                'changes' => [
-                    'status' => 'cancelled',
-                    'revoked_at' => now(),
-                ],
-                'ip_address' => request()->ip(),
-                'user_agent' => request()->userAgent(),
-            ]);
-            
-            return redirect()->route('organisation.vouchers.show', $voucher)
-                ->with('success', 'Voucher #' . $voucher->code . ' has been revoked successfully.');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                ->withErrors(['error' => 'Failed to revoke voucher: ' . $e->getMessage()]);
-        }
-    }
 }

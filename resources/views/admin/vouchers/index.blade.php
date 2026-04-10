@@ -46,9 +46,9 @@
                     <td class="px-4 py-3 text-right">
                         <a href="{{ route('admin.vouchers.show', $voucher) }}" class="text-xs bg-gray-100 text-gray-700 hover:bg-gray-200 px-2 py-1 rounded">View</a>
                         @if($voucher->status === 'active')
-                        <form method="POST" action="{{ route('admin.vouchers.cancel', $voucher) }}" class="inline">
+                        <form method="POST" action="{{ route('admin.vouchers.revoke', $voucher) }}" class="inline">
                             @csrf @method('PATCH')
-                            <button type="submit" class="text-xs bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded ml-1">Cancel</button>
+                            <button type="submit" class="text-xs bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded ml-1">Revoke</button>
                         </form>
                         @endif
                     </td>

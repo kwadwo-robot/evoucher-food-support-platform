@@ -11,7 +11,7 @@
         <div class="card-hd">
           <div class="card-title"><i class="fas fa-ticket text-blue-600"></i> Voucher Information</div>
           <span class="badge @if($voucher->status === 'active' && $voucher->expiry_date >= now()) badge-green @elseif($voucher->status === 'cancelled') badge-gray @else badge-red @endif">
-            {{ $voucher->status === 'active' && $voucher->expiry_date >= now() ? 'Active' : ($voucher->status === 'cancelled' ? 'Cancelled' : 'Expired') }}
+            {{ $voucher->status === 'active' && $voucher->expiry_date >= now() ? 'Active' : ($voucher->status === 'cancelled' ? 'Revokeled' : 'Expired') }}
           </span>
         </div>
         <div class="card-body">
@@ -33,7 +33,7 @@
                     <span class="text-red-600"><i class="fas fa-times-circle"></i> Expired</span>
                   @endif
                 @elseif($voucher->status === 'cancelled')
-                  <span class="text-gray-600"><i class="fas fa-ban"></i> Cancelled</span>
+                  <span class="text-gray-600"><i class="fas fa-ban"></i> Revokeled</span>
                 @else
                   <span class="text-blue-600"><i class="fas fa-info-circle"></i> {{ ucfirst($voucher->status) }}</span>
                 @endif
@@ -184,11 +184,11 @@
       @if($voucher->status === 'active')
       <div class="card">
         <div class="card-body">
-          <form action="{{ auth()->user()->role === 'vcfse' ? route('vcfse.vouchers.cancel', $voucher) : route('school.vouchers.cancel', $voucher) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this voucher? The remaining balance will be refunded to your wallet.');">
+          <form action="{{ auth()->user()->role === 'vcfse' ? route('vcfse.vouchers.revoke', $voucher) : route('school.vouchers.revoke', $voucher) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this voucher? The remaining balance will be refunded to your wallet.');">
             @csrf
             @method('PATCH')
             <button type="submit" class="btn btn-danger w-full">
-              <i class="fas fa-ban"></i> Cancel Voucher
+              <i class="fas fa-ban"></i> Revoke Voucher
             </button>
           </form>
         </div>

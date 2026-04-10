@@ -95,7 +95,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/vouchers/create', [AdminVoucher::class, 'create'])->name('vouchers.create');
     Route::post('/vouchers', [AdminVoucher::class, 'store'])->name('vouchers.store');
     Route::get('/vouchers/{voucher}', [AdminVoucher::class, 'show'])->name('vouchers.show');
-    Route::patch('/vouchers/{voucher}/cancel', [AdminVoucher::class, 'revoke'])->name('vouchers.revoke');
+    Route::patch('/vouchers/{voucher}/cancel', [AdminVoucher::class, 'cancel'])->name('vouchers.cancel');
     Route::get('/listings', [AdminDashboard::class, 'listings'])->name('listings.index');
     Route::patch('/listings/{listing}/status', [AdminDashboard::class, 'updateListingStatus'])->name('listings.status');
     Route::delete('/listings/{listing}', [AdminDashboard::class, 'destroyListing'])->name('listings.destroy');
@@ -233,7 +233,7 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
     Route::post('/vouchers', [OrgVoucher::class, 'store'])->name('vouchers.store');
     Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/{voucher}', [OrgVoucher::class, 'show'])->name('vouchers.show');
-    Route::patch('/vouchers/{voucher}/cancel', [OrgVoucher::class, 'revoke'])->name('vouchers.revoke');
+    Route::patch('/vouchers/{voucher}/cancel', [OrgVoucher::class, 'cancel'])->name('vouchers.cancel');
     Route::get('/reports/vouchers/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportVouchersExcel'])->name('reports.vouchers-excel');
     Route::get('/reports/vouchers/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportVouchersPdf'])->name('reports.vouchers-pdf');
 });
@@ -268,7 +268,7 @@ Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:
     Route::post('/vouchers', [OrgVoucher::class, 'store'])->name('vouchers.store');
     Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/{voucher}', [OrgVoucher::class, 'show'])->name('vouchers.show');
-    Route::patch('/vouchers/{voucher}/cancel', [OrgVoucher::class, 'revoke'])->name('vouchers.revoke');
+    Route::patch('/vouchers/{voucher}/cancel', [OrgVoucher::class, 'cancel'])->name('vouchers.cancel');
     Route::get('/reports/vouchers/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportVouchersExcel'])->name('reports.vouchers-excel');
     Route::get('/reports/vouchers/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportVouchersPdf'])->name('reports.vouchers-pdf');
 });

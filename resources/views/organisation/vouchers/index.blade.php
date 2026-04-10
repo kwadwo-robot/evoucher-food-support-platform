@@ -28,7 +28,7 @@
     </div>
     <div class="stat-card">
       <div class="stat-icon mb-3" style="background:#fee2e2;color:#ef4444;"><i class="fas fa-ban"></i></div>
-      <div class="stat-label">Cancelled</div>
+      <div class="stat-label">Revokeled</div>
       <div class="stat-value">{{ $cancelledCount }}</div>
     </div>
   </div>
@@ -81,7 +81,7 @@
                     <span class="badge badge-red">Expired</span>
                   @endif
                 @elseif($voucher->status === 'cancelled')
-                  <span class="badge badge-gray">Cancelled</span>
+                  <span class="badge badge-gray">Revokeled</span>
                 @else
                   <span class="badge badge-blue">{{ ucfirst($voucher->status) }}</span>
                 @endif
@@ -100,7 +100,7 @@
                     <i class="fas fa-eye"></i>
                   </a>
                   @if($voucher->status === 'active')
-                    <form action="{{ auth()->user()->role === 'vcfse' ? route('vcfse.vouchers.cancel', $voucher) : route('school.vouchers.cancel', $voucher) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel this voucher?');">
+                    <form action="{{ auth()->user()->role === 'vcfse' ? route('vcfse.vouchers.revoke', $voucher) : route('school.vouchers.revoke', $voucher) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to cancel this voucher?');">
                       @csrf
                       @method('PATCH')
                       <button type="submit" class="btn btn-sm" style="background:#fee2e2;color:#ef4444;border:1px solid #fecaca;padding:5px 10px;">
