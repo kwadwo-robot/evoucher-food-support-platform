@@ -145,7 +145,7 @@ class ReportsController extends Controller
     public function exportVouchersExcel()
     {
         $user = Auth::user();
-        $vouchers = Voucher::where('issued_by', $user->id)
+        $vouchers = Voucher::where('organisation_user_id', $user->id)
             ->with('recipient')
             ->latest()
             ->get();
@@ -158,7 +158,7 @@ class ReportsController extends Controller
     public function exportVouchersPdf()
     {
         $user = Auth::user();
-        $vouchers = Voucher::where('issued_by', $user->id)
+        $vouchers = Voucher::where('organisation_user_id', $user->id)
             ->with('recipient')
             ->latest()
             ->get();
