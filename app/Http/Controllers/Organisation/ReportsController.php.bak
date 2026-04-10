@@ -141,33 +141,4 @@ class ReportsController extends Controller
         $pdf = \PDF::loadView('organisation.reports.bank-deposits-pdf', compact('bankDeposits', 'totalDeposits', 'orgName'));
         return $pdf->download('bank-deposits-' . now()->format('Y-m-d-His') . '.pdf');
     }
-
-    public function exportVouchersExcel()
-    {
-        $user = Auth::user();
-        $vouchers = Voucher::where('organisation_user_id', $user->id)
-            ->with('recipient')
-            ->latest()
-            ->get();
-        
-        $fileName = 'vouchers-' . now()->format('Y-m-d-His') . '.xlsx';
-        
-        return \Excel::download(new \App\Exports\VouchersExport($vouchers), $fileName);
-    }
-    
-    public function exportVouchersPdf()
-    {
-        $user = Auth::user();
-        $vouchers = Voucher::where('organisation_user_id', $user->id)
-            ->with('recipient')
-            ->latest()
-            ->get();
-        
-        $totalVouchers = $vouchers->count();
-        $totalValue = $vouchers->sum('amount');
-        $orgName = $user->organisation_profile->name ?? 'Organisation';
-        
-        $pdf = \PDF::loadView('organisation.reports.vouchers-pdf', compact('vouchers', 'totalVouchers', 'totalValue', 'orgName'));
-        return $pdf->download('vouchers-' . now()->format('Y-m-d-His') . '.pdf');
-    }
 }
