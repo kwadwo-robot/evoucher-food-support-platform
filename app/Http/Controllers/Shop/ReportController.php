@@ -40,7 +40,7 @@ class ReportController extends Controller
         // Get recent redemptions
         $recentRedemptions = Redemption::whereHas('foodListing', function ($q) use ($user) {
             $q->where('shop_user_id', $user->id);
-        })->with(['foodListing', 'voucher'])
+        })->with(['foodListing', 'voucher', 'recipient'])
             ->latest()
             ->take(10)
             ->get();

@@ -58,10 +58,10 @@
         @foreach($recentRedemptions as $redemption)
         <tr>
           <td style="font-weight:600;color:#0f172a">{{ $redemption->foodListing->item_name ?? '—' }}</td>
-          <td style="font-size:12.5px;color:#64748b">{{ $redemption->foodListing->shopUser->name ?? '—' }}</td>
-          <td><code style="background:#f0fdf4;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700;color:#16a34a">{{ $redemption->voucher->voucher_code ?? '—' }}</code></td>
+          <td style="font-size:12.5px;color:#64748b">{{ $redemption->recipient->name ?? $redemption->recipient->email ?? '—' }}</td>
+          <td><code style="background:#f0fdf4;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:700;color:#16a34a">{{ $redemption->voucher->code ?? '—' }}</code></td>
           <td style="font-size:12px;color:#64748b">{{ \Carbon\Carbon::parse($redemption->created_at)->format('d M Y H:i') }}</td>
-          <td style="font-weight:600;color:#0f172a">£{{ number_format($redemption->amount_redeemed ?? 0, 2) }}</td>
+          <td style="font-weight:600;color:#0f172a">£{{ number_format($redemption->amount_used ?? 0, 2) }}</td>
           <td>
             @if($redemption->status === 'pending')<span class="badge badge-yellow">Pending</span>
             @elseif($redemption->status === 'confirmed')<span class="badge badge-green">Confirmed</span>
