@@ -153,8 +153,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     // Service Fees
     Route::get('/service-fees', [AdminServiceFee::class, 'index'])->name('service-fees.index');
     Route::get('/service-fees/{id}', [AdminServiceFee::class, 'show'])->name('service-fees.show');
-    Route::get('/service-fees-settings', [AdminServiceFee::class, 'settings'])->name('service-fees.settings');
-    Route::post('/service-fees-settings', [AdminServiceFee::class, 'updatePercentage'])->name('service-fees.update-percentage');
+    Route::get('/service-fees/settings', [AdminServiceFee::class, 'settings'])->name('service-fees.settings');
+    Route::post('/service-fees/settings', [AdminServiceFee::class, 'updatePercentage'])->name('service-fees.update-percentage');
     Route::get('/service-fees/export', [AdminServiceFee::class, 'export'])->name('service-fees.export');
 });
 
@@ -167,17 +167,12 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'approved', 'role:loca
     Route::get('/listings/{listing}/edit', [ShopListing::class, 'edit'])->name('listings.edit');
     Route::put('/listings/{listing}', [ShopListing::class, 'update'])->name('listings.update');
     Route::delete('/listings/{listing}', [ShopListing::class, 'destroy'])->name('listings.destroy');
-    Route::patch('/listings/{listing}/mark-collected', [ShopListing::class, 'markCollected'])->name('listings.collected');
-    Route::get('/redemptions', [ShopDashboard::class, 'redemptions'])->name('redemptions');
+    // Voucher Verification
     Route::get('/verify', [ShopDashboard::class, 'verifyVoucher'])->name('verify');
     Route::post('/verify/lookup', [ShopDashboard::class, 'lookupVoucher'])->name('verify.lookup');
     Route::post('/verify/accept', [ShopDashboard::class, 'acceptVoucher'])->name('verify.accept');
-    Route::post('/verify/reject', [ShopDashboard::class, 'rejectVoucher'])->name('verify.reject');
     Route::post('/verify/accept-direct', [ShopDashboard::class, 'acceptVoucherDirect'])->name('verify.accept-direct');
-    Route::post('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption'])->name('redemptions.confirm');
-    Route::patch('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption']);
-    Route::get('/profile', [ShopDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile', [ShopDashboard::class, 'updateProfile'])->name('profile.update');
+    Route::get('/redemptions', [ShopDashboard::class, 'redemptions'])->name('redemptions');
     // Payouts
     Route::get('/payouts', [ShopPayout::class, 'index'])->name('payouts.index');
     Route::post('/payouts/bank-details', [ShopPayout::class, 'saveBankDetails'])->name('payouts.bank-details');
@@ -190,22 +185,15 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'approved', 'role:loca
 // Recipient
 Route::prefix('recipient')->name('recipient.')->middleware(['auth', 'role:recipient'])->group(function () {
     Route::get('/dashboard', [RecipientDashboard::class, 'index'])->name('dashboard');
-    Route::get('/food', [RecipientDashboard::class, 'browse'])->name('food.browse');
-    Route::get('/food/{listing}', [RecipientDashboard::class, 'showListing'])->name('food.show');
-    Route::post('/food/{listing}/redeem', [RecipientVoucher::class, 'redeem'])->name('food.redeem');
-    Route::get('/vouchers', [RecipientVoucher::class, 'index'])->name('vouchers');
+    Route::get('/vouchers', [RecipientVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/{voucher}', [RecipientVoucher::class, 'show'])->name('vouchers.show');
-    Route::get('/history', [RecipientDashboard::class, 'history'])->name('history');
-    // Shopping Cart
-    Route::get('/cart', [RecipientCart::class, 'index'])->name('cart');
+    Route::get('/cart', [RecipientCart::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{listing}', [RecipientCart::class, 'add'])->name('cart.add');
+    Route::post('/cart/remove/{listing}', [RecipientCart::class, 'remove'])->name('cart.remove');
     Route::post('/cart/checkout', [RecipientCart::class, 'checkout'])->name('cart.checkout');
-    Route::post('/cart/{listing}', [RecipientCart::class, 'add'])->name('cart.add');
-    Route::delete('/cart/{listing}', [RecipientCart::class, 'remove'])->name('cart.remove');
-    Route::delete('/cart', [RecipientCart::class, 'clear'])->name('cart.clear');
-    Route::get('/profile', [RecipientDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile', [RecipientDashboard::class, 'updateProfile'])->name('profile.update');
+    Route::post('/cart/clear', [RecipientCart::class, 'clear'])->name('cart.clear');
     // Reports
-    Route::get('/reports/export-pdf', [RecipientReport::class, 'exportPDF'])->name('reports.export-pdf');
+    Route::get('/reports', [RecipientReport::class, 'index'])->name('reports.index');
     Route::get('/reports/export-excel', [RecipientReport::class, 'exportExcel'])->name('reports.export-excel');
     // Broadcasts
     Route::get("/broadcasts/{broadcast}", [RecipientBroadcast::class, "show"])->name("broadcasts.show");
@@ -215,31 +203,12 @@ Route::prefix('recipient')->name('recipient.')->middleware(['auth', 'role:recipi
 // VCFSE
 Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vcfse'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'vcfseDashboard'])->name('dashboard');
-    Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
-    Route::post('/food/{foodListingId}/claim', [SurplusClaimController::class, 'claim'])->name('food.claim');
-    Route::get('/donate', [DonationController::class, 'showForm'])->name('donate');
-    Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
-    Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
-    Route::get('/fund-load', [OrgFundLoad::class, 'showLoadForm'])->name('fund-load');
-    Route::post('/fund-load/create-intent', [OrgFundLoad::class, 'createPaymentIntent'])->name('fund-load.create-intent');
-    Route::post('/fund-load/confirm', [OrgFundLoad::class, 'confirmPayment'])->name('fund-load.confirm');
-    Route::get('/fund-load/history', [OrgFundLoad::class, 'loadHistory'])->name('fund-load.history');
-    Route::get('/food-breakdown', [FoodBreakdownController::class, 'vcfseBreakdown'])->name('food-breakdown');
-    Route::get('/reports', [\App\Http\Controllers\Organisation\ReportsController::class, 'index'])->name('reports');
-    Route::get('/reports/fund-loads/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsExcel'])->name('reports.fund-loads-excel');
-    Route::get('/reports/fund-loads/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsPdf'])->name('reports.fund-loads-pdf');
-    Route::get('/reports/bank-deposits/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportBankDepositsExcel'])->name('reports.bank-deposits-excel');
-    Route::get('/reports/bank-deposits/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportBankDepositsPdf'])->name('reports.bank-deposits-pdf');
-    Route::get('/profile', [OrgDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile', [OrgDashboard::class, 'updateProfile'])->name('profile.update');
-    Route::get('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'create'])->name('bank-deposit-notification.create');
-    Route::post('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'store'])->name('bank-deposit-notification.store');
-    Route::get('/bank-deposit-notification/list', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'index'])->name('bank-deposit-notification.index');
-    Route::get('/bank-deposit-notification/{bankDeposit}', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'show'])->name('bank-deposit-notification.show');
-    // Vouchers
+    Route::get('/fund-loads', [OrgFundLoad::class, 'index'])->name('fund-loads.index');
+    Route::post('/fund-loads', [OrgFundLoad::class, 'store'])->name('fund-loads.store');
+    Route::delete('/fund-loads/{fundLoad}', [OrgFundLoad::class, 'destroy'])->name('fund-loads.destroy');
+    Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/create', [OrgVoucher::class, 'create'])->name('vouchers.create');
     Route::post('/vouchers', [OrgVoucher::class, 'store'])->name('vouchers.store');
-    Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/{voucher}', [OrgVoucher::class, 'show'])->name('vouchers.show');
     Route::patch('/vouchers/{voucher}/cancel', [OrgVoucher::class, 'revoke'])->name('vouchers.revoke');
     Route::get('/reports/vouchers/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportVouchersExcel'])->name('reports.vouchers-excel');
@@ -249,32 +218,12 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
 // School/Care
 Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:school_care'])->group(function () {
     Route::get('/dashboard', [OrgDashboard::class, 'schoolDashboard'])->name('dashboard');
-    Route::get('/food', [OrgDashboard::class, 'browseFood'])->name('food');
-    Route::post('/food/{foodListingId}/claim', [SurplusClaimController::class, 'claim'])->name('food.claim');
-    Route::post('/food/{listing}/redeem', [RecipientVoucher::class, 'redeem'])->name('food.redeem');
-    Route::get('/donate', [DonationController::class, 'showForm'])->name('donate');
-    Route::post('/donate', [DonationController::class, 'storeDonation'])->name('donate.store');
-    Route::get('/donations', [OrgDashboard::class, 'donations'])->name('donations');
-    Route::get('/fund-load', [OrgFundLoad::class, 'showLoadForm'])->name('fund-load');
-    Route::post('/fund-load/create-intent', [OrgFundLoad::class, 'createPaymentIntent'])->name('fund-load.create-intent');
-    Route::post('/fund-load/confirm', [OrgFundLoad::class, 'confirmPayment'])->name('fund-load.confirm');
-    Route::get('/fund-load/history', [OrgFundLoad::class, 'loadHistory'])->name('fund-load.history');
-    Route::get('/food-breakdown', [FoodBreakdownController::class, 'schoolBreakdown'])->name('food-breakdown');
-    Route::get('/reports', [\App\Http\Controllers\Organisation\ReportsController::class, 'index'])->name('reports');
-    Route::get('/reports/fund-loads/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsExcel'])->name('reports.fund-loads-excel');
-    Route::get('/reports/fund-loads/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportFundLoadsPdf'])->name('reports.fund-loads-pdf');
-    Route::get('/reports/bank-deposits/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportBankDepositsExcel'])->name('reports.bank-deposits-excel');
-    Route::get('/reports/bank-deposits/pdf', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportBankDepositsPdf'])->name('reports.bank-deposits-pdf');
-    Route::get('/profile', [OrgDashboard::class, 'profile'])->name('profile');
-    Route::put('/profile', [OrgDashboard::class, 'updateProfile'])->name('profile.update');
-    Route::get('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'create'])->name('bank-deposit-notification.create');
-    Route::post('/bank-deposit-notification', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'store'])->name('bank-deposit-notification.store');
-    Route::get('/bank-deposit-notification/list', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'index'])->name('bank-deposit-notification.index');
-    Route::get('/bank-deposit-notification/{bankDeposit}', [\App\Http\Controllers\Organisation\BankDepositNotificationController::class, 'show'])->name('bank-deposit-notification.show');
-    // Vouchers
+    Route::get('/fund-loads', [OrgFundLoad::class, 'index'])->name('fund-loads.index');
+    Route::post('/fund-loads', [OrgFundLoad::class, 'store'])->name('fund-loads.store');
+    Route::delete('/fund-loads/{fundLoad}', [OrgFundLoad::class, 'destroy'])->name('fund-loads.destroy');
+    Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/create', [OrgVoucher::class, 'create'])->name('vouchers.create');
     Route::post('/vouchers', [OrgVoucher::class, 'store'])->name('vouchers.store');
-    Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/{voucher}', [OrgVoucher::class, 'show'])->name('vouchers.show');
     Route::patch('/vouchers/{voucher}/cancel', [OrgVoucher::class, 'revoke'])->name('vouchers.revoke');
     Route::get('/reports/vouchers/excel', [\App\Http\Controllers\Organisation\ReportsController::class, 'exportVouchersExcel'])->name('reports.vouchers-excel');
@@ -293,13 +242,3 @@ Route::middleware('auth')->prefix('notifications')->name('notifications.')->grou
 
 // Stripe Webhook
 Route::post('/stripe/webhook', [DonationController::class, 'webhook'])->name('stripe.webhook');
-
-
-// Service Fee Management Routes
-Route::middleware(['auth', 'role:admin,super_admin'])->prefix('admin')->group(function () {
-    Route::get('/service-fees', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'index'])->name('admin.service-fees.index');
-    Route::get('/service-fees/settings', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'settings'])->name('admin.service-fees.settings');
-    Route::post('/service-fees/update-percentage', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'updatePercentage'])->name('admin.service-fees.update-percentage');
-    Route::get('/service-fees/{id}', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'show'])->name('admin.service-fees.show');
-    Route::get('/service-fees/export/csv', [\App\Http\Controllers\Admin\ServiceFeeController::class, 'export'])->name('admin.service-fees.export');
-});
