@@ -22,7 +22,7 @@
     </div>
 @endif
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+<div style="display:grid;grid-template-columns:1fr;gap:20px;align-items:start;" class="grid-responsive">
 
     {{-- LEFT: QR Scanner + Manual Entry --}}
     <div>
@@ -391,4 +391,9 @@ function qrScanner() {
     };
 }
 </script>
+<style>
+@media (min-width: 768px) {
+    .grid-responsive { grid-template-columns: 1fr 1fr; }
+}
+</style>
 @endsection
