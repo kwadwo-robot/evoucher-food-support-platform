@@ -265,4 +265,14 @@ class DashboardController extends Controller
 
         return compact('voucher', 'foodListings', 'redemptionHistory', 'error');
     }
+
+    public function redemptions()
+    {
+        $shopUser = Auth::user();
+        $redemptions = Redemption::where('shop_user_id', $shopUser->id)
+            ->with(['voucher', 'foodListing', 'recipient'])
+            ->orderBy('redeemed_at', 'desc')
+            ->paginate(20);
+        return view('shop.redemptions', compact('redemptions'));
+    }
 }
