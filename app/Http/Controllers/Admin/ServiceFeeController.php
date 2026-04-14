@@ -47,9 +47,10 @@ class ServiceFeeController extends Controller
             'current_percentage' => ServiceFeeSetting::getCurrentPercentage(),
         ];
 
-        // Get shops for filter dropdown
-        $shops = User::where('role', 'shop')
-            ->whereHas('serviceFees')
+        // Get shops for filter dropdown - get shops that have service fees
+        $shopsWithFees = ServiceFee::distinct('shop_user_id')->pluck('shop_user_id');
+        $shops = User::where('role', 'local_shop')
+            ->whereIn('id', $shopsWithFees)
             ->select('id', 'name', 'email')
             ->orderBy('name')
             ->get();
