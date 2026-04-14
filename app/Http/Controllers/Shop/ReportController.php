@@ -21,12 +21,14 @@ class ReportController extends Controller
         $availableListings = FoodListing::where('shop_user_id', $user->id)
             ->where('status', 'available')
             ->count();
-        $redeemedListings = FoodListing::where('shop_user_id', $user->id)
-            ->where('status', 'redeemed')
-            ->count();
         $expiredListings = FoodListing::where('shop_user_id', $user->id)
             ->where('status', 'expired')
             ->count();
+        
+        // Redeemed count is the number of redemptions, not listing status
+        $redeemedListings = Redemption::whereHas('foodListing', function ($q) use ($user) {
+            $q->where('shop_user_id', $user->id);
+        })->count();
         
         // Get redemption statistics
         $totalRedemptions = Redemption::whereHas('foodListing', function ($q) use ($user) {

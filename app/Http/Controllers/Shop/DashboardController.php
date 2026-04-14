@@ -34,10 +34,10 @@ class DashboardController extends Controller
             ->whereDate('expiry_date', '>=', now())
             ->count();
         
-        // Payout stats
+        // Payout stats - Only voucher value, not cash paid
         $unpaidAmount = Redemption::where('shop_user_id', $shopUser->id)
             ->where('status', 'collected')
-            ->sum('amount_owed_at_shop');
+            ->sum('amount_used');
         
         $pendingPayouts = ShopPayoutRequest::where('shop_user_id', $shopUser->id)
             ->where('status', 'pending')
