@@ -89,7 +89,7 @@
           </tbody>
           <tfoot>
             <tr style="background:#f0fdf4">
-              <td colspan="2" style="font-weight:700;padding:10px 12px">Total to Pay</td>
+              <td colspan="2" style="font-weight:700;padding:10px 12px">Gross Total</td>
               <td style="text-align:right;font-weight:700;color:#16a34a;padding:10px 12px;font-size:16px">
                 £{{ number_format($payout->total_amount, 2) }}
               </td>
@@ -138,6 +138,29 @@
       </div>
     </div>
 
+    {{-- Service Fee Breakdown --}}
+    @if($payout->service_fee_percentage)
+    <div class="card mb-4">
+      <div class="card-hd">
+        <div class="card-title"><i class="fas fa-percent text-orange-600"></i> Service Fee Breakdown</div>
+      </div>
+      <div class="card-body" style="font-size:13px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <span class="text-muted">Gross Amount</span>
+          <strong>£{{ number_format($payout->total_amount, 2) }}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #e5e7eb">
+          <span class="text-muted">Service Fee ({{ number_format($payout->service_fee_percentage, 2) }}%)</span>
+          <strong style="color:#f59e0b">-£{{ number_format($payout->service_fee_amount, 2) }}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;background:#f0fdf4;padding:8px;border-radius:4px">
+          <span class="text-muted"><strong>Amount to Transfer</strong></span>
+          <strong style="color:#16a34a;font-size:15px">£{{ number_format($payout->amount_after_fee, 2) }}</strong>
+        </div>
+      </div>
+    </div>
+    @endif
+
     {{-- Actions --}}
     @if(in_array($payout->status, ['pending', 'approved']))
     <div class="card mb-4">
@@ -175,8 +198,8 @@
               placeholder="Any notes about this payment..."></textarea>
           </div>
           <button type="submit" class="btn w-full" style="background:#16a34a;color:#fff"
-            onclick="return confirm('Mark this payout as PAID? This confirms the bank transfer has been completed.')">
-            <i class="fas fa-check-double mr-2"></i>Mark as Paid — £{{ number_format($payout->total_amount, 2) }}
+            onclick="return confirm('Mark this payout as PAID? This confirms the bank transfer of £' + {{ $payout->amount_after_fee }} + ' has been completed.')">
+            <i class="fas fa-check-double mr-2"></i>Mark as Paid — £{{ number_format($payout->amount_after_fee, 2) }}
           </button>
         </form>
 

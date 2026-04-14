@@ -112,9 +112,19 @@
           <strong>{{ $payout->redemption_count }}</strong>
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span class="text-muted">Total Amount</span>
+          <span class="text-muted">Gross Amount</span>
           <strong style="color:#16a34a">£{{ number_format($payout->total_amount, 2) }}</strong>
         </div>
+        @if($payout->service_fee_percentage)
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #e5e7eb">
+          <span class="text-muted">Service Fee ({{ number_format($payout->service_fee_percentage, 2) }}%)</span>
+          <strong style="color:#f59e0b">-£{{ number_format($payout->service_fee_amount, 2) }}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;background:#f0fdf4;padding:8px;border-radius:4px">
+          <span class="text-muted"><strong>Amount to You</strong></span>
+          <strong style="color:#16a34a;font-size:16px">£{{ number_format($payout->amount_after_fee, 2) }}</strong>
+        </div>
+        @endif
         <div style="display:flex;justify-content:space-between">
           <span class="text-muted">Submitted</span>
           <strong>{{ $payout->created_at->format('d M Y') }}</strong>
