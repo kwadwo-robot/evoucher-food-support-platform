@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('expiry_date');
             $table->decimal('voucher_value', 8, 2)->default(0);
             $table->string('image_url')->nullable();
-            $table->enum('status', ['available', 'reserved', 'redeemed', 'expired'])->default('available');
+            $table->enum('status', ['available', 'reserved', 'redeemed', 'expired', 'removed'])->default('available');
             $table->string('collection_address')->nullable();
             $table->string('collection_time')->nullable();
             $table->text('collection_instructions')->nullable();
