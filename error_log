@@ -25,3 +25,5 @@ Stack trace:
 [21-Mar-2026 12:51:55 UTC] PHP Fatal error:  Cannot declare class CreateBroadcastDeliveriesTable, because the name is already in use in /home/is8cxbwcoidt/public_html/evoucher.compliance-360.co.uk/database/migrations/2026_03_21_create_broadcast_deliveries_table.php on line 7
 [14-Apr-2026 12:11:31 UTC] PHP Parse error:  Unmatched '}' in Standard input code on line 27
 [14-Apr-2026 13:59:28 UTC] PHP Parse error:  syntax error, unexpected identifier "not", expecting "," or ";" in Standard input code on line 85
+[14-Apr-2026 18:49:18 UTC] PHP Parse error:  syntax error, unexpected token ";" in app/Http/Controllers/Shop/DashboardController.php on line 72
+[14-Apr-2026 18:50:12 UTC] PHP Parse error:  syntax error, unexpected token ";" in app/Http/Controllers/Shop/DashboardController.php on line 72

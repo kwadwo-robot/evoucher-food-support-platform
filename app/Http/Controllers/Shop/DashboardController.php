@@ -21,9 +21,8 @@ class DashboardController extends Controller
         $totalRedemptions = Redemption::where('shop_user_id', $shopUser->id)->count();
         $totalEarnings = Redemption::where('shop_user_id', $shopUser->id)
             ->sum('amount_owed_at_shop');
-
-         = FoodListing::where('shop_user_id', ->id)->where('status', 'redeemed')->count();
-         = Redemption::where('shop_user_id', ->id)->with(['voucher', 'foodListing', 'recipient'])->orderBy('created_at', 'desc')->limit(5)->get();
+        $redeemedListings = FoodListing::where('shop_user_id', $shopUser->id)->where('status', 'redeemed')->count();
+        $recentRedemptions = Redemption::where('shop_user_id', $shopUser->id)->with(['voucher', 'foodListing', 'recipient'])->orderBy('created_at', 'desc')->limit(5)->get();
         return view('shop.dashboard', compact('totalListings', 'activeListings', 'redeemedListings', 'totalRedemptions', 'totalEarnings', 'recentRedemptions'));
     }
 
