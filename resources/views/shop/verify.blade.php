@@ -62,7 +62,7 @@
                                class="form-input"
                                placeholder="e.g. EV-ABCD1234"
                                value="{{ old('code', $code ?? '') }}"
-                               style="flex:1;text-transform:uppercase;letter-spacing:2px;font-weight:700;font-size:15px;"
+                               style="flex:1;text-transform:uppercase;letter-spacing:2px;font-weight:700;font-size:16px;padding:12px 14px;border:2px solid #e2e8f0;border-radius:6px;min-height:44px;"
                                autocomplete="off"
                                autofocus>
                         <button type="submit" class="btn btn-primary" style="white-space:nowrap;">Look Up</button>

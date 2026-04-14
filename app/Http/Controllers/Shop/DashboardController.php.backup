@@ -289,12 +289,6 @@ class DashboardController extends Controller
         $redemptionHistory   = collect();
         $error               = null;
 
-        // Handle pipe-separated QR code format: CODE|AMOUNT|DATE|RECIPIENT_NAME
-        // Extract just the voucher code (first part before the pipe)
-        if (strpos($code, "|") !== false) {
-            $parts = explode("|", $code);
-            $code = trim($parts[0]);
-        }
         $voucher = Voucher::with(['recipient.recipientProfile', 'redemptions.foodListing'])
             ->where('code', $code)
             ->first();
