@@ -166,6 +166,7 @@ Route::prefix('shop')->name('shop.')->middleware(['auth', 'approved', 'role:loca
     Route::post('/verify/lookup', [ShopDashboard::class, 'lookupVoucher'])->name('verify.lookup');
     Route::post('/verify/accept', [ShopDashboard::class, 'acceptVoucher'])->name('verify.accept');
     Route::post('/verify/reject', [ShopDashboard::class, 'rejectVoucher'])->name('verify.reject');
+    Route::post('/verify/accept-direct', [ShopDashboard::class, 'acceptVoucherDirect'])->name('verify.accept-direct');
     Route::post('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption'])->name('redemptions.confirm');
     Route::patch('/redemptions/{id}/confirm', [ShopDashboard::class, 'confirmRedemption']);
     Route::get('/profile', [ShopDashboard::class, 'profile'])->name('profile');

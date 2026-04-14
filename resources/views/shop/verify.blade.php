@@ -319,6 +319,98 @@
                         @endif
                     </div>
                 </div>
+
+                {{-- Direct Voucher Redemption --}}
+                <div class="card" style="margin-top:20px;">
+                    <div class="card-hd" style="padding:16px 20px;background:#f0fdf4;border-bottom:2px solid #dcfce7;">
+                        <span class="card-title" style="color:#15803d;">Or Redeem Voucher Directly</span>
+                        <p style="font-size:12px;color:#64748b;margin:4px 0 0;">Redeem voucher without selecting a specific food item</p>
+                    </div>
+                    <div class="card-body" style="padding:16px 20px;">
+                        <form method="POST" action="{{ route('shop.verify.accept-direct') }}" id="directRedeemForm"
+                              x-data="{
+                                  voucherBalance: {{ (float)$voucher->remaining_value }},
+                                  redemptionAmount: 0,
+                                  topUpAmount: 0,
+                                  paymentMethod: '',
+                                  get totalAmount() { return this.redemptionAmount + this.topUpAmount; },
+                                  get isValid() { return this.redemptionAmount > 0 && this.redemptionAmount <= this.voucherBalance; }
+                              }">
+                            @csrf
+                            <input type="hidden" name="code" value="{{ $voucher->code }}">
+
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:16px;">
+                                <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Voucher Details</div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;">
+                                    <span style="color:#64748b;">Available Balance</span>
+                                    <span style="font-weight:600;color:#16a34a;" x-text="'£' + {{ (float)$voucher->remaining_value }}.toFixed(2)"></span>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom:16px;">
+                                <label class="form-label">Amount to Redeem from Voucher <span style="color:#ef4444;">*</span></label>
+                                <div style="display:flex;align-items:center;gap:8px;">
+                                    <span style="font-weight:600;font-size:16px;">£</span>
+                                    <input type="number" name="redemption_amount" class="form-control" 
+                                           placeholder="0.00" step="0.01" min="0.01" max="{{ $voucher->remaining_value }}"
+                                           x-model.number="redemptionAmount" required
+                                           style="font-size:16px;padding:12px 14px;">
+                                </div>
+                                <p style="font-size:12px;color:#94a3b8;margin:4px 0 0;">Enter the amount from the voucher to use (max: £{{ number_format($voucher->remaining_value, 2) }})</p>
+                            </div>
+
+                            <div style="background:#fef9c3;border:1px solid #fcd34d;border-radius:10px;padding:12px;margin-bottom:16px;" x-show="topUpAmount > 0">
+                                <div style="font-size:12px;font-weight:700;color:#b45309;margin-bottom:10px;">Customer Top-up Payment</div>
+                                <div style="margin-bottom:12px;">
+                                    <label class="form-label">Top-up Amount</label>
+                                    <div style="display:flex;align-items:center;gap:8px;">
+                                        <span style="font-weight:600;font-size:16px;">£</span>
+                                        <input type="number" name="top_up_amount" class="form-control" 
+                                               placeholder="0.00" step="0.01" min="0" 
+                                               x-model.number="topUpAmount"
+                                               style="font-size:16px;padding:12px 14px;">
+                                    </div>
+                                    <p style="font-size:12px;color:#94a3b8;margin:4px 0 0;">Additional amount customer pays in cash or other method</p>
+                                </div>
+
+                                <div style="margin-bottom:12px;">
+                                    <label class="form-label">Payment Method Received <span style="color:#ef4444;">*</span></label>
+                                    <select name="payment_method" class="form-select" x-model="paymentMethod"
+                                            :required="topUpAmount > 0">
+                                        <option value="">-- Select payment method --</option>
+                                        <option value="cash">Cash</option>
+                                        <option value="card">Card</option>
+                                        <option value="contactless">Contactless</option>
+                                        <option value="bank_transfer">Bank Transfer</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:10px;padding:14px;margin-bottom:16px;">
+                                <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Summary</div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;">
+                                    <span style="color:#64748b;">Voucher Used</span>
+                                    <span style="font-weight:600;color:#16a34a;" x-text="'£' + (redemptionAmount || 0).toFixed(2)"></span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;" x-show="topUpAmount > 0">
+                                    <span style="color:#64748b;">Top-up Collected</span>
+                                    <span style="font-weight:600;color:#b45309;" x-text="'£' + (topUpAmount || 0).toFixed(2)"></span>
+                                </div>
+                                <div style="border-top:1px solid #dcfce7;margin:8px 0;"></div>
+                                <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700;">
+                                    <span>Total Transaction</span>
+                                    <span x-text="'£' + (totalAmount || 0).toFixed(2)" style="color:#16a34a;"></span>
+                                </div>
+                            </div>
+
+                            <div style="display:flex;gap:10px;">
+                                <button type="submit" class="btn btn-primary" style="flex:1;justify-content:center;padding:12px;" :disabled="!isValid">
+                                    Redeem Voucher Directly
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             @else
                 <div class="card">
                     <div class="card-body" style="padding:20px;">

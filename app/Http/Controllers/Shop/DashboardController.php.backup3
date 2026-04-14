@@ -1,30 +1,101 @@
 <?php
-
 namespace App\Http\Controllers\Shop;
 
+use App\Http\Controllers\Controller;
 use App\Models\FoodListing;
 use App\Models\Redemption;
+use App\Models\ShopPayoutRequest;
 use App\Models\Voucher;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $shopUser = Auth::user();
-        $totalListings = FoodListing::where('shop_user_id', $shopUser->id)->count();
-        $activeListings = FoodListing::where('shop_user_id', $shopUser->id)
-            ->where('status', 'available')
-            ->count();
-        $totalRedemptions = Redemption::where('shop_user_id', $shopUser->id)->count();
-        $totalEarnings = Redemption::where('shop_user_id', $shopUser->id)
-            ->sum('amount_owed_at_shop');
+        $user = Auth::user();
+        $totalListings     = FoodListing::where('shop_user_id', $user->id)->count();
+        $availableListings = FoodListing::where('shop_user_id', $user->id)->where('status', 'available')->count();
+        $redeemedCount     = Redemption::where('shop_user_id', $user->id)->count();
+        $expiringSoon      = FoodListing::where('shop_user_id', $user->id)
+                              ->where('status', 'available')
+                              ->whereBetween('expiry_date', [now()->toDateString(), now()->addDays(3)->toDateString()])
+                              ->count();
+        $listings          = FoodListing::where('shop_user_id', $user->id)->latest()->take(5)->get();
+        $recentRedemptions = Redemption::where('shop_user_id', $user->id)
+                              ->with(['recipient.recipientProfile', 'foodListing', 'voucher', 'payoutRequest'])
+                              ->latest()->take(5)->get();
+        
+        // Pending redemptions count for notification badge
+        $pendingRedemptionsCount = Redemption::where('shop_user_id', $user->id)
+                              ->where('status', 'pending')->count();
 
-        return view('shop.dashboard', compact('totalListings', 'activeListings', 'totalRedemptions', 'totalEarnings'));
+        // Payout summary - sum of amount_used from confirmed/collected redemptions
+        $unpaidAmount = Redemption::where('shop_user_id', $user->id)
+                          ->whereIn('status', ['confirmed', 'collected'])
+                          ->whereNull('payout_request_id')
+                          ->sum('amount_used');
+        
+        // Add any amount owed at shop (from partial vouchers)
+        $unpaidAmount += Redemption::where('shop_user_id', $user->id)
+                          ->whereIn('status', ['confirmed', 'collected'])
+                          ->whereNull('payout_request_id')
+                          ->sum('amount_owed_at_shop');
+        $pendingPayouts = ShopPayoutRequest::where('shop_user_id', $user->id)
+                          ->whereIn('status', ['pending', 'approved'])->count();
+        $totalPaidOut   = ShopPayoutRequest::where('shop_user_id', $user->id)
+                          ->where('status', 'paid')->sum('total_amount');
+
+        return view('shop.dashboard', compact(
+            'totalListings', 'availableListings', 'redeemedCount',
+            'expiringSoon', 'listings', 'recentRedemptions',
+            'unpaidAmount', 'pendingPayouts', 'totalPaidOut', 'pendingRedemptionsCount'
+        ));
     }
 
+    public function redemptions()
+    {
+        $redemptions = Redemption::where('shop_user_id', Auth::id())
+            ->with(['recipient.recipientProfile', 'foodListing', 'voucher', 'payoutRequest'])
+            ->latest()->paginate(20);
+
+        return view('shop.redemptions', compact('redemptions'));
+    }
+
+    public function confirmRedemption(Request $request, $id)
+    {
+        $redemption = Redemption::where('id', $id)
+            ->where('shop_user_id', Auth::id())
+            ->firstOrFail();
+
+        $updateData = ['status' => 'confirmed'];
+
+        // If this is a payment confirmation from the modal (priced item)
+        if ($request->input('payment_confirmed') == '1') {
+            $request->validate([
+                'payment_method' => 'required|in:cash,card,contactless,bank_transfer',
+            ]);
+            $updateData['payment_collected'] = true;
+            $updateData['payment_method']    = $request->input('payment_method');
+        }
+
+        $redemption->update($updateData);
+
+        $msg = 'Redemption marked as confirmed.';
+        if (!empty($updateData['payment_method'])) {
+            $msg .= ' Payment received by ' . ucfirst(str_replace('_', ' ', $updateData['payment_method'])) . '.';
+        }
+        return back()->with('success', $msg);
+    }
+
+    // -------------------------------------------------------
+    // Voucher Verification Flow
+    // -------------------------------------------------------
+
+    /**
+     * Show the voucher verification page (QR scan + manual entry).
+     */
     public function verifyVoucher(Request $request)
     {
         $voucher          = null;
@@ -44,6 +115,9 @@ class DashboardController extends Controller
         return view('shop.verify', compact('voucher', 'foodListings', 'redemptionHistory', 'error', 'code'));
     }
 
+    /**
+     * POST: Look up a voucher code and redirect to verify page with code in query string.
+     */
     public function lookupVoucher(Request $request)
     {
         $request->validate(['code' => 'required|string|max:30']);
@@ -51,6 +125,10 @@ class DashboardController extends Controller
         return redirect()->route('shop.verify', ['code' => $code]);
     }
 
+    /**
+     * POST: Accept/confirm a voucher — create redemption and mark as collected.
+     * Handles partial vouchers and payment collection for priced items.
+     */
     public function acceptVoucher(Request $request)
     {
         $request->validate([
@@ -65,6 +143,7 @@ class DashboardController extends Controller
         $shopUserId    = Auth::id();
 
         $voucher = Voucher::where('code', $code)->first();
+
         if (!$voucher) {
             return back()->withErrors(['code' => 'Voucher not found.'])->withInput();
         }
@@ -81,12 +160,15 @@ class DashboardController extends Controller
             return back()->withErrors(['code' => 'This voucher has expired.'])->withInput();
         }
 
+        // Check if this is a continuation of a previous redemption (same item)
         $previousRedemption = Redemption::where('voucher_id', $voucher->id)
             ->where('food_listing_id', $listingId)
             ->first();
-
+        
         $isContinuationRedemption = $previousRedemption !== null;
-
+        
+        // For continuation redemptions, allow the item even if status is 'redeemed'
+        // For new redemptions, only allow items with 'available' status
         if ($isContinuationRedemption) {
             $foodListing = FoodListing::where('id', $listingId)
                 ->where('shop_user_id', $shopUserId)
@@ -102,20 +184,24 @@ class DashboardController extends Controller
             return back()->withErrors(['code' => 'Food listing not found or not available at your shop.'])->withInput();
         }
 
+        // Prevent double redemption of the same voucher on the same item (same status)
         if ($previousRedemption && in_array($previousRedemption->status, ['pending', 'collected'])) {
             return back()->withErrors(['code' => 'This voucher has already been redeemed for this item.'])->withInput();
         }
 
+        // Calculate amounts
         $itemCost          = (float) ($foodListing->voucher_value ?? 0);
         $voucherBalance    = (float) $voucher->remaining_value;
         $amountUsed        = min($voucherBalance, $itemCost);
         $amountOwedAtShop  = max(0, $itemCost - $voucherBalance);
         $newRemainingValue = max(0, $voucherBalance - $itemCost);
 
+        // If customer owes money at shop, payment_method is required
         if ($amountOwedAtShop > 0 && empty($paymentMethod)) {
             return back()->withErrors(['payment_method' => 'Please select the payment method used by the customer to pay the outstanding amount of £' . number_format($amountOwedAtShop, 2) . '.'])->withInput();
         }
 
+        // Create redemption record
         $redemption = Redemption::create([
             'voucher_id'          => $voucher->id,
             'food_listing_id'     => $listingId,
@@ -129,77 +215,72 @@ class DashboardController extends Controller
             'redeemed_at'         => now(),
         ]);
 
+        // Update voucher remaining value and status
         if ($newRemainingValue <= 0) {
             $voucher->update(['remaining_value' => 0, 'status' => 'redeemed']);
         } else {
             $voucher->update(['remaining_value' => $newRemainingValue, 'status' => 'partially_used']);
         }
 
-        return redirect()->route('shop.verify')->with('success', 'Voucher redeemed successfully! Amount used: £' . number_format($amountUsed, 2) . ($amountOwedAtShop > 0 ? ', Amount collected: £' . number_format($amountOwedAtShop, 2) : '') . '.');
+        // Mark food listing as redeemed (quantity management could be added later)
+        $foodListing->update(['status' => 'redeemed']);
+
+        // Notify shop about the voucher redemption
+        NotificationService::notifyShopVoucherRedemption($redemption);
+
+        $msg = 'Voucher accepted! Food item marked as collected.';
+        if ($amountOwedAtShop > 0) {
+            $msg .= ' Customer paid £' . number_format($amountOwedAtShop, 2) . ' by ' . ucfirst(str_replace('_', ' ', $paymentMethod)) . '.';
+        }
+        if ($newRemainingValue > 0) {
+            $msg .= ' Voucher has £' . number_format($newRemainingValue, 2) . ' remaining balance.';
+        }
+
+        return redirect()->route('shop.verify')
+            ->with('success', $msg);
     }
 
-    public function acceptVoucherDirect(Request $request)
+    /**
+     * POST: Reject a voucher (no state change — just inform the shop).
+     */
+    public function rejectVoucher(Request $request)
+    {
+        $request->validate(['code' => 'required|string|max:30']);
+        $code = strtoupper(trim($request->input('code')));
+
+        return redirect()->route('shop.verify')
+            ->with('info', 'Voucher ' . $code . ' was rejected. No changes have been made.');
+    }
+
+    public function profile()
+    {
+        $profile = Auth::user()->shopProfile;
+        return view('shop.profile', compact('profile'));
+    }
+
+    public function updateProfile(Request $request)
     {
         $request->validate([
-            'code'                => 'required|string|max:30',
-            'redemption_amount'   => 'required|numeric|min:0.01',
-            'payment_method'      => 'nullable|string|in:cash,card,contactless,bank_transfer',
-            'top_up_amount'       => 'nullable|numeric|min:0',
+            'shop_name'     => 'required|string|max:200',
+            'category'      => 'nullable|string|max:100',
+            'phone'         => 'nullable|string|max:20',
+            'address'       => 'required|string',
+            'town'          => 'nullable|string|max:100',
+            'postcode'      => 'nullable|string|max:10',
+            'opening_hours' => 'nullable|string',
+            'description'   => 'nullable|string',
         ]);
 
-        $code = strtoupper(trim($request->input('code')));
-        $redemptionAmount = (float) $request->input('redemption_amount');
-        $topUpAmount = (float) ($request->input('top_up_amount') ?? 0);
-        $paymentMethod = $request->input('payment_method');
-        $shopUserId = Auth::id();
+        Auth::user()->shopProfile->update($request->only([
+            'shop_name', 'category', 'phone', 'address', 'town', 'postcode', 'opening_hours', 'description'
+        ]));
 
-        $voucher = Voucher::where('code', $code)->first();
-        if (!$voucher) {
-            return back()->withErrors(['code' => 'Voucher not found.'])->withInput();
-        }
-
-        if (!in_array($voucher->status, ['active', 'partially_used'])) {
-            return back()->withErrors(['code' => 'This voucher is not active.'])->withInput();
-        }
-
-        if ($voucher->remaining_value <= 0) {
-            return back()->withErrors(['code' => 'This voucher has no remaining balance.'])->withInput();
-        }
-
-        if ($voucher->expiry_date < now()->toDateString()) {
-            return back()->withErrors(['code' => 'This voucher has expired.'])->withInput();
-        }
-
-        if ($redemptionAmount > $voucher->remaining_value) {
-            return back()->withErrors(['redemption_amount' => 'Amount cannot exceed voucher balance.'])->withInput();
-        }
-
-        if ($topUpAmount > 0 && empty($paymentMethod)) {
-            return back()->withErrors(['payment_method' => 'Payment method required for top-up.'])->withInput();
-        }
-
-        $redemption = Redemption::create([
-            'voucher_id'          => $voucher->id,
-            'food_listing_id'     => null,
-            'shop_user_id'        => $shopUserId,
-            'recipient_user_id'   => $voucher->recipient_user_id,
-            'amount_used'         => $redemptionAmount,
-            'amount_owed_at_shop' => $topUpAmount,
-            'payment_collected'   => $topUpAmount > 0 ? 1 : 0,
-            'payment_method'      => $topUpAmount > 0 ? $paymentMethod : null,
-            'status'              => 'collected',
-            'redeemed_at'         => now(),
-        ]);
-
-        $newRemainingValue = $voucher->remaining_value - $redemptionAmount;
-        if ($newRemainingValue <= 0) {
-            $voucher->update(['remaining_value' => 0, 'status' => 'redeemed']);
-        } else {
-            $voucher->update(['remaining_value' => $newRemainingValue, 'status' => 'partially_used']);
-        }
-
-        return redirect()->route('shop.verify')->with('success', 'Voucher redeemed! Used: £' . number_format($redemptionAmount, 2) . ($topUpAmount > 0 ? ', Top-up: £' . number_format($topUpAmount, 2) : '') . '.');
+        return back()->with('success', 'Profile updated.');
     }
+
+    // -------------------------------------------------------
+    // Private helper
+    // -------------------------------------------------------
 
     private function resolveVoucher(string $code): array
     {
@@ -214,7 +295,6 @@ class DashboardController extends Controller
             $parts = explode("|", $code);
             $code = trim($parts[0]);
         }
-
         $voucher = Voucher::with(['recipient.recipientProfile', 'redemptions.foodListing'])
             ->where('code', $code)
             ->first();
@@ -247,7 +327,7 @@ class DashboardController extends Controller
             $originalListing = FoodListing::where('id', $originalItemId)
                 ->where('shop_user_id', Auth::id())
                 ->first();
-
+            
             if ($originalListing) {
                 // Show only the original item for continued redemption
                 $foodListings = collect([$originalListing]);
