@@ -343,7 +343,7 @@
                                 <div style="font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Voucher Details</div>
                                 <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;">
                                     <span style="color:#64748b;">Available Balance</span>
-                                    <span style="font-weight:600;color:#16a34a;" x-text="'£' + {{ (float)$voucher->remaining_value }}.toFixed(2)"></span>
+                                    <span style="font-weight:600;color:#16a34a;" x-text="'£' + voucherBalance.toFixed(2)"></span>
                                 </div>
                             </div>
 
