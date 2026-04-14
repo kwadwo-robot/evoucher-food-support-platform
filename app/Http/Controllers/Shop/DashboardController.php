@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Shop;
 use App\Models\FoodListing;
 use App\Models\Redemption;
 use App\Models\Voucher;
+use App\Models\ShopPayoutRequest;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,16 +15,61 @@ class DashboardController extends Controller
     public function index()
     {
         $shopUser = Auth::user();
+        
+        // Basic listing stats
         $totalListings = FoodListing::where('shop_user_id', $shopUser->id)->count();
-        $activeListings = FoodListing::where('shop_user_id', $shopUser->id)
+        $availableListings = FoodListing::where('shop_user_id', $shopUser->id)
             ->where('status', 'available')
             ->count();
-        $totalRedemptions = Redemption::where('shop_user_id', $shopUser->id)->count();
-        $totalEarnings = Redemption::where('shop_user_id', $shopUser->id)
+        
+        // Redemption stats
+        $redeemedCount = Redemption::where('shop_user_id', $shopUser->id)
+            ->where('status', 'collected')
+            ->count();
+        
+        // Expiring soon
+        $expiringSoon = FoodListing::where('shop_user_id', $shopUser->id)
+            ->where('status', 'available')
+            ->whereDate('expiry_date', '<=', now()->addDays(3))
+            ->whereDate('expiry_date', '>=', now())
+            ->count();
+        
+        // Payout stats
+        $unpaidAmount = Redemption::where('shop_user_id', $shopUser->id)
+            ->where('status', 'collected')
             ->sum('amount_owed_at_shop');
-        $redeemedListings = FoodListing::where('shop_user_id', $shopUser->id)->where('status', 'redeemed')->count();
-        $recentRedemptions = Redemption::where('shop_user_id', $shopUser->id)->with(['voucher', 'foodListing', 'recipient'])->orderBy('created_at', 'desc')->limit(5)->get();
-        return view('shop.dashboard', compact('totalListings', 'activeListings', 'redeemedListings', 'totalRedemptions', 'totalEarnings', 'recentRedemptions'));
+        
+        $pendingPayouts = ShopPayoutRequest::where('shop_user_id', $shopUser->id)
+            ->where('status', 'pending')
+            ->count();
+        
+        $totalPaidOut = ShopPayoutRequest::where('shop_user_id', $shopUser->id)
+            ->where('status', 'paid')
+            ->sum('amount_after_fee');
+        
+        // Get listings and redemptions
+        $listings = FoodListing::where('shop_user_id', $shopUser->id)
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        $recentRedemptions = Redemption::where('shop_user_id', $shopUser->id)
+            ->with(['voucher', 'foodListing', 'recipient'])
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+        
+        return view('shop.dashboard', compact(
+            'totalListings',
+            'availableListings',
+            'redeemedCount',
+            'expiringSoon',
+            'unpaidAmount',
+            'pendingPayouts',
+            'totalPaidOut',
+            'listings',
+            'recentRedemptions'
+        ));
     }
 
     public function verifyVoucher(Request $request)
