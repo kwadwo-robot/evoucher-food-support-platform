@@ -25,7 +25,7 @@ class DashboardController extends Controller
             'total_food_listings'  => FoodListing::where('status','available')->count(),
             'total_donated'        => Donation::where('status', 'completed')->sum('amount'),
             'total_redemptions'    => Redemption::count(),
-            'total_shops'          => User::where('role','local_shop')->where('is_approved',true)->count(),
+            'total_shops'          => User::where('role','local_shop')->count(),
             'total_donors'         => User::whereIn('role',['vcfse','school_care'])->where('is_approved',true)->count(),
         ];
         $pendingUsers    = User::where('is_approved', false)->whereNotIn('role', ['recipient','admin','super_admin'])->latest()->take(5)->get();
