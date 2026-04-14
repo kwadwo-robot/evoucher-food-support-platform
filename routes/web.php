@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SystemLogController as AdminSystemLog;
 use App\Http\Controllers\Admin\BankDepositController as AdminBankDeposit;
 use App\Http\Controllers\Admin\ShopController as AdminShop;
 use App\Http\Controllers\Admin\ReportGeneratorController as AdminReportGenerator;
+use App\Http\Controllers\Admin\ServiceFeeController as AdminServiceFee;
 use App\Http\Controllers\Organisation\FundLoadController as OrgFundLoad;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ChangePasswordController;
@@ -149,6 +150,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/reports/redemptions', [AdminReportGenerator::class, 'redemptionsReport'])->name('reports.redemptions');
     Route::get('/reports/users', [AdminReportGenerator::class, 'usersReport'])->name('reports.users');
     Route::get('/reports/food-listings', [AdminReportGenerator::class, 'foodListingsReport'])->name('reports.food-listings');
+    // Service Fees
+    Route::get('/service-fees', [AdminServiceFee::class, 'index'])->name('service-fees.index');
+    Route::get('/service-fees/{id}', [AdminServiceFee::class, 'show'])->name('service-fees.show');
+    Route::get('/service-fees-settings', [AdminServiceFee::class, 'settings'])->name('service-fees.settings');
+    Route::post('/service-fees-settings', [AdminServiceFee::class, 'updatePercentage'])->name('service-fees.update-percentage');
+    Route::get('/service-fees/export', [AdminServiceFee::class, 'export'])->name('service-fees.export');
 });
 
 // Shop

@@ -2,138 +2,160 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\ServiceFeeTransaction;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use App\Models\ServiceFee;
+use App\Models\ServiceFeeSetting;
+use App\Models\User;
+use App\Services\ServiceFeeService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ServiceFeeController extends Controller
 {
+    /**
+     * Display service fee dashboard with statistics and transactions
+     */
     public function index(Request $request)
     {
-        $query = ServiceFeeTransaction::query();
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        $shopId = $request->get('shop_id');
 
-        // Filter by status
-        if ($request->has('status') && $request->status) {
-            $query->where('status', $request->status);
+        // Build query
+        $query = ServiceFee::with('shopUser');
+
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
         }
 
-        $transactions = $query->with('shop')->paginate(15);
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
+        if ($shopId) {
+            $query->where('shop_user_id', $shopId);
+        }
+
+        $serviceFees = $query->orderBy('created_at', 'desc')->paginate(20);
 
         // Calculate statistics
         $stats = [
-            'total_collected' => ServiceFeeTransaction::where('status', 'collected')->sum('service_fee_amount'),
-            'total_pending' => ServiceFeeTransaction::where('status', 'pending')->sum('service_fee_amount'),
-            'collected_transactions' => ServiceFeeTransaction::where('status', 'collected')->count(),
-            'pending_transactions' => ServiceFeeTransaction::where('status', 'pending')->count(),
-            'total_transactions' => ServiceFeeTransaction::count(),
-            'current_percentage' => DB::table('settings')->where('key', 'service_fee_percentage')->value('value') ?? 10,
+            'total_collected' => ServiceFee::where('status', 'collected')->sum('service_fee_amount'),
+            'total_transactions' => ServiceFee::count(),
+            'collected_transactions' => ServiceFee::where('status', 'collected')->count(),
+            'average_fee_per_transaction' => $this->calculateAverageFee(),
+            'current_percentage' => ServiceFeeSetting::getCurrentPercentage(),
         ];
 
-        return view('admin.service-fees.index', compact('transactions', 'stats'));
+        // Get shops for filter dropdown
+        $shops = User::where('role', 'shop')
+            ->whereHas('serviceFees')
+            ->select('id', 'name', 'email')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.service-fees.index', compact('serviceFees', 'stats', 'shops', 'startDate', 'endDate', 'shopId'));
     }
 
+    /**
+     * Show detailed view of a single service fee transaction
+     */
+    public function show($id)
+    {
+        $serviceFee = ServiceFee::with(['shopUser', 'payoutRequest'])->findOrFail($id);
+
+        return view('admin.service-fees.show', compact('serviceFee'));
+    }
+
+    /**
+     * Display service fee settings page
+     */
     public function settings()
     {
-        $currentPercentage = DB::table('settings')->where('key', 'service_fee_percentage')->value('value') ?? 10;
-        return view('admin.service-fees.settings', compact('currentPercentage'));
+        $currentSetting = ServiceFeeSetting::first();
+        $stats = [
+            'total_collected' => ServiceFee::where('status', 'collected')->sum('service_fee_amount'),
+            'total_transactions' => ServiceFee::count(),
+            'average_fee_per_transaction' => $this->calculateAverageFee(),
+        ];
+
+        return view('admin.service-fees.settings', compact('currentSetting', 'stats'));
     }
 
-    public function updateSettings(Request $request)
-    {
-        $request->validate([
-            'service_fee_percentage' => 'required|numeric|min:0|max:100',
-        ]);
-
-        DB::table('settings')->updateOrInsert(
-            ['key' => 'service_fee_percentage'],
-            ['value' => $request->service_fee_percentage, 'updated_at' => now()]
-        );
-
-        return redirect()->route('admin.service-fees.settings')->with('success', 'Service fee percentage updated to ' . $request->service_fee_percentage . '%');
-    }
-
+    /**
+     * Update service fee percentage
+     */
     public function updatePercentage(Request $request)
     {
         $request->validate([
             'service_fee_percentage' => 'required|numeric|min:0|max:100',
         ]);
 
-        DB::table('settings')->updateOrInsert(
-            ['key' => 'service_fee_percentage'],
-            ['value' => $request->service_fee_percentage, 'updated_at' => now()]
-        );
+        $percentage = (float) $request->input('service_fee_percentage');
 
-        return redirect()->route('admin.service-fees.settings')->with('success', 'Service fee percentage updated to ' . $request->service_fee_percentage . '%');
+        // Update or create the setting
+        $setting = ServiceFeeSetting::first() ?? new ServiceFeeSetting();
+        $setting->service_fee_percentage = $percentage;
+        $setting->description = 'Service fee percentage updated to ' . $percentage . '% by ' . Auth::user()->name . ' on ' . now()->format('Y-m-d H:i:s');
+        $setting->save();
+
+        return back()->with('success', 'Service fee percentage updated to ' . $percentage . '%');
     }
 
-    public function show($id)
-    {
-        $transaction = ServiceFeeTransaction::with('shop')->findOrFail($id);
-        return view('admin.service-fees.show', compact('transaction'));
-    }
-
+    /**
+     * Export service fee data to CSV
+     */
     public function export(Request $request)
     {
-        $format = $request->get('format', 'csv');
-        $query = ServiceFeeTransaction::with('shop');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
 
-        // Filter by status if provided
-        if ($request->has('status') && $request->status) {
-            $query->where('status', $request->status);
+        $query = ServiceFee::with('shopUser');
+
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', $startDate);
         }
 
-        $transactions = $query->get();
-
-        switch ($format) {
-            case 'excel':
-                return $this->exportExcel($transactions);
-            case 'pdf':
-                return $this->exportPdf($transactions);
-            case 'csv':
-            default:
-                return $this->exportCsv($transactions);
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', $endDate);
         }
-    }
 
-    private function exportCsv($transactions)
-    {
-        $filename = 'service-fees-' . now()->format('Y-m-d-H-i-s') . '.csv';
+        $serviceFees = $query->orderBy('created_at', 'desc')->get();
 
+        $filename = 'service-fees-' . now()->format('Y-m-d-His') . '.csv';
         $headers = [
-            'Content-Type' => 'text/csv; charset=utf-8',
-            'Content-Disposition' => "attachment; filename=\"$filename\"",
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
         ];
 
-        $callback = function () use ($transactions) {
+        $callback = function () use ($serviceFees) {
             $file = fopen('php://output', 'w');
-            
-            // Add BOM for Excel UTF-8 compatibility
-            fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
 
             // Header row
             fputcsv($file, [
                 'ID',
                 'Shop Name',
-                'Total Amount',
+                'Shop Email',
+                'Payout Amount',
                 'Fee Percentage',
                 'Fee Amount',
                 'Amount After Fee',
                 'Status',
-                'Date',
+                'Created At',
             ]);
 
             // Data rows
-            foreach ($transactions as $transaction) {
+            foreach ($serviceFees as $fee) {
                 fputcsv($file, [
-                    $transaction->id,
-                    $transaction->shop ? $transaction->shop->name : 'N/A',
-                    '£' . number_format($transaction->total_amount, 2),
-                    $transaction->service_fee_percentage . '%',
-                    '£' . number_format($transaction->service_fee_amount, 2),
-                    '£' . number_format($transaction->amount_after_fee, 2),
-                    ucfirst($transaction->status),
-                    $transaction->created_at->format('M d, Y'),
+                    $fee->id,
+                    $fee->shopUser->name,
+                    $fee->shopUser->email,
+                    '£' . number_format($fee->payout_amount, 2),
+                    $fee->service_fee_percentage . '%',
+                    '£' . number_format($fee->service_fee_amount, 2),
+                    '£' . number_format($fee->amount_after_fee, 2),
+                    ucfirst($fee->status),
+                    $fee->created_at->format('Y-m-d H:i:s'),
                 ]);
             }
 
@@ -143,21 +165,14 @@ class ServiceFeeController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    private function exportExcel($transactions)
+    /**
+     * Calculate average fee per transaction
+     */
+    private function calculateAverageFee()
     {
-        $filename = 'service-fees-' . now()->format('Y-m-d-H-i-s') . '.xlsx';
+        $totalFees = ServiceFee::sum('service_fee_amount');
+        $totalTransactions = ServiceFee::count();
 
-        // For now, just return CSV if Excel export is not configured
-        return $this->exportCsv($transactions);
-    }
-
-    private function exportPdf($transactions)
-    {
-        $filename = 'service-fees-' . now()->format('Y-m-d-H-i-s') . '.pdf';
-
-        $html = view('admin.service-fees.export-pdf', compact('transactions'))->render();
-        
-        // For now, just return CSV if PDF export is not configured
-        return $this->exportCsv($transactions);
+        return $totalTransactions > 0 ? round($totalFees / $totalTransactions, 2) : 0;
     }
 }
