@@ -152,10 +152,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'approved', 'role:ad
     Route::get('/reports/food-listings', [AdminReportGenerator::class, 'foodListingsReport'])->name('reports.food-listings');
     // Service Fees
     Route::get('/service-fees', [AdminServiceFee::class, 'index'])->name('service-fees.index');
-    Route::get('/service-fees/{id}', [AdminServiceFee::class, 'show'])->name('service-fees.show');
     Route::get('/service-fees/settings', [AdminServiceFee::class, 'settings'])->name('service-fees.settings');
     Route::post('/service-fees/settings', [AdminServiceFee::class, 'updatePercentage'])->name('service-fees.update-percentage');
     Route::get('/service-fees/export', [AdminServiceFee::class, 'export'])->name('service-fees.export');
+    Route::get('/service-fees/{id}', [AdminServiceFee::class, 'show'])->name('service-fees.show');
 });
 
 // Shop
