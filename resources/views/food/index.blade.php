@@ -73,7 +73,7 @@
         </div>
         <p style="font-size:13px;color:#64748b;margin-bottom:8px;line-height:1.5">{{ Str::limit($item->description, 60) }}</p>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
-          <span style="font-size:18px;font-weight:700;color:#16a34a">£{{ number_format($item->price, 2) }}</span>
+          <span style="font-size:18px;font-weight:700;color:#16a34a">£{{ number_format($item->discounted_price, 2) }}</span>
         </div>
         <div style="margin-top:12px;padding:8px 12px;background:#f0fdf4;border-radius:8px;font-size:12px;color:#15803d;font-weight:500">
           <i class="fas fa-map-marker-alt mr-1"></i> {{ Str::limit($item->collection_address, 45) }}
@@ -213,7 +213,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
         </div>
         <p style="font-size:13px;color:#64748b;margin-bottom:8px;line-height:1.5">{{ Str::limit($item->description, 60) }}</p>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:12px">
-          <span style="font-size:18px;font-weight:700;color:#16a34a">£{{ number_format($item->price, 2) }}</span>
+          <span style="font-size:18px;font-weight:700;color:#16a34a">£{{ number_format($item->discounted_price, 2) }}</span>
         </div>
         <div style="margin-top:12px;padding:8px 12px;background:#f0fdf4;border-radius:8px;font-size:12px;color:#15803d;font-weight:500">
           <i class="fas fa-map-marker-alt mr-1"></i> {{ Str::limit($item->collection_address, 45) }}

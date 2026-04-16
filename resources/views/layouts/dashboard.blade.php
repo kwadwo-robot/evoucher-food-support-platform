@@ -374,14 +374,14 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   @php
     $profileRoute = match($role) {
       'local_shop' => null,
-      'recipient' => 'recipient.dashboard',
+      'recipient' => 'recipient.profile.edit',
       'vcfse' => 'vcfse.dashboard',
       'school_care' => 'school.dashboard',
       default => null,
     };
   @endphp
   @if($profileRoute && $role !== 'local_shop')
-  <a href="{{ route($profileRoute) }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+  <a href="{{ route($profileRoute) }}" class="nav-item {{ request()->routeIs('recipient.profile.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-user-cog"></i></span> {{ __('app.profile_settings') }}
   </a>
   @endif

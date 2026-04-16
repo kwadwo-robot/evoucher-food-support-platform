@@ -24,6 +24,7 @@ use App\Http\Controllers\Recipient\DashboardController as RecipientDashboard;
 use App\Http\Controllers\Recipient\VoucherController as RecipientVoucher;
 use App\Http\Controllers\Recipient\CartController as RecipientCart;
 use App\Http\Controllers\Recipient\ReportController as RecipientReport;
+use App\Http\Controllers\Recipient\ProfileController as RecipientProfile;
 use App\Http\Controllers\Shop\DashboardController as ShopDashboard;
 use App\Http\Controllers\Shop\FoodListingController as ShopListing;
 use App\Http\Controllers\Shop\PayoutController as ShopPayout;
@@ -193,6 +194,9 @@ Route::prefix('recipient')->name('recipient.')->middleware(['auth', 'role:recipi
     Route::post('/cart/checkout', [RecipientCart::class, 'checkout'])->name('cart.checkout');
     Route::post('/cart/clear', [RecipientCart::class, 'clear'])->name('cart.clear');
     // Reports
+    // Profile
+    Route::get('/profile', [RecipientProfile::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [RecipientProfile::class, 'update'])->name('profile.update');
     Route::get('/reports', [RecipientReport::class, 'index'])->name('reports.index');
     Route::get('/reports/export-excel', [RecipientReport::class, 'exportExcel'])->name('reports.export-excel');
     // Broadcasts
