@@ -27,7 +27,7 @@
     </div>
   </div>
   <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.15);display:flex;gap:12px;position:relative;z-index:10">
-    <a href="{{ route('recipient.food.browse') }}" class="btn" style="background:rgba(255,255,255,.2);color:#fff;flex:1;justify-content:center;backdrop-filter:blur(4px)">
+    <a href="{{ route('food.index') }}" class="btn" style="background:rgba(255,255,255,.2);color:#fff;flex:1;justify-content:center;backdrop-filter:blur(4px)">
       <i class="fas fa-basket-shopping"></i> {{ __('app.browse_food') }}
     </a>
     <a href="{{ route('recipient.vouchers') }}" class="btn" style="background:rgba(255,255,255,.1);color:#fff;justify-content:center;backdrop-filter:blur(4px)">
@@ -65,13 +65,13 @@
 <div class="card">
   <div class="card-hd">
     <div class="card-title"><i class="fas fa-basket-shopping text-yellow-500"></i> {{ __('app.recipient_available_food') }}</div>
-    <a href="{{ route('recipient.food.browse') }}" class="btn btn-secondary btn-sm">{{ __('app.recipient_browse_all') }}</a>
+    <a href="{{ route('food.index') }}" class="btn btn-secondary btn-sm">{{ __('app.recipient_browse_all') }}</a>
   </div>
   <div style="padding:16px">
     @if(count($availableFood ?? []) > 0)
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       @foreach($availableFood as $item)
-      <a href="{{ route('recipient.food.show', $item->id) }}" style="text-decoration:none">
+      <a href="{{ route('food.show', $item->id) }}" style="text-decoration:none">
         <div class="food-card">
           @if($item->image_url)
           <img src="{{ $item->image_url }}" class="food-card-img" alt="{{ $item->item_name }}">
