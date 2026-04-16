@@ -1,6 +1,8 @@
 @if(auth()->check())
 @extends('layouts.dashboard')
 
+@section('page-title', 'Browse Food')
+
 @section('content')
 <div style="padding:24px">
   <div style="margin-bottom:28px">
