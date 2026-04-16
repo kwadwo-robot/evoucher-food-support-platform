@@ -30,7 +30,7 @@
     <a href="{{ route('food.index') }}" class="btn" style="background:rgba(255,255,255,.2);color:#fff;flex:1;justify-content:center;backdrop-filter:blur(4px)">
       <i class="fas fa-basket-shopping"></i> {{ __('app.browse_food') }}
     </a>
-    <a href="{{ route('recipient.vouchers') }}" class="btn" style="background:rgba(255,255,255,.1);color:#fff;justify-content:center;backdrop-filter:blur(4px)">
+    <a href="{{ route('recipient.vouchers.index') }}" class="btn" style="background:rgba(255,255,255,.1);color:#fff;justify-content:center;backdrop-filter:blur(4px)">
       <i class="fas fa-ticket"></i> {{ __('app.recipient_my_vouchers') }}
     </a>
   </div>
