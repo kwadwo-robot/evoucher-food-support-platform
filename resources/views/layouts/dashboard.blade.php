@@ -281,13 +281,13 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('recipient.dashboard') }}" class="nav-item {{ request()->routeIs('recipient.dashboard') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-home"></i></span> {{ __('app.dashboard') }}
   </a>
-  <a href="{{ route('recipient.vouchers') }}" class="nav-item {{ request()->routeIs('recipient.vouchers') ? 'active' : '' }}">
+  <a href="{{ route('recipient.vouchers.index') }}" class="nav-item {{ request()->routeIs('recipient.vouchers.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.my_vouchers') }}
   </a>
-  <a href="{{ route('recipient.food.browse') }}" class="nav-item {{ request()->routeIs('recipient.food.browse') ? 'active' : '' }}">
+  <a href="{{ route('food.index') }}" class="nav-item {{ request()->routeIs('food.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-basket-shopping"></i></span> {{ __('app.browse_food') }}
   </a>
-  <a href="{{ route('recipient.cart') }}" class="nav-item {{ request()->routeIs('recipient.cart') ? 'active' : '' }}">
+  <a href="{{ route('recipient.cart.index') }}" class="nav-item {{ request()->routeIs('recipient.cart.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-shopping-cart"></i></span> {{ __('app.my_cart') }}
     @php $cartCount = count(session('recipient_cart', [])); @endphp
     @if($cartCount > 0)
@@ -295,15 +295,19 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
     @endif
   </a>
   <div class="sb-section">Reports</div>
-  <a href="{{ route('recipient.history') }}" class="nav-item {{ request()->routeIs('recipient.history') ? 'active' : '' }}">
+  <a href="{{ route('recipient.reports.index') }}" class="nav-item {{ request()->routeIs('recipient.reports.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-history"></i></span> {{ __('app.redemption_history') }}
   </a>
+  @if(Route::has('recipient.reports.export-pdf'))
   <a href="{{ route('recipient.reports.export-pdf') }}" class="nav-item">
     <span class="ni"><i class="fas fa-file-pdf"></i></span> {{ __('app.export_pdf') }}
   </a>
+  @endif
+  @if(Route::has('recipient.reports.export-excel'))
   <a href="{{ route('recipient.reports.export-excel') }}" class="nav-item">
     <span class="ni"><i class="fas fa-file-excel"></i></span> {{ __('app.export_excel') }}
   </a>
+  @endif
   @endif
 
   @if($role === 'vcfse')
