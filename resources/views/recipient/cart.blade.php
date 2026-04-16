@@ -102,7 +102,7 @@
         </div>
         @endforeach
 
-        <a href="{{ route('recipient.food.browse') }}" style="font-size:13px;color:#16a34a;font-weight:600;text-decoration:none">
+        <a href="{{ route('food.index') }}" style="font-size:13px;color:#16a34a;font-weight:600;text-decoration:none">
             <i class="fas fa-plus mr-1"></i> Add more items
         </a>
     </div>
@@ -128,7 +128,7 @@
                     <i class="fas fa-exclamation-triangle mr-1"></i>
                     You have no active vouchers. Contact your support worker or admin to receive a voucher.
                 </div>
-                <a href="{{ route('recipient.vouchers') }}" class="btn btn-secondary w-full" style="text-align:center;justify-content:center">
+                <a href="{{ route('recipient.vouchers.index') }}" class="btn btn-secondary w-full" style="text-align:center;justify-content:center">
                     View My Vouchers
                 </a>
                 @else
