@@ -103,9 +103,12 @@
         <div style="font-size:48px;margin-bottom:16px">🎫</div>
         <div style="font-size:15px;font-weight:700;color:#334155;margin-bottom:8px">Redeem with Voucher</div>
         <div style="font-size:13px;color:#94a3b8;margin-bottom:16px">Add this item to your cart to redeem with your voucher</div>
-        <a href="{{ route('food.index') }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 16px;border-radius:8px;background:#16a34a;color:white;font-weight:600;text-decoration:none;font-size:13px;transition:all .15s;cursor:pointer">
-          <i class="fas fa-shopping-cart"></i> Add to Cart
-        </a>
+        <form method="POST" action="{{ route('recipient.cart.add', $listing->id) }}" style="width:100%">
+          @csrf
+          <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:10px 16px;border-radius:8px;background:#16a34a;color:white;font-weight:600;border:none;font-size:13px;transition:all .15s;cursor:pointer;font-family:inherit">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+        </form>
       </div>
     </div>
   </div>
