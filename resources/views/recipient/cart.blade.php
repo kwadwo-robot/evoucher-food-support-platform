@@ -29,7 +29,7 @@
         <div style="font-size:48px;margin-bottom:16px">🛒</div>
         <div style="font-size:18px;font-weight:700;color:#334155;margin-bottom:8px">Your cart is empty</div>
         <div style="font-size:14px;color:#94a3b8;margin-bottom:24px">Browse available food items and add them to your cart</div>
-        <a href="{{ route('recipient.food.browse') }}" class="btn btn-primary">
+        <a href="{{ route('food.index') }}" class="btn btn-primary">
             <i class="fas fa-search mr-2"></i> Browse Food
         </a>
     </div>
