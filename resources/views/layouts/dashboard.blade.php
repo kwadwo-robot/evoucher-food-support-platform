@@ -373,10 +373,10 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <div class="sb-section">{{ __('app.account') }}</div>
   @php
     $profileRoute = match($role) {
-      'local_shop' => 'shop.dashboard',
-      'recipient' => 'recipient.dashboard',
-      'vcfse' => 'vcfse.dashboard',
-      'school_care' => 'school.dashboard',
+      'local_shop' => 'shop.profile',
+      'recipient' => 'profile.edit',
+      'vcfse' => 'profile.edit',
+      'school_care' => 'profile.edit',
       default => null,
     };
   @endphp
