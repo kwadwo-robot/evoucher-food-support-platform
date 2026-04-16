@@ -24,6 +24,19 @@
   </style>
 </head>
 <body>
+  <!-- Simple Navigation Bar -->
+  <div style="background: white; border-bottom: 1px solid #e2e8f0; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;">
+    <a href="{{ route('food.index') }}" style="font-size: 14px; font-weight: 600; color: #16a34a; text-decoration: none;">← Back to Browse Food</a>
+    @auth
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 13px; color: #64748b;">{{ auth()->user()->name }}</span>
+      <a href="{{ route('logout') }}" style="font-size: 13px; color: #ef4444; text-decoration: none;">Sign Out</a>
+    </div>
+    @else
+    <a href="{{ route('login') }}" style="font-size: 13px; color: #16a34a; text-decoration: none;">Sign In</a>
+    @endauth
+  </div>
+
   <div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
     <div style="margin-bottom: 24px;">
       <a href="{{ route('food.index') }}" class="btn btn-secondary">
@@ -120,6 +133,18 @@
           </div>
         </div>
 
+        @auth
+        <div class="card">
+          <div style="padding: 20px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">🎫</div>
+            <div style="font-size: 15px; font-weight: 700; color: #334155; margin-bottom: 8px;">Redeem with Voucher</div>
+            <div style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">Add this item to your cart to redeem with your voucher</div>
+            <a href="{{ route('food.index') }}" class="btn btn-primary" style="justify-content: center; width: 100%;">
+              <i class="fas fa-shopping-cart"></i> Add to Cart
+            </a>
+          </div>
+        </div>
+        @else
         <div class="card">
           <div style="padding: 20px; text-align: center;">
             <div style="font-size: 48px; margin-bottom: 16px;">🎫</div>
@@ -130,6 +155,7 @@
             </a>
           </div>
         </div>
+        @endauth
       </div>
     </div>
   </div>
