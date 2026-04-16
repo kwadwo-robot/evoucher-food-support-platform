@@ -373,15 +373,15 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <div class="sb-section">{{ __('app.account') }}</div>
   @php
     $profileRoute = match($role) {
-      'local_shop' => 'shop.profile',
-      'recipient' => 'profile.edit',
-      'vcfse' => 'profile.edit',
-      'school_care' => 'profile.edit',
+      'local_shop' => null,
+      'recipient' => 'recipient.dashboard',
+      'vcfse' => 'vcfse.dashboard',
+      'school_care' => 'school.dashboard',
       default => null,
     };
   @endphp
   @if($profileRoute && $role !== 'local_shop')
-  <a href="{{ route($profileRoute) }}" class="nav-item {{ request()->routeIs($profileRoute) ? 'active' : '' }}">
+  <a href="{{ route($profileRoute) }}" class="nav-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-user-cog"></i></span> {{ __('app.profile_settings') }}
   </a>
   @endif
