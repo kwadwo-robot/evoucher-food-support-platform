@@ -20,7 +20,7 @@
       <select style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px">
         <option>All Shops</option>
         @foreach($shops as $shop)
-        <option value="{{ $shop->id }}">{{ $shop->shop_name }} ({{ $shop->food_count }})</option>
+        <option value="{{ $shop['id'] }}">{{ $shop['name'] }} ({{ $shop['count'] }})</option>
         @endforeach
       </select>
     </div>
@@ -48,11 +48,11 @@
   </div>
 
   <div style="margin-bottom:16px;padding:12px;background:#dcfce7;border-radius:8px;border-left:4px solid #16a34a;color:#15803d;font-size:13px">
-    <i class="fas fa-check-circle mr-2"></i> Showing {{ count($items) }} of {{ count($items) }} items
+    <i class="fas fa-check-circle mr-2"></i> Showing {{ $listings->count() }} of {{ $listings->total() }} items
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:20px">
-    @foreach($items as $item)
+    @foreach($listings as $item)
     <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.05)">
       <div style="position:relative;height:160px;background:#f1f5f9;overflow:hidden">
         @if($item->image_url)
@@ -160,7 +160,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
       <select style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px">
         <option>All Shops</option>
         @foreach($shops as $shop)
-        <option value="{{ $shop->id }}">{{ $shop->shop_name }} ({{ $shop->food_count }})</option>
+        <option value="{{ $shop['id'] }}">{{ $shop['name'] }} ({{ $shop['count'] }})</option>
         @endforeach
       </select>
     </div>
@@ -188,11 +188,11 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
   </div>
 
   <div style="margin-bottom:16px;padding:12px;background:#dcfce7;border-radius:8px;border-left:4px solid #16a34a;color:#15803d;font-size:13px">
-    <i class="fas fa-check-circle mr-2"></i> Showing {{ count($items) }} of {{ count($items) }} items
+    <i class="fas fa-check-circle mr-2"></i> Showing {{ $listings->count() }} of {{ $listings->total() }} items
   </div>
 
   <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:20px">
-    @foreach($items as $item)
+    @foreach($listings as $item)
     <div style="background:#fff;border-radius:14px;border:1px solid #e2e8f0;overflow:hidden;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.05)">
       <div style="position:relative;height:160px;background:#f1f5f9;overflow:hidden">
         @if($item->image_url)
