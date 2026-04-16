@@ -153,7 +153,7 @@ body{font-family:'Inter',sans-serif;background:#f1f5f9;color:#0f172a}
           <i class="fas fa-map-marker-alt mr-1"></i> {{ Str::limit($item->collection_address, 45) }}
         </div>
         @auth
-        <a href="{{ route('recipient.food.show', $item->id) }}" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px;background:#16a34a;color:#fff;border-radius:9px;font-size:13px;font-weight:700;text-decoration:none">
+        <a href="{{ route('food.show', $item->id) }}" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:12px;padding:10px;background:#16a34a;color:#fff;border-radius:9px;font-size:13px;font-weight:700;text-decoration:none">
           <i class="fas fa-ticket"></i> Redeem with Voucher
         </a>
         @else
