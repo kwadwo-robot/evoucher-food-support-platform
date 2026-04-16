@@ -374,9 +374,9 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   @php
     $profileRoute = match($role) {
       'local_shop' => 'shop.dashboard',
-      'recipient' => 'recipient.profile',
-      'vcfse' => 'vcfse.profile',
-      'school_care' => 'school.profile',
+      'recipient' => 'recipient.dashboard',
+      'vcfse' => 'vcfse.dashboard',
+      'school_care' => 'school.dashboard',
       default => null,
     };
   @endphp
