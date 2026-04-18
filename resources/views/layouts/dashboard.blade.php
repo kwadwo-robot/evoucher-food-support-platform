@@ -340,12 +340,7 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('school.fund-loads.index') }}" class="nav-item {{ request()->routeIs('school.fund-loads.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-wallet"></i></span> {{ __('app.load_funds') }}
   </a>
-  <a href="{{ route('school.food') }}" class="nav-item {{ request()->routeIs('school.food') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.browse_food') }}
-  </a>
-  <a href="{{ route('school.food-breakdown') }}" class="nav-item {{ request()->routeIs('school.food-breakdown') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-pie"></i></span> {{ __('app.food_breakdown') }}
-  </a>
+
   <div class="sb-section">{{ __('app.vouchers') }}</div>
   <a href="{{ route('school.vouchers.create') }}" class="nav-item {{ request()->routeIs('school.vouchers.create') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-plus-circle"></i></span> {{ __('app.issue_voucher') }}
@@ -354,26 +349,14 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
     <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.my_vouchers') }}
   </a>
   <div class="sb-section">Reports</div>
-  <a href="{{ route('school.reports') }}" class="nav-item {{ request()->routeIs('school.reports') ? 'active' : '' }}">
+  <a href="{{ route('school.reports.vouchers-pdf') }}" class="nav-item {{ request()->routeIs('school.reports.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.reports') }}
-  </a>
-  <a href="{{ route('school.bank-deposit-notification.create') }}" class="nav-item {{ request()->routeIs('school.bank-deposit-notification.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-university"></i></span> {{ __('app.bank_deposit') }}
   </a>
   @endif
 
   <div class="sb-section">{{ __('app.account') }}</div>
-  @php
-    $profileRoute = match($role) {
-      'local_shop' => null,
-      'recipient' => 'recipient.profile.edit',
-      'vcfse' => 'vcfse.dashboard',
-      'school_care' => 'school.dashboard',
-      default => null,
-    };
-  @endphp
-  @if($profileRoute && $role !== 'local_shop')
-  <a href="{{ route($profileRoute) }}" class="nav-item {{ request()->routeIs('recipient.profile.*') ? 'active' : '' }}">
+  @if($role === 'recipient')
+  <a href="{{ route('recipient.profile.edit') }}" class="nav-item {{ request()->routeIs('recipient.profile.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-user-cog"></i></span> {{ __('app.profile_settings') }}
   </a>
   @endif

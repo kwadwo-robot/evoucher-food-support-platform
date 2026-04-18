@@ -17,6 +17,21 @@ use Illuminate\Support\Str;
 
 class FundLoadController extends Controller
 {
+    public function index()
+    {
+        return $this->showLoadForm();
+    }
+
+    public function store(Request $request)
+    {
+        return $this->createPaymentIntent($request);
+    }
+
+    public function destroy()
+    {
+        // Not used for organisations
+    }
+
     public function showLoadForm()
     {
         $user = Auth::user();
