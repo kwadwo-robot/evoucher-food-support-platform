@@ -166,7 +166,7 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
   try {
     // Create payment intent
     const rolePrefix = '{{ $user->role === "school_care" ? "school" : "vcfse" }}';
-    const response = await fetch('/' + rolePrefix + '/fund-load/create-intent', {
+    const response = await fetch('/' + rolePrefix + '/fund-loads', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
       document.getElementById('card-errors').textContent = result.error.message;
     } else if (result.paymentIntent.status === 'succeeded') {
       // Confirm on backend
-      const confirmResponse = await fetch('/' + rolePrefix + '/fund-load/confirm', {
+      const confirmResponse = await fetch('/' + rolePrefix + '/fund-loads/confirm-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

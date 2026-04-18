@@ -209,6 +209,7 @@ Route::prefix('vcfse')->name('vcfse.')->middleware(['auth', 'approved', 'role:vc
     Route::get('/dashboard', [OrgDashboard::class, 'vcfseDashboard'])->name('dashboard');
     Route::get('/fund-loads', [OrgFundLoad::class, 'index'])->name('fund-loads.index');
     Route::post('/fund-loads', [OrgFundLoad::class, 'store'])->name('fund-loads.store');
+    Route::post('/fund-loads/confirm-payment', [OrgFundLoad::class, 'confirmPayment'])->name('fund-loads.confirm-payment');
     Route::delete('/fund-loads/{fundLoad}', [OrgFundLoad::class, 'destroy'])->name('fund-loads.destroy');
     Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/create', [OrgVoucher::class, 'create'])->name('vouchers.create');
@@ -224,6 +225,7 @@ Route::prefix('school')->name('school.')->middleware(['auth', 'approved', 'role:
     Route::get('/dashboard', [OrgDashboard::class, 'schoolDashboard'])->name('dashboard');
     Route::get('/fund-loads', [OrgFundLoad::class, 'index'])->name('fund-loads.index');
     Route::post('/fund-loads', [OrgFundLoad::class, 'store'])->name('fund-loads.store');
+    Route::post('/fund-loads/confirm-payment', [OrgFundLoad::class, 'confirmPayment'])->name('fund-loads.confirm-payment');
     Route::delete('/fund-loads/{fundLoad}', [OrgFundLoad::class, 'destroy'])->name('fund-loads.destroy');
     Route::get('/vouchers', [OrgVoucher::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/create', [OrgVoucher::class, 'create'])->name('vouchers.create');
