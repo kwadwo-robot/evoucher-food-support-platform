@@ -207,7 +207,7 @@ body{font-family:'Inter',sans-serif;color:#0f172a;background:#fff}
     <div class="hero-btns">
       <a href="{{ route('register') }}" class="btn btn-primary"><i class="fas fa-rocket"></i> {{ __('app.get_started_free') }}</a>
       <a href="{{ url('/food') }}" class="btn btn-secondary"><i class="fas fa-basket-shopping"></i> {{ __('app.browse_food') }}</a>
-      <a href="{{ auth()->check() ? (auth()->user()->isVcfse() ? route('vcfse.donate') : (auth()->user()->isSchoolCare() ? route('school.donate') : '#')) : route('login') }}" class="btn btn-secondary"><i class="fas fa-heart"></i> {{ __('app.donate') }}</a>
+      <a href="{{ auth()->check() ? (auth()->user()->isVcfse() ? route('vcfse.dashboard') : (auth()->user()->isSchoolCare() ? '#' : '#')) : route('login') }}" class="btn btn-secondary"><i class="fas fa-heart"></i> {{ __('app.donate') }}</a>
     </div>
   </div>
 </div>

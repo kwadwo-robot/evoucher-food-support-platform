@@ -315,15 +315,10 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('vcfse.dashboard') }}" class="nav-item {{ request()->routeIs('vcfse.dashboard') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-building"></i></span> {{ __('app.dashboard') }}
   </a>
-  <a href="{{ route('vcfse.fund-load') }}" class="nav-item {{ request()->routeIs('vcfse.fund-load') ? 'active' : '' }}">
+  <a href="{{ route('vcfse.fund-loads.index') }}" class="nav-item {{ request()->routeIs('vcfse.fund-loads.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-wallet"></i></span> {{ __('app.load_funds') }}
   </a>
-  <a href="{{ route('vcfse.food') }}" class="nav-item {{ request()->routeIs('vcfse.food') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-box-open"></i></span> {{ __('app.browse_food') }}
-  </a>
-  <a href="{{ route('vcfse.food-breakdown') }}" class="nav-item {{ request()->routeIs('vcfse.food-breakdown') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-chart-pie"></i></span> {{ __('app.food_breakdown') }}
-  </a>
+
   <div class="sb-section">{{ __('app.vouchers') }}</div>
   <a href="{{ route('vcfse.vouchers.create') }}" class="nav-item {{ request()->routeIs('vcfse.vouchers.create') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-plus-circle"></i></span> {{ __('app.issue_voucher') }}
@@ -332,11 +327,8 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
     <span class="ni"><i class="fas fa-ticket"></i></span> {{ __('app.my_vouchers') }}
   </a>
   <div class="sb-section">Reports</div>
-  <a href="{{ route('vcfse.reports') }}" class="nav-item {{ request()->routeIs('vcfse.reports') ? 'active' : '' }}">
+  <a href="{{ route('vcfse.reports.vouchers-excel') }}" class="nav-item {{ request()->routeIs('vcfse.reports.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-chart-bar"></i></span> {{ __('app.reports') }}
-  </a>
-  <a href="{{ route('vcfse.bank-deposit-notification.create') }}" class="nav-item {{ request()->routeIs('vcfse.bank-deposit-notification.*') ? 'active' : '' }}">
-    <span class="ni"><i class="fas fa-university"></i></span> {{ __('app.bank_deposit') }}
   </a>
   @endif
 
@@ -345,7 +337,7 @@ input[type=checkbox],input[type=radio]{width:auto !important;display:inline-bloc
   <a href="{{ route('school.dashboard') }}" class="nav-item {{ request()->routeIs('school.dashboard') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-school"></i></span> {{ __('app.dashboard') }}
   </a>
-  <a href="{{ route('school.fund-load') }}" class="nav-item {{ request()->routeIs('school.fund-load') ? 'active' : '' }}">
+  <a href="{{ route('school.fund-loads.index') }}" class="nav-item {{ request()->routeIs('school.fund-loads.*') ? 'active' : '' }}">
     <span class="ni"><i class="fas fa-wallet"></i></span> {{ __('app.load_funds') }}
   </a>
   <a href="{{ route('school.food') }}" class="nav-item {{ request()->routeIs('school.food') ? 'active' : '' }}">

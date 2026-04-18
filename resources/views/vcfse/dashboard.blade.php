@@ -2,7 +2,7 @@
 @section('title','VCFSE Dashboard')
 @section('page-title','Organisation Dashboard')
 @section('topbar-actions')
-<a href="{{ route('vcfse.fund-load') }}" class="btn btn-primary btn-sm">
+<a href="{{ route('vcfse.fund-loads.index') }}" class="btn btn-primary btn-sm">
   <i class="fas fa-wallet"></i> Load Funds
 </a>
 @endsection
@@ -88,7 +88,7 @@
       <div style="font-size:13.5px;opacity:.75;line-height:1.7;margin-bottom:20px">
         {{ __('app.load_funds_description_vcfse') }}
       </div>
-      <a href="{{ route('vcfse.fund-load') }}" class="btn" style="background:#fff;color:#16a34a;width:100%;justify-content:center;font-weight:600;display:flex;align-items:center;text-decoration:none;padding:10px 16px;border-radius:6px;border:none;cursor:pointer">
+      <a href="{{ route('vcfse.fund-loads.index') }}" class="btn" style="background:#fff;color:#16a34a;width:100%;justify-content:center;font-weight:600;display:flex;align-items:center;text-decoration:none;padding:10px 16px;border-radius:6px;border:none;cursor:pointer">
         <i class="fas fa-wallet"></i> Load Funds Now
       </a>
     </div>
@@ -127,7 +127,7 @@
   <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
     <div style="padding:16px 20px;border-bottom:1px solid #f8fafc;display:flex;justify-content:space-between;align-items:center">
       <div style="font-size:14px;font-weight:700;color:#0f172a"><i class="fas fa-wallet text-green-600"></i> {{ __('app.recent_fund_loads') }}</div>
-      <a href="{{ route('vcfse.reports') }}" style="font-size:12px;padding:6px 12px;background:#f1f5f9;color:#0f172a;border-radius:4px;text-decoration:none;border:none;cursor:pointer">All</a>
+      <a href="{{ route('vcfse.reports.vouchers-excel') }}" style="font-size:12px;padding:6px 12px;background:#f1f5f9;color:#0f172a;border-radius:4px;text-decoration:none;border:none;cursor:pointer">All</a>
     </div>
     <div>
       @forelse($recentTransactions ?? [] as $t)
@@ -152,7 +152,7 @@
 <div style="background:#fff;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden">
   <div style="padding:16px 20px;border-bottom:1px solid #f8fafc;display:flex;justify-content:space-between;align-items:center">
       <div style="font-size:14px;font-weight:700;color:#0f172a"><i class="fas fa-shopping-bag text-blue-600"></i> {{ __('app.recent_food_claims') }}</div>
-    <a href="{{ route('vcfse.reports') }}" style="font-size:12px;padding:6px 12px;background:#f1f5f9;color:#0f172a;border-radius:4px;text-decoration:none;border:none;cursor:pointer">All Claims</a>
+    <a href="{{ route('vcfse.reports.vouchers-excel') }}" style="font-size:12px;padding:6px 12px;background:#f1f5f9;color:#0f172a;border-radius:4px;text-decoration:none;border:none;cursor:pointer">All Claims</a>
   </div>
   <div>
     @forelse($recentFoodClaims ?? [] as $claim)

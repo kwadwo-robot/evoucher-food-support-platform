@@ -2,7 +2,7 @@
 @section('title','School Dashboard')
 @section('page-title','Organisation Dashboard')
 @section('topbar-actions')
-<a href="{{ route('school.fund-load') }}" class="btn btn-primary btn-sm">
+<a href="{{ route('school.fund-loads.index') }}" class="btn btn-primary btn-sm">
   <i class="fas fa-wallet"></i> Load Funds
 </a>
 @endsection
@@ -52,7 +52,7 @@
       <div style="font-size:13.5px;opacity:.75;line-height:1.7;margin-bottom:20px">
         {{ __('app.load_funds_description') }}
       </div>
-      <a href="{{ route('school.fund-load') }}" class="btn" style="background:#fff;color:#1d4ed8;width:100%;justify-content:center;font-weight:600">
+      <a href="{{ route('school.fund-loads.index') }}" class="btn" style="background:#fff;color:#1d4ed8;width:100%;justify-content:center;font-weight:600">
         <i class="fas fa-wallet"></i> Load Funds Now
       </a>
     </div>

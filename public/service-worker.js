@@ -93,8 +93,9 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           if (response.ok) {
+            const clonedResponse = response.clone();
             const cache = caches.open(RUNTIME_CACHE);
-            cache.then((c) => c.put(request, response.clone()));
+            cache.then((c) => c.put(request, clonedResponse));
           }
           return response;
         })
@@ -114,8 +115,9 @@ self.addEventListener('fetch', (event) => {
         cached ||
         fetch(request).then((response) => {
           if (response.ok) {
+            const clonedResponse = response.clone();
             const cache = caches.open(RUNTIME_CACHE);
-            cache.then((c) => c.put(request, response.clone()));
+            cache.then((c) => c.put(request, clonedResponse));
           }
           return response;
         })
